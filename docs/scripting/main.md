@@ -9,6 +9,13 @@
 local not_survival_api = require "not_survival:api"
 ```
 
+В следующих модулях методы прописаны без `not_survival_api`.
+В теории их можно использовать и без этого, но я крайне рекомендую перед ними написать `not_survival_api.`
+Пример:
+```lua
+not_survival_api.exp.give(0, 5);
+```
+
 ### Модули
 
 #### Выживание
