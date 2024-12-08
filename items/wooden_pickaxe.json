@@ -1,0 +1,7 @@
+{
+  "icon-type": "sprite",
+  "icon": "items:wooden_pickaxe",
+  "stack-size": 1,
+  "not_survival:tool_speed": 2,
+  "not_survival:tool_type": ["pickaxe"]
+}

@@ -1,0 +1,9 @@
+<container color="#40000070" size-func="unpack(gui.get_viewport())">
+  <container gravity="center-center" size="300,200" color="#000000CC" id="death_window">
+    <label color="#FF0000" gravity="top-center" margin="0,10,0,0">Dead</label>
+    <label id="reason" autoresize="true">
+      Died from nothing
+    </label>
+    <button text-align="center" size="100,50" pos="100,75" onclick="respawn()">Respawn</button>
+  </container>
+</container>

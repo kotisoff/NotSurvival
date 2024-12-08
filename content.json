@@ -1,0 +1,18 @@
+{
+  "blocks": [
+    "sapling",
+    "dead_bush",
+    "cobblestone"
+  ],
+  "items": [
+    "coal",
+    "apple",
+    "flint",
+    "stick",
+    "wooden_pickaxe"
+  ],
+  "entities": [
+    "base:player",
+    "exp_orb"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "not_survival:stick"
+    },
+    "C": {
+      "item": "not_survival:coal"
+    }
+  },
+  "pattern": ["C", "#"],
+  "result": {
+    "count": 2,
+    "id": "base:torch"
+  },
+  "show_notification": false
+}

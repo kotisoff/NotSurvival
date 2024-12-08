@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "not_survival:stick"
+    },
+    "X": {
+      "item": "base:planks"
+    }
+  },
+  "pattern": ["XXX", " # ", " # "],
+  "result": {
+    "count": 1,
+    "id": "not_survival:wooden_pickaxe"
+  }
+}

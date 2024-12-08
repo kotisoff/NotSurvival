@@ -1,0 +1,42 @@
+<container size="525,70" position-func="gui.get_viewport()[1]/2-262.5,gui.get_viewport()[2]-135"
+  z-index="-1">
+  <!-- Armor -->
+  <container size="240, 22" gravity="top-left">
+    <container color="#FFFFFF80" size="240, 22" id="armor_bar" />
+    <label color="#000000FF" gravity="center-center" id="armor">0/20</label>
+  </container>
+
+  <!-- Air -->
+  <container gravity="top-right" size="240, 22">
+    <container color="#b9f4fa40" size="240, 22" id="oxygen_bar" />
+    <label gravity="center-center" id="oxygen">20/20</label>
+  </container>
+
+  <container color="#00000020" size="525,45" pos="0, 25">
+    <!-- Health -->
+    <container size="240, 25" gravity="top-left">
+      <container color="#00000070" size="240, 25" />
+      <container color="#FF000080" size="240, 25" id="health_bar" />
+      <label gravity="center-center" id="health">20/20</label>
+    </container>
+
+    <!-- Hunger and saturation -->
+    <container size="240, 25" gravity="top-right">
+      <container color="#00000070" size="240, 25" />
+      <container color="#99755080" size="240, 25" id="hunger_bar" />
+      <container pos="0,18" color="#ffa94660" size="240,25" id="saturation_bar" />
+      <label gravity="center-center" id="hunger">20/20</label>
+    </container>
+
+    <!-- Experience -->
+    <container gravity="bottom-center" size="44, 25" margin="0,0,22,16">
+      <label color="#00FF00" gravity="center-center" id="lvl">0</label>
+    </container>
+    <container size="525, 15" margin="0,0,0,2" gravity="bottom-left">
+      <container color="#00000070" size="525, 15" />
+      <container color="#00FF0070" size="525, 15" id="xp_bar" />
+      <label gravity="center-center" id="xp">0/7</label>
+    </container>
+
+  </container>
+</container>

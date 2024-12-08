@@ -1,0 +1,9 @@
+{
+  "components": ["not_survival:exp_orb"],
+  "hitbox": [0.2, 0.2, 0.2],
+  "sensors": [
+    ["radius", 0.3],
+    ["radius", 3]
+  ],
+  "blocking": false
+}

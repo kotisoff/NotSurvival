@@ -1,0 +1,7 @@
+{
+  "parent": "base:flower",
+  "caption": "dead bush",
+  "texture": "dead_bush",
+  "picking-item": "not_survival:dead_bush.item",
+  "script-name": "dead_bush"
+}

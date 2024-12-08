@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "base:planks"
+    }
+  },
+  "pattern": ["#", "#"],
+  "result": {
+    "count": 4,
+    "id": "not_survival:stick"
+  },
+  "show_notification": false
+}

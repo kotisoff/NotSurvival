@@ -1,0 +1,28 @@
+{
+  "sounds": [
+    "not_survival/random/orb",
+    "not_survival/random/levelup",
+    "not_survival/random/splash",
+
+    "not_survival/random/eat1",
+    "not_survival/random/eat2",
+    "not_survival/random/eat3",
+
+    "not_survival/damage/fallbig1",
+    "not_survival/damage/fallbig2",
+    "not_survival/damage/fallsmall",
+
+    "not_survival/damage/hit1",
+    "not_survival/damage/hit2",
+    "not_survival/damage/hit3",
+
+    "not_survival/entity/player/hurt/drown1",
+    "not_survival/entity/player/hurt/drown2",
+    "not_survival/entity/player/hurt/drown3",
+    "not_survival/entity/player/hurt/drown4",
+
+    "not_survival/entity/player/hurt/fire_hurt1",
+    "not_survival/entity/player/hurt/fire_hurt2",
+    "not_survival/entity/player/hurt/fire_hurt3"
+  ]
+}
