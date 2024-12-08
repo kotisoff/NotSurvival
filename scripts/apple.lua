@@ -1,6 +1,6 @@
 function resource(name) return PACK_ID .. ":" .. name end
 
-require("api");
+local not_survival_api = require "not_survival:api";
 local hunger = not_survival_api.hunger;
 
 function eat(pid)

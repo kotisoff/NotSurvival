@@ -1,5 +1,3 @@
-require("api");
-
 movement = {
   speed_limit = 7
 };
