@@ -81,13 +81,16 @@ end
 ---@param eat_delay number|nil How many seconds will item be used
 ---@param consume_item boolean|nil Will item be consumed?
 ---@param eat_anyway boolean|nil Eat item even if player is not hungry
-function hunger.eat(pid, foodlevel, saturation, eat_delay, consume_item, eat_anyway)
+---@param callback function|nil Callback after eating.
+function hunger.eat(pid, foodlevel, saturation, eat_delay, consume_item, eat_anyway, callback)
   if eating_players[pid] then return end;
 
   if hunger.get(pid) >= hunger.get_max(pid) and not eat_anyway
   then
     return
   end
+
+  callback = callback or function(player_id) end
 
   not_utils.create_coroutine(function()
     movement.set_speed_limit(2.5);
@@ -121,6 +124,8 @@ function hunger.eat(pid, foodlevel, saturation, eat_delay, consume_item, eat_any
       local itemid, count = inventory.get(invid, slot);
       inventory.set(invid, slot, itemid, count - 1);
     end
+
+    callback(pid);
 
     ::stop_eating::
 
