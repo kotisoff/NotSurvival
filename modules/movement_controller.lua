@@ -6,12 +6,10 @@ movement = {
 
 movement.defaults = table.copy(movement);
 
-function movement.set_limit(speed)
+function movement.set_speed_limit(speed)
   speed = speed or movement.defaults.speed_limit;
   movement.speed_limit = speed;
 end
-
-print(movement);
 
 events.on(resource("player_tick"), function(pid)
   if not rules.get("ns-control-movement") then return end;

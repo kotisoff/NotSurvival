@@ -99,6 +99,13 @@ function variables.get_player_data(pid)
     return component.ARGS.data;
 end
 
+---Get player attributes.
+---@param pid number
+function variables.get_player_attributes(pid)
+    local component = get_player_component(pid);
+    return component.ARGS.attributes;
+end
+
 ---Get damage type of player.
 ---@param pid number
 function variables.get_player_damage(pid)
@@ -106,21 +113,16 @@ function variables.get_player_damage(pid)
     return component.ARGS.damage_source;
 end
 
-function variables.get_player_attributes(pid)
-    local component = get_player_component(pid);
-    return component.ARGS.attributes;
-end
-
 function variables.new_player_data()
     return table.copy(Player);
 end
 
-function variables.new_player_damage()
-    return table.copy(DamageSource);
-end
-
 function variables.new_player_attributes()
     return table.copy(PlayerAttributes);
+end
+
+function variables.new_player_damage()
+    return table.copy(DamageSource);
 end
 
 return variables;

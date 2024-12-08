@@ -4,6 +4,7 @@ require("survival/oxygen");
 require("survival/exp");
 require("gamemode");
 require("variables");
+require("movement_controller");
 
 not_survival_api = {
   health = health,
@@ -11,7 +12,8 @@ not_survival_api = {
   oxygen = oxygen,
   exp = exp,
   gamemode = gamemode,
-  variables = variables
+  variables = variables,
+  movement = movement
 };
 
 return not_survival_api;

@@ -19,17 +19,17 @@ function health.full(pid)
   health.set(pid, variables.get_player_attributes(pid).health);
 end
 
-function health.heal(pid, count)
-  if not count then
-    count = 1
+function health.heal(pid, amount)
+  if not amount then
+    amount = 1
   end
 
   local hp = health.get(pid);
-  variables.get_player_data(pid).health = hp + count;
+  variables.get_player_data(pid).health = hp + amount;
 end
 
-function health.set(pid, count)
-  variables.get_player_data(pid).health = count
+function health.set(pid, amount)
+  variables.get_player_data(pid).health = amount
 end
 
 ---Damage player
@@ -83,6 +83,7 @@ end
 function health.knockback(pid, source, knockback_multiplier)
   local playerdamage = variables.get_player_damage(pid);
   source = source or playerdamage.source;
+  knockback_multiplier = knockback_multiplier or 6;
 
   local player_vel = { player.get_vel(pid) };
   local knockback_vel = vec3.normalize(vec3.sub({ player.get_pos(pid) }, source));

@@ -27,6 +27,14 @@ function hunger.get_max_saturation(pid)
   return variables.get_player_attributes(pid).saturation;
 end
 
+function hunger.set(pid, amount)
+  variables.get_player_data(pid).hunger = amount;
+end
+
+function hunger.set_saturation(pid, amount)
+  variables.get_player_data(pid).saturation = amount;
+end
+
 -- Feed player to his max.
 function hunger.full(pid)
   local max_values = variables.get_player_attributes(pid);
@@ -63,7 +71,7 @@ function hunger.consume(pid, amount)
   end
 end
 
-function get_random_eating_sound()
+local function get_random_eating_sound()
   return eating_sounds[math.random(#eating_sounds)];
 end
 
@@ -82,7 +90,7 @@ function hunger.eat(pid, foodlevel, saturation, eat_delay, consume_item, eat_any
   end
 
   not_utils.create_coroutine(function()
-    movement.set_limit(2.5);
+    movement.set_speed_limit(2.5);
 
     eating_players[pid] = true;
 
@@ -102,7 +110,7 @@ function hunger.eat(pid, foodlevel, saturation, eat_delay, consume_item, eat_any
       end
     );
 
-    movement.set_limit();
+    movement.set_speed_limit();
 
     if not state then goto stop_eating end;
 

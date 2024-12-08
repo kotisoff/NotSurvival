@@ -35,7 +35,7 @@ events.on(resource("player_tick"), function(pid, tps)
   end
 
   if underwater_ticks[pid] % second == 0 and is_under_water then
-    oxygen.add(pid, -1);
+    oxygen.sub(pid, 1);
     if oxygen.get(pid) <= 0 then
       health.damage(0, 2, "from drowning",
         nil, nil,

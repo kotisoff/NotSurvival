@@ -43,6 +43,14 @@ function exp.calc_lvl(total)
   end
 end
 
+function exp.get_xp(pid)
+  return variables.get_player_data(pid).xp;
+end
+
+function exp.get_lvl(pid)
+  return exp.calc_lvl(exp.get_xp(pid));
+end
+
 function exp.give(pid, amount)
   local xp = exp.get_xp(pid);
   variables.get_player_data(pid).xp = xp + amount;
@@ -61,9 +69,26 @@ function exp.summon(pos, amount)
   )
 end
 
+---Забирает у игрока определённое кол-во опыта.
+---@param pid number
+---@param amount number
+---@return boolean
 function exp.drain(pid, amount)
-  local xp = exp.get_xp(pid);
-  variables.get_player_data(pid).xp = xp - amount;
+  local xp = exp.get_xp(pid) - amount;
+  if xp < 0 then return false end;
+  variables.get_player_data(pid).xp = xp;
+  return true;
+end
+
+---Забирает у игрока определённое кол-во уровней опыта.
+---@param pid number
+---@param amount number
+---@return boolean
+function exp.drain_lvl(pid, amount)
+  local lvl = exp.calc_lvl(exp.get_xp(pid)) - amount;
+  if lvl < 0 then return false end;
+  variables.get_player_data(pid).xp = exp.calc_total(lvl);
+  return true;
 end
 
 function exp.set_xp(pid, val)
@@ -73,14 +98,6 @@ end
 function exp.set_lvl(pid, val)
   local total = exp.calc_total(val);
   variables.get_player_data(pid).xp = total;
-end
-
-function exp.get_xp(pid)
-  return variables.get_player_data(pid).xp;
-end
-
-function exp.get_lvl(pid)
-  return exp.calc_lvl(exp.get_xp(pid));
 end
 
 return exp;
