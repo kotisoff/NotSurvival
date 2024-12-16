@@ -1,4 +1,6 @@
-health = {};
+local variables = require("utility/variables");
+
+local health = {};
 
 local hit_sounds = {
   "not_survival/damage/hit1",
@@ -40,7 +42,7 @@ end
 ---@param do_knockback boolean | nil Knockback player or not.
 ---@param playsound string | boolean | nil Damage sound name or boolean.
 function health.damage(pid, damage, damage_type, source, do_knockback, playsound)
-  source = source or { 0, 0, 0 };
+  source = source or { player.get_pos(pid) };
   playsound = playsound or true;
 
   if type(playsound) == "boolean" and playsound then
@@ -50,15 +52,12 @@ function health.damage(pid, damage, damage_type, source, do_knockback, playsound
   health.heal(pid, -damage);
 
   if playsound then
-    local offset = vec3.mul(
-      vec3.normalize(
-        vec3.sub(
-          { player.get_pos(pid) }, source
-        )
-      ),
-      2
+    local sound_source = vec3.mul(
+      vec3.normalize(source),
+      vec3.length({ player.get_pos(pid) })
     )
-    local x, y, z = unpack(offset);
+
+    local x, y, z = unpack(sound_source);
 
     local upper_block = vec3.add({ player.get_pos(pid) }, { 0, 1, 0 });
     if block.get(unpack(upper_block)) == 0 then

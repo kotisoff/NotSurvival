@@ -1,4 +1,6 @@
-movement = {
+local variables = require("utility/variables");
+
+local movement = {
   speed_limit = 7
 };
 
@@ -29,3 +31,5 @@ events.on(resource("player_tick"), function(pid)
     player.set_flight(0, false);
   end
 end)
+
+return movement

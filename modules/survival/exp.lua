@@ -1,8 +1,8 @@
 local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
 
-variables = require("variables");
+local variables = require("utility/variables");
 
-exp = {}
+local exp = {}
 
 -- Calculates max exp for next lvl
 function exp.calc_max(lvl)

@@ -1,6 +1,6 @@
--- Совсем скоро я это нечто вырежу к хуям. А пока пусть живёт...
+local not_utils = require("utility/utils");
 
-loot_tables = {};
+local loot_tables = {};
 loot_tables.blocks = {
   data = {}
 }
@@ -19,18 +19,10 @@ local function get_block_loot_table(blockid)
 end
 
 ---@param blockname string
----@param dropitems table Table of tables with numbers. 1 is itemid, 2 is chance, 3 is drop rate array.
----Will drop item table[1][1] with chance of table[1][2] (0 to 1) from 1 to element[1][3] items with element[1][3][index] chance (0 to 1).
----Drop priority is last item in table. Set rarest items in the end.
----Tip: For example you need to drop 3 items. Then set drop_rate to { 0, 0, 1 }.
----@param experience table|nil Experience count range. { 0, 10 } is from 0 to 10 xp points.
----Usage: loot_tables.blocks.set_drop("base:grass_block", { { 0, 1, { 1 } } }, { 0, 1 })
-function loot_tables.blocks.set_drop(blockname, dropitems, experience)
+---@param drop { name:string, pools:{id:string,chance:number,drop-chances:number[]|nil,experience:number[]|nil,rolls:number}[] }
+function loot_tables.blocks.set_drop(blockname, drop)
   local index = string.gsub(blockname, ":", "__");
-  loot_tables.blocks.data[index] = {
-    items = dropitems,
-    experience = experience or { 0, 0 }
-  }
+  loot_tables.blocks.data[index] = drop;
 end
 
 ---Usage: loot_tables.blocks.set_handler("base:grass_block", function(blockid, x, y, z, pid) return { items = { { 0, 1, { 1 } } }, experience = { 0, 1 } } end)
@@ -64,27 +56,33 @@ function loot_tables.blocks.get_drop(blockid, x, y, z, pid)
   }
 
   -- Take one of items from loot_table.
-  local item = { 0, 0, { 0 } };
-  for _, itemdata in pairs(loot.items) do
-    if itemdata[2] >= math.random() then
-      item = itemdata;
-      drop.item = tonumber(itemdata[1])
+  local item = {};
+  for _, itemdata in pairs(loot) do
+    if itemdata.chance >= math.random() then
+      for _ = 1, itemdata.rolls do
+        item = item or itemdata;
+
+        drop.item = not_utils.index_item(itemdata.id) or 0;
+
+        for count, chance in pairs(itemdata["drop-chances"] or { 1 }) do
+          if chance >= math.random() then
+            drop.count = drop.count + count;
+          end
+        end
+
+        drop.experience =
+            drop.experience +
+            not_utils.round_to(
+              math.rand(unpack(itemdata.experience or { 0, 0 })),
+              10
+            )
+      end
     end
   end
 
   if not item then return drop end;
 
-  -- Get drop count.
-  for count, chance in pairs(item[3]) do
-    if chance >= math.random() then
-      drop.count = count;
-    end
-  end
-
   if drop.count == 0 then drop.item = 0 end;
-
-  -- Get experience amount.
-  drop.experience = math.random(unpack(loot.experience or { 0, 0 }));
 
   return drop;
 end

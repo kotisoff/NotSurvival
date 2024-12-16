@@ -1,3 +1,6 @@
+local oxygen = require("survival/oxygen");
+local health = require("survival/health");
+
 local drowning_sounds = {
   "not_survival/entity/player/hurt/drown1",
   "not_survival/entity/player/hurt/drown2",
@@ -46,7 +49,7 @@ events.on(resource("player_tick"), function(pid, tps)
 
   if oxygen.get(pid) < oxygen.get_max(pid) and not is_under_water then
     add_regen(pid, 1);
-    if regen_ticks[pid] % second == 0 then
+    if regen_ticks[pid] % (second / 2) == 0 then
       oxygen.add(pid, 1);
     end
   else

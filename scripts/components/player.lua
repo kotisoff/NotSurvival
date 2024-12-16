@@ -1,7 +1,7 @@
 local PACK_ID = "not_survival"; local function resource(name) return PACK_ID .. ":" .. name end
 
-require("variables");
-require("gamemode");
+require("utility/variables");
+require("utility/gamemode");
 
 local tsf = entity.transform
 local body = entity.rigidbody

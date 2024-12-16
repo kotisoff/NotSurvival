@@ -1,5 +1,5 @@
-require("survival/health");
-require("variables");
+local health = require("survival/health");
+local variables = require("utility/variables");
 
 local gravity = 22.18;
 
@@ -19,7 +19,7 @@ events.on(resource("grounded"), function(pid, velocity)
   if block.get(x, y, z) == water then
     if block.get(x, y + 1, z) ~= water then
       audio.play_sound("not_survival/random/splash",
-        x, y - 0.5, z, 1.0, math.rand(0.9, 1.2), "regular"
+        x, y - 0.5, z, 0.8, math.rand(0.9, 1.2), "regular"
       )
     end;
 
@@ -32,7 +32,7 @@ events.on(resource("grounded"), function(pid, velocity)
   if damage <= 0 then return end;
 
   audio.play_sound(fall_damage_sounds[math.random(#fall_damage_sounds)],
-    x, y - 0.5, z, 1.0, math.rand(0.8, 1.2), "regular"
+    x, y - 0.5, z, 0.8, math.rand(0.8, 1.2), "regular"
   )
 
   health.damage(

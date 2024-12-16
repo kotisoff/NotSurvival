@@ -1,12 +1,12 @@
-require("survival/hunger");
-require("survival/health");
-require("survival/oxygen");
-require("survival/exp");
-require("gamemode");
-require("variables");
-require("movement_controller");
+local hunger = require("survival/hunger");
+local health = require("survival/health");
+local oxygen = require("survival/oxygen");
+local exp = require("survival/exp");
+local gamemode = require("utility/gamemode");
+local variables = require("utility/variables");
+local movement = require("utility/movement_controller");
 
-not_survival_api = {
+local not_survival_api = {
   health = health,
   hunger = hunger,
   oxygen = oxygen,

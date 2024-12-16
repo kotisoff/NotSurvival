@@ -1,4 +1,4 @@
-require("utils");
+require("utility/utils");
 
 function compose_fragment_path(packid, genid)
   return packid .. ":generators/" .. genid .. ".files/fragments";

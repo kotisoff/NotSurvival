@@ -1,0 +1,21 @@
+{
+  "name": "base:leaves",
+  "pools": [
+    {
+      "id": "not_survival:sapling",
+      "chance": 0.1,
+      "rolls": 1
+    },
+    {
+      "id": "not_survival:apple",
+      "chance": 0.05,
+      "rolls": 1
+    },
+    {
+      "id": "not_survival:stick",
+      "chance": 0.02,
+      "drop-chances": [1, 0.5],
+      "rolls": 1
+    }
+  ]
+}

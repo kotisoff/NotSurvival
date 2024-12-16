@@ -1,9 +1,9 @@
 local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
 
-require("variables");
-require("survival/health");
-require("survival/hunger")
-require("utils");
+local variables = require("utility/variables");
+local health = require("survival/health");
+local hunger = require("survival/hunger")
+local not_utils = require("utility/utils");
 
 local index_item = not_utils.index_item;
 
@@ -47,7 +47,7 @@ end)
 
 -- Minecraft-like commands.
 
-require("gamemode");
+require("utility/gamemode");
 
 console.add_command("gamemode player:sel=$obj.id state:int", "Set game mode", function(args, kwargs)
     local pid, mode = unpack(args);
@@ -56,18 +56,15 @@ console.add_command("gamemode player:sel=$obj.id state:int", "Set game mode", fu
     if not status then name = tostring(pid) end;
 
     if gamemode.set_player_mode(pid, mode) then
-        return "Game mode of " .. name .. " set to " .. tostring(args[1])
+        local gm = gamemode.modes[mode + 1] or {};
+        return "Game mode of " .. name .. " set to " .. (gm.name or mode)
     else
-        local text = "Failed to change game mode.\n";
+        local text = { "Failed to change game mode." };
         for key, value in pairs(gamemode.modes) do
-            text = text .. key - 1 .. ". " .. value.name;
-
-            if gamemode.modes[key + 1] then
-                text = text .. "\n"
-            end
+            table.insert(text, "  " .. tostring(key - 1) .. ". " .. value.name);
         end
 
-        return "Failed to change game mode.\n"
+        return table.concat(text, "\n");
     end
 end)
 
@@ -81,7 +78,7 @@ console.add_command("give player:sel=$obj.id item:str count:int=1", "Give player
     local itemid = index_item(itemname);
     if not itemid then return "No item found." end
     inventory.add(invid, itemid, count);
-    return "Given player " .. name .. " " .. itemname .. " (" .. itemid .. ")" .. " x" .. count;
+    return "Given player " .. name .. " " .. itemname .. "(" .. itemid .. ")" .. " x" .. count;
 end)
 
 console.add_command("kill player:sel=$obj.id", "Kill player", function(args)
@@ -120,7 +117,7 @@ console.add_command("xp.drain player:sel=$obj.id amount:int", "Drain from player
     return "Given player " .. (pid or 0) .. " " .. amount .. " xp points."
 end)
 
-console.add_command("summon entity:str x:num~pos.x=pos.x y:num~pos.y=pos.y z:num~pos.z=pos.z",
+console.add_command("summon entity:str x:num~pos.x=0 y:num~pos.y=100 z:num~pos.z=0",
     "Summon entity at pos",
     function(args)
         local entity, x, y, z = unpack(args);

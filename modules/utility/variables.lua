@@ -1,6 +1,6 @@
 local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
 
-variables = {}
+local variables = {};
 
 local Player = {
     gamemode = 0,

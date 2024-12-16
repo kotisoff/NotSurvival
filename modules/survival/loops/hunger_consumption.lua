@@ -1,5 +1,5 @@
-require("survival/hunger");
-require("survival/health");
+local hunger = require("survival/hunger");
+local health = require("survival/health");
 
 local damage_ticks = {};
 local staving_ticks = {};
@@ -11,7 +11,7 @@ end
 local second = 60;
 events.on(resource("player_tick"), function(pid)
   if hunger.get(pid) <= 0 then
-    damage_ticks[pid] = damage_ticks[pid] + 1;
+    damage_ticks[pid] = (damage_ticks[pid] or 0) + 1;
     if damage_ticks[pid] % (second * 3) == 0 then
       health.damage(pid, 1, "from starving");
     end

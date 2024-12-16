@@ -1,5 +1,5 @@
-require("survival/hunger");
-require("survival/health");
+local hunger = require("survival/hunger");
+local health = require("survival/health");
 
 local regen_tick = {};
 

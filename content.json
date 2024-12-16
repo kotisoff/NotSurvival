@@ -13,6 +13,7 @@
   ],
   "entities": [
     "base:player",
-    "exp_orb"
+    "exp_orb",
+    "base:drop"
   ]
 }

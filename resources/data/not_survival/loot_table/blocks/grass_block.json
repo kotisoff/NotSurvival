@@ -1,0 +1,10 @@
+{
+  "name": "base:grass_block",
+  "pools": [
+    {
+      "id": "base:dirt",
+      "chance": 1.0,
+      "rolls": 1
+    }
+  ]
+}

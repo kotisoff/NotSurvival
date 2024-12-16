@@ -1,5 +1,6 @@
-require("variables");
-require("utils");
+local variables = require("utility/variables");
+local not_utils = require("utility/utils");
+local movement = require("utility/movement_controller");
 
 local eating_sounds = {
   "not_survival/random/eat1",
@@ -9,7 +10,7 @@ local eating_sounds = {
 
 local eating_players = {};
 
-hunger = {};
+local hunger = {};
 
 function hunger.get(pid)
   return variables.get_player_data(pid).hunger;
@@ -105,7 +106,7 @@ function hunger.eat(pid, foodlevel, saturation, eat_delay, consume_item, eat_any
         if not speaker or audio.get_volume(speaker) <= 0 then
           temp.speaker = audio.play_sound_2d(
             get_random_eating_sound(),
-            0.8,
+            0.7,
             1,
             "regular"
           )

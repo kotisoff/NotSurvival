@@ -1,8 +1,8 @@
 local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
 
-require("variables");
+local variables = require("utility/variables");
 
-oxygen = {};
+local oxygen = {};
 
 function oxygen.get(pid)
   return variables.get_player_data(pid).oxygen;

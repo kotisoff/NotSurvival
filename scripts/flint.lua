@@ -1,4 +1,4 @@
-require(PACK_ID .. ":utils");
+require("utility/utils");
 local not_crafting = "not_crafting";
 
 function on_use_on_block(x, y, z, pid, normal)

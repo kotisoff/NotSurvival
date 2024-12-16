@@ -1,0 +1,12 @@
+{
+  "name": "base:coal_ore",
+  "pools": [
+    {
+      "id": "not_survival:coal",
+      "chance": 1,
+      "drop-chances": [1, 0.4, 0.2, 0.1],
+      "experience": [0.5, 4],
+      "rolls": 1
+    }
+  ]
+}

@@ -1,10 +1,11 @@
 function resource(name) return PACK_ID .. ":" .. name end
 
-require("variables");
-require("survival/health");
-require("survival/hunger");
-require("survival/exp");
-require("survival/oxygen")
+local variables = require("utility/variables");
+local health = require("survival/health");
+local hunger = require("survival/hunger");
+local exp = require("survival/exp");
+local oxygen = require("survival/oxygen");
+local base_util = require("base:util")
 
 local dead = false;
 events.on(resource("world_tick"), function()

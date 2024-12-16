@@ -2,10 +2,9 @@ local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" ..
 
 require("drop/block_events");
 require("survival/loops/_main");
-require("gamemode");
-require("variables");
-require("movement_controller");
-require("drop/base_drop");
+local variables = require("utility/variables");
+require("utility/movement_controller");
+require("drop/drop_loader");
 
 require("drop/block_destroy")
 

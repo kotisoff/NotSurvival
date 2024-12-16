@@ -1,4 +1,4 @@
-require("variables");
+local variables = require("utility/variables");
 
 -- Generate hud keys.
 events.on(resource("hud_open"), function()

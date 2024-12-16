@@ -6,19 +6,28 @@ function inventory.consume_selected(pid)
   inventory.set(invid, slot, itemid, count - 1);
 end
 
-not_utils = {};
+local not_utils = {};
 
 function not_utils.index_item(itemname)
   local status = true;
   local itemid_or_err = 0;
 
   status, itemid_or_err = pcall(block.item_index, itemname);
-  if not status then status, itemid_or_err = pcall(item.index, itemname) end;
+  if not status then
+    status, itemid_or_err = pcall(item.index, itemname)
+  end;
+  if not status then
+    status, itemid_or_err = pcall(item.index, itemname .. ".item")
+  end;
 
   if not status then
     return nil;
   end
   return itemid_or_err;
+end
+
+function not_utils.round_to(num, accuracy)
+  return (math.floor(num) * accuracy) / accuracy
 end
 
 local coroutines = {};

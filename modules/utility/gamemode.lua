@@ -1,14 +1,17 @@
 local PACK_ID = PACK_ID or "not_survival"; local function resource(name) return PACK_ID .. ":" .. name end;
 
-require("variables");
+local variables = require("utility/variables");
 
 gamemode = {};
 
 gamemode.modes = {};
 
-local function get_gamemode(name)
+function gamemode.get_gamemode(name_or_key)
   for key, value in pairs(gamemode.modes) do
-    if tostring(key - 1) == tostring(name) or value.name == name then
+    if
+        tostring(key - 1) == tostring(name_or_key)
+        or value.name == name_or_key
+    then
       return key - 1, value
     end
   end
@@ -23,7 +26,7 @@ function gamemode.register(mode, func)
 end
 
 function gamemode.set_player_mode(pid, name_or_key)
-  local key, mode = get_gamemode(name_or_key);
+  local key, mode = gamemode.get_gamemode(name_or_key);
   if not mode then return false end;
   mode.handler(pid);
 
@@ -73,7 +76,7 @@ end)
 gamemode.register("creative", function(pid)
   hud.close(resource("survival_hud"));
 
-  gamemode.set_creative_rules(false);
+  gamemode.set_creative_rules(true);
   gamemode.set_creative_player_states(pid, true);
 end)
 
