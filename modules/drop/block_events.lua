@@ -1,8 +1,9 @@
 local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
 
-require "survival/exp";
+local api = require "api";
+local exp = api.exp;
 local loot_tables = require "drop/loot_tables";
-require "utility/variables";
+local variables = api.variables;
 local base_util = require "base:util"
 
 events.on(resource("block_broken"), function(blockid, x, y, z, pid)

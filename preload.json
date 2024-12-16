@@ -23,6 +23,13 @@
 
     "not_survival/entity/player/hurt/fire_hurt1",
     "not_survival/entity/player/hurt/fire_hurt2",
-    "not_survival/entity/player/hurt/fire_hurt3"
+    "not_survival/entity/player/hurt/fire_hurt3",
+
+    "not_survival/ambient/underwater/enter1",
+    "not_survival/ambient/underwater/enter2",
+    "not_survival/ambient/underwater/enter3",
+    "not_survival/ambient/underwater/exit1",
+    "not_survival/ambient/underwater/exit2",
+    "not_survival/ambient/underwater/exit3"
   ]
 }

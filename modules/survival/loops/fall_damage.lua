@@ -1,5 +1,6 @@
-local health = require("survival/health");
-local variables = require("utility/variables");
+local api = require "api";
+local health = api.health;
+local variables = api.variables;
 
 local gravity = 22.18;
 
@@ -15,16 +16,10 @@ events.on(resource("grounded"), function(pid, velocity)
 
   local x, y, z = player.get_pos(pid);
 
-  local water = block.index("base:water");
-  if block.get(x, y, z) == water then
-    if block.get(x, y + 1, z) ~= water then
-      audio.play_sound("not_survival/random/splash",
-        x, y - 0.5, z, 0.8, math.rand(0.9, 1.2), "regular"
-      )
-    end;
-
-    return;
-  end;
+  --  local water = block.index("base:water");
+  -- if block.get(x, y, z) == water then
+  --   return;
+  -- end;
 
   local fall_distance = (velocity ^ 2) / (2 * gravity);
 
