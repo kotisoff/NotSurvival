@@ -1,4 +1,4 @@
-local variables = require "api".variables;
+local variables = require "utility/variables";
 
 local movement = {
   speed_limit = 7

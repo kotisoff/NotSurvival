@@ -1,6 +1,6 @@
 local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
 
-local variables = require "api".variables;
+local variables = require "utility/variables";
 
 local exp = {}
 

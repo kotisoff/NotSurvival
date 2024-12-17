@@ -1,6 +1,6 @@
 local PACK_ID = PACK_ID or "not_survival"; local function resource(name) return PACK_ID .. ":" .. name end;
 
-local variables = require "api".variables;
+local variables = require "utility/variables";
 
 gamemode = {};
 
