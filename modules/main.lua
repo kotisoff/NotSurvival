@@ -1,13 +1,12 @@
-local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
+local PACK_ID = PACK_ID or "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
 
 local variables = require("utility/variables");
 
-require("drop/block_events");
-require("survival/loops/_main");
-require("utility/movement_controller");
-require("drop/drop_loader");
-require("drop/block_destroy");
-require("world/swimming");
+require "api";
+require "drop/index";
+require "player/index";
+require "survival/index";
+require "utility/index";
 
 local first_player_tick = true;
 events.on(resource("player_tick"), function(pid)

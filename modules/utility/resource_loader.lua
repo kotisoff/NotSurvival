@@ -1,4 +1,4 @@
-local PACK_ID;
+local PACK_ID = PACK_ID or nil;
 
 local silentlogs = {};
 

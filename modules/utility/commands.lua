@@ -1,9 +1,12 @@
 local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
 
-local variables = require("utility/variables");
-local health = require("survival/health");
-local hunger = require("survival/hunger")
-local not_utils = require("utility/utils");
+local api = require "api";
+
+local variables = api.variables;
+local health = api.health;
+local hunger = api.hunger;
+local gamemode = api.gamemode;
+local not_utils = api.utils;
 
 local index_item = not_utils.index_item;
 
@@ -46,8 +49,6 @@ console.add_command("event.list", "List of events", function(args, kwargs)
 end)
 
 -- Minecraft-like commands.
-
-require("utility/gamemode");
 
 console.add_command("gamemode player:sel=$obj.id state:int", "Set game mode", function(args, kwargs)
     local pid, mode = unpack(args);

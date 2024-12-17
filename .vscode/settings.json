@@ -25,7 +25,8 @@
     "cameras",
     "base_util",
     "mat4",
-    "time"
+    "time",
+    "generation"
   ],
   "Lua.diagnostics.disable": ["lowercase-global"],
   "Lua.runtime.unicodeName": true

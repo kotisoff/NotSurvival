@@ -1,6 +1,7 @@
-local variables = require("utility/variables");
-local not_utils = require("utility/utils");
-local movement = require("utility/movement_controller");
+local api = require "api";
+local variables = api.variables;
+local not_utils = api.utils;
+local movement = api.movement;
 
 local eating_sounds = {
   "not_survival/random/eat1",

@@ -1,5 +1,6 @@
-local oxygen = require("survival/oxygen");
-local health = require("survival/health");
+local api = require "api";
+local oxygen = api.oxygen;
+local health = api.health;
 
 local drowning_sounds = {
   "not_survival/entity/player/hurt/drown1",

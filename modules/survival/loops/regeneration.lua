@@ -1,5 +1,6 @@
-local hunger = require("survival/hunger");
-local health = require("survival/health");
+local api = require "api";
+local hunger = api.hunger;
+local health = api.health;
 
 local regen_tick = {};
 

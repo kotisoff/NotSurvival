@@ -1,7 +1,7 @@
 local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
 
-local loot_tables = require("drop/loot_tables")
-local ResourceLoader = require("utility/resource_loader");
+local loot_tables = require "drop/loot_tables";
+local ResourceLoader = require "utility/resource_loader";
 
 local drop_loader = ResourceLoader.new("drop_loader")
 ResourceLoader.set_pack_id(PACK_ID);

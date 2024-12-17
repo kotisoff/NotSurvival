@@ -1,8 +1,5 @@
 local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
 
-local api = require "api";
-local movement = api.movement;
-
 local function is_flight(pid)
   return player.is_flight(pid) or player.is_noclip(pid)
 end
@@ -16,17 +13,17 @@ local function player_pos(pid)
   return x, y, z;
 end
 
-local function is_under_water(pid)
+local function is_underwater(pid)
   local x, y, z = player_pos(pid);
   return block.get(x, y - 0.3, z) == water or block.get(x, y + 1, z) == water
 end
 
-local function head_under_water(pid)
+local function head_underwater(pid)
   local x, y, z = player_pos(pid);
   return block.get(x, y + 0.8, z) == water;
 end
 
-local function body_under_water(pid)
+local function body_underwater(pid)
   return block.get(player_pos(pid)) == water;
 end
 
@@ -55,7 +52,7 @@ local on_water = {};
 events.on(resource("player_tick"), function(pid, tps)
   if is_flight(pid) then return end;
 
-  if is_under_water(pid) then
+  if is_underwater(pid) then
     local x, y, z = player.get_vel(pid)
 
     if vec3.length({ x, 0, z }) > swim_speed then
@@ -67,7 +64,7 @@ events.on(resource("player_tick"), function(pid, tps)
 
     --Sounds
 
-    if head_under_water(pid) then
+    if head_underwater(pid) then
       if not under_water[pid] then
         under_water[pid] = true;
         play_underwater_sound(pid, "enter");
@@ -87,7 +84,7 @@ events.on(resource("player_tick"), function(pid, tps)
     if not hud.is_inventory_open() then
       if input.is_active("movement.jump") then
         y = 3;
-        if not body_under_water(pid) then
+        if not body_underwater(pid) then
           y = 6;
         end
       end

@@ -1,4 +1,4 @@
-local not_utils = require("utility/utils");
+require "api";
 local not_crafting = "not_crafting";
 
 function on_use_on_block(x, y, z, pid, normal)

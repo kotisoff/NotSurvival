@@ -1,4 +1,4 @@
-local variables = require("utility/variables");
+local variables = require "api".variables;
 
 local health = {};
 
