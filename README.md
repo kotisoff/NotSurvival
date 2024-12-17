@@ -1,7 +1,8 @@
-# not_survival
-Survival content pack for Voxel Core.
+# NotSurvival
+
+Контент-пак на выживания, сделанный для [VoxelCore](https://github.com/MihailRis/VoxelEngine-Cpp).
+
+### Скачать: [Стабильная](https://voxelworld.ru/mods/87) | [Последняя](https://github.com/kotisoff/NotSurvival/archive/refs/heads/main.zip)
 
 - [Документация по api мода](docs/scripting/main.md)
-- [Скачать стабильную версию](https://voxelworld.ru/mods/87)
-- [Скачать последнюю версию](https://github.com/kotisoff/NotSurvival/archive/refs/heads/main.zip)
-- [Changelog](changelog.md)
+- [ChangeLog](changelog.md)
