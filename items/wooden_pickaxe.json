@@ -3,5 +3,6 @@
   "icon": "items:wooden_pickaxe",
   "stack-size": 1,
   "not_survival:tool_speed": 2,
-  "not_survival:tool_type": ["pickaxe"]
+  "not_survival:tool_type": ["pickaxe"],
+  "not_crafting:fuel_burn_time": 200
 }

@@ -3,5 +3,6 @@
   "caption": "dead bush",
   "texture": "dead_bush",
   "picking-item": "not_survival:dead_bush.item",
-  "script-name": "dead_bush"
+  "script-name": "dead_bush",
+  "not_crafting:fuel_burn_time": 50
 }

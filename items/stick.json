@@ -1,4 +1,5 @@
 {
   "icon-type": "sprite",
-  "icon": "items:stick"
+  "icon": "items:stick",
+  "not_crafting:fuel_burn_time": 100
 }

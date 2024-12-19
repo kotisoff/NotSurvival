@@ -62,8 +62,10 @@ end
 function gamemode.set_creative_player_states(pid, state)
   player.set_instant_destruction(pid, state)
   player.set_infinite_items(pid, state)
-  player.set_flight(pid, state)
-  player.set_noclip(pid, state)
+  if not state then
+    player.set_flight(pid, state)
+    player.set_noclip(pid, state)
+  end
 end
 
 gamemode.register("survival", function(pid)

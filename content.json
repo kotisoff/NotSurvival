@@ -2,7 +2,8 @@
   "blocks": [
     "sapling",
     "dead_bush",
-    "cobblestone"
+    "cobblestone",
+    "bed"
   ],
   "items": [
     "coal",

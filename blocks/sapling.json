@@ -3,5 +3,6 @@
   "caption": "sapling",
   "texture": "sapling",
   "picking-item": "not_survival:sapling.item",
-  "script-name": "sapling"
+  "script-name": "sapling",
+  "not_crafting:fuel_burn_time": 50
 }

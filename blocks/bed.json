@@ -1,0 +1,15 @@
+{
+  "size": [1, 1, 2],
+  "hitbox": [0, 0, 0, 1, 0.5, 2],
+  "model": "custom",
+  "model-primitives": {
+    "aabbs": [
+      [0, 0.1, 0, 1, 0.4, 2, "planks", "planks", "wood", "wood", "planks", "planks"],
+      [0, 0, 0, 0.1, 0.1, 0.1, "planks"],
+      [0.9, 0, 0, 0.1, 0.1, 0.1, "planks"],
+      [0, 0, 1.9, 0.1, 0.1, 0.1, "planks"],
+      [0.9, 0, 1.9, 0.1, 0.1, 0.1, "planks"]
+    ]
+  },
+  "rotation": "pane"
+}

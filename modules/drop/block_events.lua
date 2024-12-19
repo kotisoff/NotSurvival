@@ -9,7 +9,7 @@ local base_util = require "base:util"
 
 events.on(resource("block_broken"), function(blockid, x, y, z, pid)
   local status, data = pcall(variables.get_player_data, pid);
-  if not status or data.gamemode == 1 then return end;
+  if pid and (not status or data.gamemode == 1) then return end;
 
   local drop = {
     item = block.get_picking_item(blockid),
