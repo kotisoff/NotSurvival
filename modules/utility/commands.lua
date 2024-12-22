@@ -7,6 +7,7 @@ local health = api.health;
 local hunger = api.hunger;
 local gamemode = api.gamemode;
 local not_utils = api.utils;
+local death = api.death;
 
 local index_item = not_utils.index_item;
 
@@ -83,11 +84,7 @@ console.add_command("give player:sel=$obj.id item:str count:int=1", "Give player
 end)
 
 console.add_command("kill player:sel=$obj.id", "Kill player", function(args)
-    local pid = args[1];
-
-    local maxhp = variables.get_player_attributes(pid).health;
-
-    health.damage(pid, maxhp, "in void")
+    death.kill(args[1]);
 end)
 
 console.add_command("setname name:str", "Set your name", function(args)
@@ -135,6 +132,13 @@ console.add_command("logdata player:sel=$obj.id", "Log player data", function(ar
     local pid = args[1];
 
     debug.print(variables.get_player_data(pid), variables.get_player_attributes(pid));
+end)
+
+console.add_command("spawnpoint player:sel=$obj.id", "Set player spawnpoint", function(args)
+    local pid = unpack(args);
+    local pos = vec3.round({ player.get_pos(pid) });
+    player.set_spawnpoint(pid, unpack(pos));
+    return "Set player spawnpoint at " .. table.concat(pos, " ");
 end)
 
 

@@ -19,11 +19,16 @@ events.on(resource("block_broken"), function(blockid, x, y, z, pid)
 
   drop = loot_tables.blocks.get_drop(blockid, x, y, z, pid) or drop;
 
+  local middle_pos = vec3.add({ x, y, z }, 0.5);
+
   if drop.item ~= 0 then
-    base_util.drop(vec3.add({ x, y, z }, 0.5), drop.item, drop.count).rigidbody:set_vel(vec3.spherical_rand(3));
+    base_util.drop(middle_pos, drop.item, drop.count).rigidbody:set_vel(vec3.spherical_rand(3));
   end
 
   if drop.experience > 0 then
-    exp.give(pid, drop.experience);
+    local orbs = math.random(6);
+    for _ = 1, orbs do
+      exp.summon(middle_pos, drop.experience / orbs).rigidbody:set_vel(vec3.spherical_rand(4));
+    end
   end
 end)

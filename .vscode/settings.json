@@ -26,7 +26,8 @@
     "base_util",
     "mat4",
     "time",
-    "generation"
+    "generation",
+    "Document"
   ],
   "Lua.diagnostics.disable": ["lowercase-global"],
   "Lua.runtime.unicodeName": true

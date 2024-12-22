@@ -16,11 +16,16 @@ local data = ARGS.data
     or SAVED_DATA.data
     or variables.new_player_data();
 
+local status = ARGS.status
+    or SAVED_DATA.status
+    or variables.new_player_status();
+
 local damage_source = ARGS.damage_source
     or variables.new_player_damage();
 
 ARGS.damage_source = damage_source;
 ARGS.data = data;
+ARGS.status = status;
 ARGS.attributes = attributes;
 
 function set_player_id(pid)
@@ -30,6 +35,7 @@ end
 function on_save()
   SAVED_DATA.data = data;
   SAVED_DATA.attributes = attributes;
+  SAVED_DATA.status = status;
 end
 
 function on_grounded(velocity)
@@ -53,10 +59,14 @@ events.on(resource("player_tick"), function(pid)
 
   -- Check if player variable out of bounds.
   for key, value in pairs(ARGS.data) do
+    if type(value) ~= "number" then goto continue end;
+
     if ARGS.attributes[key] and value > ARGS.attributes[key] then
       ARGS.data[key] = ARGS.attributes[key];
     elseif value < 0 then
       ARGS.data[key] = 0;
     end
+
+    ::continue::
   end
 end)

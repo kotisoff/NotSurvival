@@ -56,8 +56,12 @@ function exp.give(pid, amount)
   variables.get_player_data(pid).xp = xp + amount;
 end
 
+---@param pos number[]
+---@param amount number|nil
+---@return unknown
 function exp.summon(pos, amount)
-  if not amount or amount <= 0 then return end;
+  amount = amount or math.random(1, 10);
+
   return entities.spawn(
     "not_survival:exp_orb",
     pos,

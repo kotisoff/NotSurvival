@@ -48,7 +48,3 @@ end
 function on_random_update(x, y, z)
   grow(x, y, z);
 end
-
-function on_interact(x, y, z, pid)
-  grow(x, y, z);
-end

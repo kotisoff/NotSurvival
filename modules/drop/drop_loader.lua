@@ -11,8 +11,6 @@ drop_loader:load_folders("loot_table/blocks");
 
 events.on(resource("first_tick"), function()
   local log = drop_loader.logger;
-  log:println("Adding loot table drops.")
-
   for packpath, itemdrops in pairs(drop_loader.packs) do
     log:info('Adding drops of "' .. packpath .. '"')
 
@@ -27,6 +25,7 @@ events.on(resource("first_tick"), function()
       log:info('Check "' .. log:filepath() .. '" for more information.')
     end
   end
+  log:print();
 
   loot_tables.blocks.set_handler("base:ice", function(blockid, x, y, z, pid)
     block.set(x, y, z, block.index("base:water"));

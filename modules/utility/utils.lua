@@ -38,18 +38,18 @@ function not_utils.create_coroutine(func)
 end
 
 ---@param timesec number
----@param break_cb function|nil Break callback. Stop sleeping if false.
+---@param break_cb function|nil Break sleeping if true.
 ---@param cycle_task function|nil Task repeating every tick.
 ---@return boolean
 function not_utils.sleep_with_break(timesec, break_cb, cycle_task)
   local tempdata = {};
   break_cb = break_cb or function(a) return false end;
-  cycle_task = cycle_task or function(a) end
+  cycle_task = cycle_task or function(a, t) end
 
   local start = time.uptime()
   while time.uptime() - start < timesec do
     if break_cb(tempdata) then return false end;
-    cycle_task(tempdata);
+    cycle_task(tempdata, time.uptime() - start);
     coroutine.yield()
   end
   return true;

@@ -20,6 +20,10 @@ local PlayerAttributes = {
     armor = 20
 }
 
+local PlayerStatus = {
+    dead = false
+}
+
 local DamageSource = {
     source = { 0, 0, 0 },
     type = "from nothing",
@@ -38,21 +42,28 @@ local function get_player_component(pid)
     return component;
 end
 
----Get player data.
+---Get player data. I.e.: health, hunger, etc.
 ---@param pid number
 function variables.get_player_data(pid)
     local component = get_player_component(pid);
     return component.ARGS.data;
 end
 
----Get player attributes.
+---Get player status. I.e.: death
+---@param pid number
+function variables.get_player_status(pid)
+    local component = get_player_component(pid);
+    return component.ARGS.status;
+end
+
+---Get player attributes. I.e. max health, max hunger, etc.
 ---@param pid number
 function variables.get_player_attributes(pid)
     local component = get_player_component(pid);
     return component.ARGS.attributes;
 end
 
----Get damage type of player.
+---Get damage source of player.
 ---@param pid number
 function variables.get_player_damage(pid)
     local component = get_player_component(pid);
@@ -61,6 +72,10 @@ end
 
 function variables.new_player_data()
     return table.copy(Player);
+end
+
+function variables.new_player_status()
+    return table.copy(PlayerStatus);
 end
 
 function variables.new_player_attributes()

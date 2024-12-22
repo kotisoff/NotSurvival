@@ -2,33 +2,25 @@ local tsf = entity.transform
 local body = entity.rigidbody
 local rig = entity.skeleton
 
-target = -1
-timer = 0.3
+local api = require "api";
+local exp = api.exp;
 
-local expdata = SAVED_DATA.exp or ARGS.exp;
-
-local DROP_SCALE = 0.3
-local scale = { 1, 1, 1 }
+local expdata = SAVED_DATA.exp or ARGS.exp or 0;
 
 function on_save()
     SAVED_DATA.exp = expdata;
 end
 
-do -- setup visuals
-    local matrix = mat4.idt()
-    rig:set_model(0, "not_survival:coal.model")
-    local bodysize = math.min(scale[1], scale[2], scale[3]) * DROP_SCALE
-    body:set_size({ scale[1] * DROP_SCALE, bodysize, scale[3] * DROP_SCALE })
-    rig:set_matrix(0, matrix)
-end
+local target = -1;
+local timer = 0.3;
 
 function on_sensor_enter(index, oid)
     local playerid = hud.get_player()
     local playerentity = player.get_entity(playerid)
-    if oid == playerentity and index == 0 then
-        entity:despawn()
-        exp.give(playerid, expdata)
-        audio.play_sound_2d("events/random/orb", 0.5, 0.8 + math.random() * 0.4, "regular")
+    if timer < 0.0 and oid == playerentity and index == 0 then
+        entity:despawn();
+        exp.give(playerid, expdata);
+        audio.play_sound_2d("not_survival/random/orb", 0.4, 0.8 + math.random() * 0.4, "regular");
     end
     if index == 1 and oid == playerentity then
         target = oid
@@ -42,16 +34,16 @@ function on_sensor_exit(index, oid)
 end
 
 function on_render()
-    local pid = hud.get_player()
-    local ppos = player.get_pos(pid) -- позиция игрока
-    local epos = tsf:get_pos()       -- позиция энтити
+    local dst_pos = { player.get_pos(hud.get_player()) };
+    local entity_pos = tsf:get_pos()
+    local direction = vec3.div(vec3.sub(dst_pos, entity_pos), math.sqrt(vec3.length(vec3.sub(dst_pos, entity_pos))))
+    local rotation_x = math.atan2(-direction[1], -direction[3]) * 180.0 / math.pi
+    local rotation_y = math.atan(direction[2]) * 180.0 / math.pi
 
-    -- Создаем матрицу, которая смотрит из позиции энтити на позицию игрока
-    local up = { 0, 1, 0 } -- вектор "вверх" (можно использовать {0, 1, 0} для Y вверх)
-    local matrix = mat4.look_at(epos, ppos, up)
+    local matrix = mat4.rotate({ 0, 1, 0 }, rotation_x);
+    matrix = mat4.rotate(matrix, { 1, 0, 0 }, rotation_y);
 
-    -- Устанавливаем матрицу для вашей энтити
-    rig:set_matrix(0, matrix)
+    tsf:set_rot(matrix);
 end
 
 function on_update(tps)
@@ -62,7 +54,7 @@ function on_update(tps)
         end
         local dir = vec3.sub(entities.get(target).transform:get_pos(), tsf:get_pos())
         vec3.normalize(dir, dir)
-        vec3.mul(dir, 10.0, dir)
+        vec3.mul(dir, { 5, 20, 5 }, dir)
         body:set_vel(dir)
     end
 end

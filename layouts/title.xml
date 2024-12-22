@@ -1,0 +1,13 @@
+<container size-func="unpack(gui.get_viewport())" z-index="-1">
+  <container size-func="unpack(gui.get_viewport())" color="#00000000" id="sleep" />
+  <container id="title-root" size="0,50" position-func="0, gui.get_viewport()[2]/2-50">
+    <label id="title" autoresize="true" />
+  </container>
+  <container id="subtitle-root" position-func="0, gui.get_viewport()[2]/2+40">
+    <label id="subtitle" autoresize="true" />
+  </container>
+  <container id="actionbar-root" size="0,50"
+    position-func="0,gui.get_viewport()[2]-160">
+    <label id="actionbar" autoresize="true" />
+  </container>
+</container>
