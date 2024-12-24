@@ -17,32 +17,18 @@ function title.utils.set_opacity(name, opacity)
   el.color = { elcolor[1], elcolor[2], elcolor[3], opacity };
 end
 
-function title.utils.fade_out_cycle(name, data, curr_time, fade_start_time, total_time)
-  if curr_time > fade_start_time then
-    local step = 255 / (20 * (total_time - fade_start_time));
-    local opacity = data.opacity or 255;
-    opacity = opacity - step;
-    title.utils.set_opacity(name, math.floor(opacity));
-    data.opacity = opacity;
-  end
-end
-
-function title.utils.fade_in_cycle(name, data, curr_time, fade_start_time, total_time)
-  if curr_time > fade_start_time then
-    local step = 255 / (20 * (total_time - fade_start_time));
-    local opacity = data.opacity or 0;
-    opacity = opacity + step;
-    title.utils.set_opacity(name, math.floor(opacity));
-    data.opacity = opacity;
-  end
-end
-
 local function new_title_component(name)
   return setmetatable(
     { name = name, is_shown = false, break_show = false },
     {
       __index = {
-        show = function(self, text)
+        ---@param text string
+        ---@param show_time number|nil
+        ---@param breakfunc function|nil
+        show = function(self, text, show_time, breakfunc)
+          show_time = show_time or 5;
+          breakfunc = breakfunc or function(temp) return false end;
+
           if self.is_shown then self.break_show = true end;
           not_utils.create_coroutine(function()
             self.is_shown = true;
@@ -51,10 +37,16 @@ local function new_title_component(name)
             title.document[self.name].text = text;
             title.utils.set_opacity(self.name, 255);
 
-            not_utils.sleep_with_break(5,
-              function() return self.break_show; end,
+            not_utils.sleep_with_break(show_time,
+              function(data) return self.break_show or breakfunc(data); end,
               function(data, time)
-                title.utils.fade_out_cycle(name, data, time, 4, 5);
+                if time > (show_time - 1) then
+                  local step = 255 / 20;
+                  local opacity = data.opacity or 255;
+                  opacity = opacity - step;
+                  title.utils.set_opacity(name, math.floor(opacity));
+                  data.opacity = opacity;
+                end
               end
             );
 

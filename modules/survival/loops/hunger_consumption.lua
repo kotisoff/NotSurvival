@@ -9,11 +9,10 @@ local function add_starv(pid, val)
   staving_ticks[pid] = (staving_ticks[pid] or 1) + (val or 0)
 end
 
-local second = 60;
-events.on(resource("player_tick"), function(pid)
+events.on(resource("player_tick"), function(pid, tps)
   if hunger.get(pid) <= 0 then
     damage_ticks[pid] = (damage_ticks[pid] or 0) + 1;
-    if damage_ticks[pid] % (second * 3) == 0 then
+    if damage_ticks[pid] % (tps * 3) == 0 then
       health.damage(pid, 1, "from starving");
     end
   else
@@ -29,7 +28,7 @@ events.on(resource("player_tick"), function(pid)
     add_starv(pid, 1);
   end
 
-  if (staving_ticks[pid] or 1) % (second * 10) == 0 then
+  if (staving_ticks[pid] or 1) % (tps * 10) == 0 then
     hunger.consume(pid, 1);
     staving_ticks[pid] = 1;
   else

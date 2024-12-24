@@ -45,7 +45,7 @@ events.on(resource("world_tick"), function()
   local player = table.copy(variables.get_player_data(pid)); -- Current client
 
   player.lvl = math.floor(exp.calc_lvl(player.xp));
-  player.xp = player.xp - math.floor(exp.calc_total(player.lvl));
+  player.xp = math.floor(player.xp - exp.calc_total(player.lvl));
 
 
   local attributes = table.copy(variables.get_player_attributes(pid));

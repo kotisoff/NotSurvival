@@ -3,7 +3,8 @@
     "sapling",
     "dead_bush",
     "cobblestone",
-    "bed"
+    "bed",
+    "base:bazalt"
   ],
   "items": [
     "coal",

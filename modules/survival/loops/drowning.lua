@@ -25,7 +25,6 @@ local function add_regen(pid, val)
   regen_ticks[pid] = (regen_ticks[pid] or 1) + (val or 0)
 end
 
-local second = 60;
 events.on(resource("player_tick"), function(pid, tps)
   local state_under_block, blockid = is_under_block(pid);
   local water = block.index("base:water");
@@ -38,7 +37,7 @@ events.on(resource("player_tick"), function(pid, tps)
     underwater_ticks[pid] = 1;
   end
 
-  if underwater_ticks[pid] % second == 0 and is_under_water then
+  if underwater_ticks[pid] % tps == 0 and is_under_water then
     oxygen.sub(pid, 1);
     if oxygen.get(pid) <= 0 then
       health.damage(0, 2, "from drowning",
@@ -50,7 +49,7 @@ events.on(resource("player_tick"), function(pid, tps)
 
   if oxygen.get(pid) < oxygen.get_max(pid) and not is_under_water then
     add_regen(pid, 1);
-    if regen_ticks[pid] % (second / 2) == 0 then
+    if regen_ticks[pid] % (tps / 2) == 0 then
       oxygen.add(pid, 1);
     end
   else

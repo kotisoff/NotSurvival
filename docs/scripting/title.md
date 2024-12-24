@@ -7,19 +7,26 @@
 Показывает текст на экране прямо над полосками здоровья.
 
 ```lua
-title.actionbar:show(text: string)
+title.actionbar:show(
+  -- Текст.
+  text: string,
+  -- Опционально. Кол-во секунд текста на экране.
+  show_time: number|nil,
+  -- Опционально. Функция, которая будет сразу убирать текст, если возвращает true.
+  breakfunc: function|nil
+)
 ```
 
-Показывает текст на экране посередине.
+Показывает текст на экране посередине. Аргументы по аналогии с actionbar.
 
 ```lua
-title.title:show(text: string)
+title.title:show(text: string, show_time: number|nil, breakfunc: function|nil)
 ```
 
-Показывает текст на экране чуть ниже середины.
+Показывает текст на экране чуть ниже середины. Аргументы по аналогии с actionbar.
 
 ```lua
-title.subtitle:show(text: string)
+title.subtitle:show(text: string, show_time: number|nil, breakfunc: function|nil)
 ```
 
 ### Дополнительные, обычно бесполезные.
@@ -36,40 +43,8 @@ title.types
 title.utils.set_opacity(name: string, opacity: number)
 ```
 
-Цикл для исчезания элемента.
-Функция для not_utils.sleep_with_break, сама по себе не особо полезна.
+[Вернуться на главную](main.md)
 
-```lua
-title.utils.fade_out_cycle(
-  --Название элемента.
-  name: string,
-  -- Таблица с временными данными.
-  data: table,
-  -- Текущее время от 0 до total_time.
-  curr_time: number,
-  -- Начало исчезновения элемента
-  fade_start_time: number,
-  -- Время в секундах, общая задержка в функции sleep.
-  total_time: number
-)
 ```
 
-Цикл для появления элемента.
-Действует так же, как и fade_out_cycle.
-
-````lua
-title.utils.fade_in_cycle(
-  --Название элемента.
-  name: string,
-  -- Таблица с временными данными.
-  data: table,
-  -- Текущее время от 0 до total_time.
-  curr_time: number,
-  -- Начало исчезновения элемента
-  fade_start_time: number,
-  -- Время в секундах, общая задержка в функции sleep.
-  total_time: number
-)```
-
-[Вернуться на главную](main.md)
-````
+```

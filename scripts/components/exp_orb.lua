@@ -53,8 +53,15 @@ function on_update(tps)
             return
         end
         local dir = vec3.sub(entities.get(target).transform:get_pos(), tsf:get_pos())
-        vec3.normalize(dir, dir)
-        vec3.mul(dir, { 5, 20, 5 }, dir)
+        local distance = math.clamp(vec3.length(dir) - 1, 0.8, 5);
+
+        local speed = 10 / distance;
+
+        vec3.normalize(dir, dir);
+        vec3.mul(dir, speed, dir);
+
+        if distance > 2 then dir[2] = dir[2] * -1.1 end;
+
         body:set_vel(dir)
     end
 end

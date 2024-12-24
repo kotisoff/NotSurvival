@@ -8,8 +8,7 @@ local function add_regen(pid, val)
   regen_tick[pid] = (regen_tick[pid] or 1) + (val or 0);
 end
 
-local second = 60;
-events.on(resource("player_tick"), function(pid)
+events.on(resource("player_tick"), function(pid, tps)
   local hp = health.get(pid);
   local max = health.get_max(pid);
 
@@ -18,7 +17,7 @@ events.on(resource("player_tick"), function(pid)
 
   if hp < max and hungerlevel > hungermax - 2 then
     add_regen(pid, 1);
-    if regen_tick[pid] % second == 0 then
+    if regen_tick[pid] % tps == 0 then
       health.heal(pid, 1);
       hunger.consume(pid, 1);
     end
