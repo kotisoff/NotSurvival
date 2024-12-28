@@ -44,7 +44,3 @@ title.utils.set_opacity(name: string, opacity: number)
 ```
 
 [Вернуться на главную](main.md)
-
-```
-
-```

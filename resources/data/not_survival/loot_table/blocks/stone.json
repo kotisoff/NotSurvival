@@ -1,10 +1,6 @@
 {
   "name": "base:stone",
-  "pools": [
-    {
-      "id": "not_survival:cobblestone",
-      "chance": 1.0,
-      "rolls": 1
-    }
-  ]
+  "pools": [{ "chance": 1, "items": ["not_survival:cobblestone"], "rolls": 1 }],
+  "type": "append",
+  "version": 25
 }

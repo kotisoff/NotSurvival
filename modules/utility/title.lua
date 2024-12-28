@@ -23,8 +23,8 @@ local function new_title_component(name)
     {
       __index = {
         ---@param text string
-        ---@param show_time number|nil
-        ---@param breakfunc function|nil
+        ---@param show_time number | nil
+        ---@param breakfunc (fun(tempdata:any): boolean) | nil True stops function.
         show = function(self, text, show_time, breakfunc)
           show_time = show_time or 5;
           breakfunc = breakfunc or function(temp) return false end;

@@ -79,11 +79,11 @@ end
 ---@param pid number Player id
 ---@param foodlevel number Amount of food to add
 ---@param saturation number Amount of saturation to add
+---@param eat_anyway boolean|nil Eat item even if player is not hungry
 ---@param eat_delay number|nil How many seconds will item be used
 ---@param consume_item boolean|nil Will item be consumed?
----@param eat_anyway boolean|nil Eat item even if player is not hungry
 ---@param callback function|nil Callback after eating.
-function hunger.eat(pid, foodlevel, saturation, eat_delay, consume_item, eat_anyway, callback)
+function hunger.eat(pid, foodlevel, saturation, eat_anyway, eat_delay, consume_item, callback)
   if eating_players[pid] then return end;
 
   if hunger.get(pid) >= hunger.get_max(pid) and not eat_anyway

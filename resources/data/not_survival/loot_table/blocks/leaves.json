@@ -1,21 +1,10 @@
 {
   "name": "base:leaves",
   "pools": [
-    {
-      "id": "not_survival:sapling",
-      "chance": 0.1,
-      "rolls": 1
-    },
-    {
-      "id": "not_survival:apple",
-      "chance": 0.05,
-      "rolls": 1
-    },
-    {
-      "id": "not_survival:stick",
-      "chance": 0.02,
-      "drop-chances": [1, 0.5],
-      "rolls": 1
-    }
-  ]
+    { "chance": 0.1, "items": ["not_survival:sapling"], "rolls": 1 },
+    { "chance": 0.05, "items": ["not_survival:apple"], "rolls": 1 },
+    { "chance": 0.02, "items": ["not_survival:stick"], "rolls": 1, "count-chances": [1, 0.5] }
+  ],
+  "type": "append",
+  "version": 25
 }

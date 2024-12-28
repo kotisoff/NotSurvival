@@ -48,12 +48,12 @@ hunger.eat(
   hunger: number,
   -- Кол-во сытости
   saturation: number,
+    -- Есть еду даже при полном голоде? (опционально)
+  eat_anyway: boolean | nil,
   -- Кол-во секунд на употребление еды (опционально)
   eat_delay: number | nil,
   -- Забирать ли предмет после употребления? (опционально)
   consume_item: boolean | nil,
-  -- Есть еду даже при полном голоде? (опционально)
-  eat_anyway: boolean | nil,
   -- Функция, выполняющаяся после употребления еды. (опционально)
   callback: function(player_id: number) | nil
 )

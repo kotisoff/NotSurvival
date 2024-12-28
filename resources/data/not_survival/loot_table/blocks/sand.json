@@ -1,16 +1,9 @@
 {
   "name": "base:sand",
   "pools": [
-    {
-      "id": "base:sand",
-      "chance": 1,
-      "rolls": 1
-    },
-    {
-      "id": "not_survival:flint",
-      "chance": 0.1,
-      "drop-chances": [1, 0.4, 0.2, 0.1],
-      "rolls": 1
-    }
-  ]
+    { "chance": 1, "items": ["base:sand"], "rolls": 1 },
+    { "chance": 0.1, "items": ["not_survival:flint"], "rolls": 1, "count-chances": [1, 0.4, 0.2, 0.1] }
+  ],
+  "type": "append",
+  "version": 25
 }

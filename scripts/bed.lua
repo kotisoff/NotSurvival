@@ -5,7 +5,7 @@ local sleeping = require "player/sleeping";
 function on_interact(x, y, z, pid)
   player.set_spawnpoint(x, y, z);
 
-  if world.get_day_time() < 0.75 then
+  if world.get_day_time() < 0.75 and world.get_day_time() > 0.33 then
     title.actionbar:show("Вы можете спать только ночью. Точка возрождения установлена.");
     return true;
   end;

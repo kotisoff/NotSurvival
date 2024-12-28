@@ -1,9 +1,17 @@
-local not_utils = require("utility/utils");
+local not_utils = require "utility/utils";
+
+---@alias DropPool {items:string[],chance:number,count-chance:number[]|{chance:number,count:number}[]|nil,count:number|nil,experience:number[]|nil,rolls:number}
+---@alias DropHandler fun(blockid:number, x:number, y:number, z:number, pid:number): DropPool
+
+---@alias DropElement {chance:number,handler:DropHandler}
 
 local loot_tables = {};
 loot_tables.blocks = {
+  ---@type table<string, DropElement[]> Array of DropElements
   data = {}
 }
+
+--- UTIL FUNCTIONS
 
 ---@param blockname string
 ---@return number
@@ -12,26 +20,54 @@ function loot_tables.blocks.get_block_item(blockname)
 end
 
 ---@param blockid number
----@return function|table|nil
+---@return DropElement[]|nil
 local function get_block_loot_table(blockid)
-  local index = string.gsub(block.name(blockid), ":", "__");
+  local index = block.name(blockid);
   return loot_tables.blocks.data[index];
 end
 
+--- SET DROP
+
+---REPLACES drop of block.
 ---@param blockname string
----@param drop { name:string, pools:{id:string,chance:number,drop-chances:number[]|nil,experience:number[]|nil,rolls:number}[] }
-function loot_tables.blocks.set_drop(blockname, drop)
-  local index = string.gsub(blockname, ":", "__");
-  loot_tables.blocks.data[index] = drop;
+---@param handler DropHandler
+---@param chance number|nil
+function loot_tables.blocks.set_handler(blockname, handler, chance)
+  chance = chance or 1;
+  loot_tables.blocks.data[blockname] = { { chance = chance, handler = handler } };
 end
 
----Usage: loot_tables.blocks.set_handler("base:grass_block", function(blockid, x, y, z, pid) return { items = { { 0, 1, { 1 } } }, experience = { 0, 1 } } end)
+---APPENDS drop of block.
 ---@param blockname string
----@param handler function
----@see loot_tables.blocks.set_drop
-function loot_tables.blocks.set_handler(blockname, handler)
-  local index = string.gsub(blockname, ":", "__");
-  loot_tables.blocks.data[index] = handler;
+---@param handler DropHandler
+---@param chance number|nil
+function loot_tables.blocks.append_handler(blockname, handler, chance)
+  chance = chance or 1;
+
+  if not loot_tables.blocks.data[blockname] then
+    loot_tables.blocks.data[blockname] = {};
+  end
+
+  table.insert(loot_tables.blocks.data[blockname], { chance = chance, handler = handler });
+end
+
+---REPLACES drop of block.
+---@param blockname string
+---@param drop DropPool[]
+function loot_tables.blocks.set_drop(blockname, drop)
+  loot_tables.blocks.data[blockname] = {};
+  for _, value in pairs(drop) do
+    loot_tables.blocks.append_handler(blockname, function() return value end, value.chance);
+  end
+end
+
+---APPENDS drop of block.
+---@param blockname string
+---@param drop DropPool[]
+function loot_tables.blocks.append_drop(blockname, drop)
+  for _, value in pairs(drop) do
+    loot_tables.blocks.append_handler(blockname, function() return value end, value.chance);
+  end
 end
 
 ---@param blockid number
@@ -39,50 +75,66 @@ end
 ---@param y number
 ---@param z number
 ---@param pid number
----@see loot_tables.blocks.set_handler
----@see loot_tables.blocks.set_drop
+---@return {items:number[],experience:number,count:number}|nil
 function loot_tables.blocks.get_drop(blockid, x, y, z, pid)
   local loot = get_block_loot_table(blockid);
-
   if not loot then return nil end;
-  if type(loot) == "function" then
-    loot = loot(blockid, x, y, z, pid);
-  end
 
   local drop = {
-    item = 0,
+    items = {},
     experience = 0,
     count = 0
   }
 
-  -- Take one of items from loot_table.
-  local item = {};
-  for _, itemdata in pairs(loot) do
-    if itemdata.chance >= math.random() then
-      for _ = 1, itemdata.rolls do
-        item = item or itemdata;
+  ---@type DropPool
+  local pool = {};
 
-        drop.item = not_utils.index_item(itemdata.id) or 0;
-
-        for count, chance in pairs(itemdata["drop-chances"] or { 1 }) do
-          if chance >= math.random() then
-            drop.count = drop.count + count;
-          end
-        end
-
-        drop.experience =
-            drop.experience +
-            not_utils.round_to(
-              math.rand(unpack(itemdata.experience or { 0, 0 })),
-              10
-            )
-      end
+  for _, pool_ in pairs(loot) do
+    if pool_.chance >= math.random() then
+      pool = pool_.handler(blockid, x, y, z, pid);
     end
   end
 
-  if not item then return drop end;
+  if not pool then return drop end;
 
-  if drop.count == 0 then drop.item = 0 end;
+  for _ = 1, pool.rolls or 0 do
+    for _, value in pairs(pool.items) do
+      local item = not_utils.index_item(value);
+      if item then table.insert(drop.items, item); end;
+    end
+
+    if pool.count then
+      drop.count = drop.count + pool.count;
+    else
+      local chances = pool["count-chances"] or { { chance = 1, count = 1 } }
+
+      for key, data in pairs(chances) do
+        local chance = 0;
+        local count = 0;
+
+        if type(data) == "number" then
+          chance = data;
+          count = key;
+        elseif type(data) == "table" then
+          chance = data.chance or 1;
+          count = data.count or key;
+        end
+
+        if chance >= math.random() then
+          drop.count = drop.count + count;
+        end
+      end
+    end
+
+    drop.experience =
+        drop.experience +
+        not_utils.round_to(
+          math.rand(unpack(pool.experience or { 0, 0 })),
+          10
+        );
+  end
+
+  if drop.count == 0 then drop.items = {} end;
 
   return drop;
 end

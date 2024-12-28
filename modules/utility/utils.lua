@@ -8,6 +8,8 @@ end
 
 local not_utils = {};
 
+---@param itemname string
+---@return number|nil
 function not_utils.index_item(itemname)
   local status = true;
   local itemid_or_err = 0;
@@ -26,20 +28,24 @@ function not_utils.index_item(itemname)
   return itemid_or_err;
 end
 
+---@param num number
+---@param accuracy number
+---@return number
 function not_utils.round_to(num, accuracy)
   return (math.floor(num) * accuracy) / accuracy
 end
 
 local coroutines = {};
 
+---@param func function
 function not_utils.create_coroutine(func)
   local co = coroutine.create(func);
   table.insert(coroutines, co);
 end
 
 ---@param timesec number
----@param break_cb function|nil Break sleeping if true.
----@param cycle_task function|nil Task repeating every tick.
+---@param break_cb (fun(tempdata:any):boolean)|nil Break sleeping if true.
+---@param cycle_task (fun(tempdata: any, time_passed: number))|nil Task repeating every tick.
 ---@return boolean
 function not_utils.sleep_with_break(timesec, break_cb, cycle_task)
   local tempdata = {};
@@ -55,6 +61,7 @@ function not_utils.sleep_with_break(timesec, break_cb, cycle_task)
   return true;
 end
 
+---@param timesec number
 function not_utils.sleep(timesec)
   local start = time.uptime()
   while time.uptime() - start < timesec do

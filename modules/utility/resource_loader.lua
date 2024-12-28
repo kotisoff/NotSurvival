@@ -85,10 +85,8 @@ local function scan_packs(self, folder, priority)
 end
 
 local function load_folders(self, path, filterfunc)
-  if not filterfunc then
-    filterfunc = function(filename, data)
-      return true;
-    end
+  filterfunc = filterfunc or function(resource_path, filepath, data)
+    return true;
   end
 
   for pack, _ in pairs(self.packs) do
@@ -101,7 +99,7 @@ local function load_folders(self, path, filterfunc)
           local filedata = file.read(res_file);
           local packres = resfile_to_packres(path, res_file);
           local status, data = pcall(json.parse, filedata);
-          if status and filterfunc(res_file, data) then
+          if status and filterfunc(pack, res_file, data) then
             self.packs[pack][packres] = data;
           else
             self.logger:silent("Failed to load " .. packres .. ". Error: " .. data);

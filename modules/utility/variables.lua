@@ -2,6 +2,7 @@ local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" ..
 
 local variables = {};
 
+---@class PlayerData
 local Player = {
     gamemode = 0,
     health = 20,
@@ -12,6 +13,7 @@ local Player = {
     armor = 0
 }
 
+---@class PlayerAttributes
 local PlayerAttributes = {
     health = 20,
     hunger = 20,
@@ -20,10 +22,12 @@ local PlayerAttributes = {
     armor = 20
 }
 
+---@class PlayerStatus
 local PlayerStatus = {
     dead = false
 }
 
+---@class DamageSource
 local DamageSource = {
     source = { 0, 0, 0 },
     type = "from nothing",
@@ -44,6 +48,7 @@ end
 
 ---Get player data. I.e.: health, hunger, etc.
 ---@param pid number
+---@return PlayerData
 function variables.get_player_data(pid)
     local component = get_player_component(pid);
     return component.ARGS.data;
@@ -51,6 +56,7 @@ end
 
 ---Get player status. I.e.: death
 ---@param pid number
+---@return PlayerStatus
 function variables.get_player_status(pid)
     local component = get_player_component(pid);
     return component.ARGS.status;
@@ -58,6 +64,7 @@ end
 
 ---Get player attributes. I.e. max health, max hunger, etc.
 ---@param pid number
+---@return PlayerAttributes
 function variables.get_player_attributes(pid)
     local component = get_player_component(pid);
     return component.ARGS.attributes;
@@ -65,23 +72,28 @@ end
 
 ---Get damage source of player.
 ---@param pid number
+---@return DamageSource
 function variables.get_player_damage(pid)
     local component = get_player_component(pid);
     return component.ARGS.damage_source;
 end
 
+---@return PlayerData
 function variables.new_player_data()
     return table.copy(Player);
 end
 
+---@return PlayerStatus
 function variables.new_player_status()
     return table.copy(PlayerStatus);
 end
 
+---@return PlayerAttributes
 function variables.new_player_attributes()
     return table.copy(PlayerAttributes);
 end
 
+---@return DamageSource
 function variables.new_player_damage()
     return table.copy(DamageSource);
 end

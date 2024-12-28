@@ -27,9 +27,15 @@ not_survival_api.exp.give(0, 5);
 - [Здоровье](health.md)
 - [Голод](hunger.md)
 - [Кислород](oxygen.md)
+- [Смерть](death.md)
 
-#### Остальные
+#### Игрок
 
 - [Режим игры](gamemode.md)
+- [Сон](sleeping.md)
 - [Переменные игрока](variables.md)
 - [Физика передвижения](movement.md)
+
+#### Утилиты
+
+- [Текст на экране](title.md)

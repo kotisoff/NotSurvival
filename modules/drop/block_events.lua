@@ -1,5 +1,3 @@
-local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
-
 local api = require "api";
 local exp = api.exp;
 local variables = api.variables;
@@ -7,12 +5,12 @@ local variables = api.variables;
 local loot_tables = require "drop/loot_tables";
 local base_util = require "base:util"
 
-events.on(resource("block_broken"), function(blockid, x, y, z, pid)
+events.on("not_survival:block_broken", function(blockid, x, y, z, pid)
   local status, data = pcall(variables.get_player_data, pid);
   if pid and (not status or data.gamemode == 1) then return end;
 
   local drop = {
-    item = block.get_picking_item(blockid),
+    items = { block.get_picking_item(blockid) },
     count = 1,
     experience = 0
   }
@@ -21,8 +19,11 @@ events.on(resource("block_broken"), function(blockid, x, y, z, pid)
 
   local middle_pos = vec3.add({ x, y, z }, 0.5);
 
-  if drop.item ~= 0 then
-    base_util.drop(middle_pos, drop.item, drop.count).rigidbody:set_vel(vec3.spherical_rand(3));
+  for _, value in pairs(drop.items) do
+    if value ~= 0 then
+      base_util.drop(middle_pos, value, drop.count)
+          .rigidbody:set_vel(vec3.spherical_rand(3));
+    end
   end
 
   if drop.experience > 0 then

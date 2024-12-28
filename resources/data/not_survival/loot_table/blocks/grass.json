@@ -1,4 +1,1 @@
-{
-  "name": "base:grass",
-  "pools": []
-}
+{ "name": "base:grass", "pools": {}, "type": "append", "version": 25 }

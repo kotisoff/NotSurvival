@@ -6,6 +6,7 @@ local death = require "survival/death";
 
 local gamemode = require "player/gamemode";
 local movement = require "player/movement_controller";
+local sleeping = require "player/sleeping";
 
 local variables = require "utility/variables";
 local not_utils = require "utility/utils";
@@ -23,6 +24,7 @@ local not_survival_api = {
 
   gamemode = gamemode,
   movement = movement,
+  sleeping = sleeping,
   variables = variables,
 
   title = title,

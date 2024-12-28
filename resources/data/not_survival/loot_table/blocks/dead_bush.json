@@ -1,11 +1,6 @@
 {
   "name": "not_survival:dead_bush",
-  "pools": [
-    {
-      "id": "not_survival:stick",
-      "chance": 1,
-      "drop-chances": [0.5, 0.5],
-      "rolls": 1
-    }
-  ]
+  "pools": [{ "chance": 1, "items": ["not_survival:stick"], "rolls": 1, "count-chances": [0.5, 0.5] }],
+  "type": "append",
+  "version": 25
 }

@@ -1,7 +1,3 @@
--- not_survival необходимо изменить под себя.
-local PACK_ID = PACK_ID or "not_survival";
-local function resource(name) return PACK_ID .. ":" .. name end;
-
 local function is_survival(pid)
   return gamemode.get_player_mode(pid) == 0;
 end
@@ -53,7 +49,7 @@ local function stop_breaking(pid, target)
   target.breaking = false
 end
 
-events.on(resource("player_tick"), function(pid, tps)
+events.on("not_survival:player_tick", function(pid, tps)
   if not is_survival(pid) then return end
 
   local target = breaking_blocks[pid]
