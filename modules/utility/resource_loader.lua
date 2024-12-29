@@ -1,9 +1,8 @@
 local PACK_ID = PACK_ID or nil;
 
-local silentlogs = {};
-
 local logger = {
   __index = {
+    silentlogs = {},
     logs = {},
     prefix = function(self) return '[' .. PACK_ID .. '][' .. self.name .. '] ' end,
 
@@ -12,7 +11,7 @@ local logger = {
     end,
 
     silent = function(self, ...)
-      table.insert(silentlogs, self:prefix() .. table.concat({ ... }, " "));
+      table.insert(self.silentlogs, self:prefix() .. table.concat({ ... }, " "));
     end,
 
     info = function(self, ...)
@@ -21,8 +20,8 @@ local logger = {
     end,
 
     save = function(self)
-      file.write(self:filepath(), table.concat(silentlogs, "\n"))
-      self.logger.logs = {};
+      file.write(self:filepath(), table.concat(self.silentlogs, "\n"))
+      self.logs = {};
     end,
 
     print = function(self)
@@ -42,16 +41,14 @@ local Logger = {
   end
 }
 
----@param str string
----@param dir string Directory in PACK_ID:resources
+---@param res_file string
 ---@return string
-local function resfile_to_packres(dir, str)
-  local packid = str:split(":")[1];
-  local t = str:sub(#(packid .. ":resources/" .. dir)):split("/");
-  local resid = table.remove(t, 1);
-  local resname = t[#t]:split(".")[1];
-  local items = { t[#t - 1], resname }
-  return resid .. ":" .. table.concat(items, "/");
+local function filename(res_file)
+  local path_table = string.split(res_file, "/");
+  local name = path_table[#path_table];
+  local name_table = string.split(name, ".");
+  table.remove(name_table, #name_table);
+  return table.concat(name_table, ".");
 end
 
 local function scan_packs(self, folder, priority)
@@ -97,12 +94,14 @@ local function load_folders(self, path, filterfunc)
       for _, res_file in pairs(res_files) do
         if file.isfile(res_file) then
           local filedata = file.read(res_file);
-          local packres = resfile_to_packres(path, res_file);
           local status, data = pcall(json.parse, filedata);
+
+          local res_name = filename(res_file);
+
           if status and filterfunc(pack, res_file, data) then
-            self.packs[pack][packres] = data;
+            self.packs[pack][res_name] = data;
           else
-            self.logger:silent("Failed to load " .. packres .. ". Error: " .. data);
+            self.logger:silent("Failed to load " .. res_name .. ". Error: " .. data);
           end
         end
       end
@@ -135,7 +134,6 @@ local ResourceLoader = {
   end,
 
   utils = {
-    resfile_to_packres = resfile_to_packres,
     Logger = Logger
   }
 }

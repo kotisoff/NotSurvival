@@ -1,9 +1,9 @@
 local not_utils = require "utility/utils";
 
----@alias DropPool {items:string[],chance:number,count-chance:number[]|{chance:number,count:number}[]|nil,count:number|nil,experience:number[]|nil,rolls:number}
+---@alias DropPool {items:string[],chance:number,count-chances:number[]|{chance:number,count:number}[]|nil,count:number|nil,experience:number[]|nil,rolls:number}
 ---@alias DropHandler fun(blockid:number, x:number, y:number, z:number, pid:number): DropPool
 
----@alias DropElement {chance:number,handler:DropHandler}
+---@alias DropElement {chance:number,handler:DropHandler}|DropPool
 
 local loot_tables = {};
 loot_tables.blocks = {
@@ -43,7 +43,6 @@ end
 ---@param chance number|nil
 function loot_tables.blocks.append_handler(blockname, handler, chance)
   chance = chance or 1;
-
   if not loot_tables.blocks.data[blockname] then
     loot_tables.blocks.data[blockname] = {};
   end
@@ -55,18 +54,19 @@ end
 ---@param blockname string
 ---@param drop DropPool[]
 function loot_tables.blocks.set_drop(blockname, drop)
-  loot_tables.blocks.data[blockname] = {};
-  for _, value in pairs(drop) do
-    loot_tables.blocks.append_handler(blockname, function() return value end, value.chance);
-  end
+  loot_tables.blocks.data[blockname] = drop;
 end
 
 ---APPENDS drop of block.
 ---@param blockname string
 ---@param drop DropPool[]
 function loot_tables.blocks.append_drop(blockname, drop)
+  if not loot_tables.blocks.data[blockname] then
+    loot_tables.blocks.data[blockname] = {};
+  end
+
   for _, value in pairs(drop) do
-    loot_tables.blocks.append_handler(blockname, function() return value end, value.chance);
+    table.insert(loot_tables.blocks.data[blockname], value);
   end
 end
 
@@ -91,7 +91,13 @@ function loot_tables.blocks.get_drop(blockid, x, y, z, pid)
 
   for _, pool_ in pairs(loot) do
     if pool_.chance >= math.random() then
-      pool = pool_.handler(blockid, x, y, z, pid);
+      if pool_.handler then
+        pool = pool_.handler(blockid, x, y, z, pid);
+      else
+        ---@type DropPool
+        ---@diagnostic disable-next-line: assign-type-mismatch
+        pool = pool_;
+      end
     end
   end
 
