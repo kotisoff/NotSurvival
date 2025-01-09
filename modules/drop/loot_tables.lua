@@ -90,7 +90,7 @@ function loot_tables.blocks.get_drop(blockid, x, y, z, pid)
   local pool = {};
 
   for _, pool_ in pairs(loot) do
-    if pool_.chance >= math.random() then
+    if (pool_.chance or 1) >= math.random() then
       if pool_.handler then
         pool = pool_.handler(blockid, x, y, z, pid);
       else

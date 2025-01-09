@@ -76,6 +76,10 @@ local function get_random_eating_sound()
   return eating_sounds[math.random(#eating_sounds)];
 end
 
+local function get_selected_item(pid)
+  return inventory.get(player.get_inventory(pid))
+end;
+
 ---@param pid number Player id
 ---@param foodlevel number Amount of food to add
 ---@param saturation number Amount of saturation to add
@@ -98,9 +102,11 @@ function hunger.eat(pid, foodlevel, saturation, eat_anyway, eat_delay, consume_i
 
     eating_players[pid] = true;
 
+    local selected_item = get_selected_item(pid);
+
     local state = not_utils.sleep_with_break(
       eat_delay or 1.5,
-      function() return not input.is_active("player.build") end,
+      function() return not input.is_active("player.build") or selected_item ~= get_selected_item(pid) end,
       function(temp)
         local speaker = temp.speaker;
         if not speaker or audio.get_volume(speaker) <= 0 then

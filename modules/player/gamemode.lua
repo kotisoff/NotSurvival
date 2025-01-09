@@ -4,8 +4,10 @@ local variables = require "utility/variables";
 
 gamemode = {};
 
+---@type { name:string,handler:fun(pid) }[]
 gamemode.modes = {};
 
+---@return nil|number, {name:string,handler:fun(pid)}|nil
 function gamemode.get_gamemode(name_or_key)
   for key, value in pairs(gamemode.modes) do
     if
@@ -27,7 +29,7 @@ end
 
 function gamemode.set_player_mode(pid, name_or_key)
   local key, mode = gamemode.get_gamemode(name_or_key);
-  if not mode then return false end;
+  if not mode or not key then return false end;
   mode.handler(pid);
 
   local playerdata = variables.get_player_data(pid);
