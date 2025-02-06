@@ -17,7 +17,7 @@ local variables = require "player/variables";
 local not_utils = require "utility/utils";
 local ResourceLoader = require "utility/resource_loader";
 local Logger = require "utility/logger";
-local base_effect = require "survival/base_effect";
+local base_effect = require "utility/base_effect";
 
 PACK_ID = PACK_ID or "not_survival";
 
