@@ -3,5 +3,7 @@
   "hitbox": [0, 0, 0, 1, 0.5, 2],
   "model": "custom",
   "model-name": "bed",
-  "rotation": "pane"
+  "rotation": "pane",
+  "material": "base:wood",
+  "base:durability": 4
 }

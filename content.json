@@ -1,10 +1,8 @@
 {
-  "blocks": [
-    "sapling",
-    "dead_bush",
-    "cobblestone",
-    "bed",
-    "base:bazalt"
+  "entities": [
+    "base:player",
+    "exp_orb",
+    "base:drop"
   ],
   "items": [
     "coal",
@@ -13,9 +11,17 @@
     "stick",
     "wooden_pickaxe"
   ],
-  "entities": [
-    "base:player",
-    "exp_orb",
-    "base:drop"
+  "blocks": [
+    "sapling",
+    "dead_bush",
+    "cobblestone",
+    "bed",
+    "base:coal_ore",
+    "base:grass",
+    "base:grass_block",
+    "base:leaves",
+    "base:sand",
+    "base:stone",
+    "base:ice"
   ]
 }

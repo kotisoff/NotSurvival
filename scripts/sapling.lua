@@ -1,4 +1,4 @@
-local not_utils = require "api".utils;
+local not_utils = require "api".utils.utils;
 
 function compose_fragment_path(packid, genid)
   return packid .. ":generators/" .. genid .. ".files/fragments";

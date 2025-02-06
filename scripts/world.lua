@@ -1,8 +1,9 @@
-function resource(name) return PACK_ID .. ":" .. name end
+local resource = require "utility/resource_func"
 
 require "main";
 
 local first_tick = true;
+local first_player_tick = {};
 function on_world_open()
   first_tick = true;
 end

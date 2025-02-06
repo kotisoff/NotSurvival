@@ -1,4 +1,4 @@
-local variables = require "utility/variables";
+local variables = require "player/variables";
 
 local health = {};
 
@@ -27,11 +27,13 @@ function health.heal(pid, amount)
   end
 
   local hp = health.get(pid);
-  variables.get_player_data(pid).health = hp + amount;
+  health.set(pid, hp + amount);
 end
 
 function health.set(pid, amount)
-  variables.get_player_data(pid).health = amount
+  local max = health.get_max(pid);
+  ---@diagnostic disable-next-line: undefined-field
+  variables.get_player_data(pid).health = math.clamp(amount, 0, max);
 end
 
 ---Damage player

@@ -1,0 +1,16 @@
+{
+  "material": "base:stone",
+  "base:loot": [
+    {
+      "item": "not_survival:coal",
+      "min": 1,
+      "max": 4
+    }
+  ],
+  "not_survival:loot": {
+    "experience": {
+      "min": 0.5,
+      "max": 4
+    }
+  }
+}

@@ -4,5 +4,12 @@
   "texture": "dead_bush",
   "picking-item": "not_survival:dead_bush.item",
   "script-name": "dead_bush",
-  "not_crafting:fuel_burn_time": 50
+  "not_crafting:fuel_burn_time": 50,
+  "base:loot": [
+    {
+      "item": "not_survival:stick",
+      "min": 1,
+      "max": 2
+    }
+  ]
 }

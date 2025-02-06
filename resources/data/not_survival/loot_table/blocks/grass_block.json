@@ -1,6 +1,0 @@
-{
-  "name": "base:grass_block",
-  "pools": [{ "chance": 1, "items": ["base:dirt"], "rolls": 1 }],
-  "type": "append",
-  "version": 25
-}

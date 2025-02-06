@@ -1,4 +1,4 @@
-local death = require "survival/death";
+local death = require("api").survival.death;
 
 function on_open(invid, x, y, z)
   document.reason.pos = {

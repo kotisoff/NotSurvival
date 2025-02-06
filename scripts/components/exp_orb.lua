@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-field
 local tsf = entity.transform
 local body = entity.rigidbody
 local rig = entity.skeleton

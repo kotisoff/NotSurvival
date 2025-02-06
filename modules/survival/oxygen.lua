@@ -1,6 +1,4 @@
-local PACK_ID = "not_survival"; function resource(name) return PACK_ID .. ":" .. name end
-
-local variables = require "utility/variables";
+local variables = require "player/variables";
 
 local oxygen = {};
 
@@ -22,8 +20,11 @@ function oxygen.full(pid)
 end
 
 function oxygen.add(pid, amount)
-  local current = oxygen.get(pid);
-  variables.get_player_data(pid).oxygen = current + amount;
+  local playerdata = variables.get_player_data(pid);
+  local max = oxygen.get_max(pid);
+
+  ---@diagnostic disable-next-line: undefined-field
+  playerdata.oxygen = math.clamp(playerdata.oxygen + amount, 0, max);
 end
 
 function oxygen.sub(pid, amount)

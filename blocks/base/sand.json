@@ -1,0 +1,13 @@
+{
+  "base:loot@append": [
+    {
+      "item": "base:sand.item",
+      "count": 1
+    },
+    {
+      "item": "not_survival:flint",
+      "count": 1,
+      "chance": 0.1
+    }
+  ]
+}

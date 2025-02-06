@@ -1,0 +1,20 @@
+{
+  "base:loot@append": [
+    {
+      "item": "not_survival:sapling.item",
+      "count": 1,
+      "chance": 0.1
+    },
+    {
+      "item": "not_survival:apple",
+      "count": 1,
+      "chance": 0.05
+    },
+    {
+      "item": "not_survival:stick",
+      "min": 1,
+      "max": 2,
+      "chance": 0.02
+    }
+  ]
+}

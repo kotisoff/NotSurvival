@@ -1,6 +1,7 @@
-local not_utils = require "utility/utils";
-local title = require "utility/title";
-local sleeping = require "player/sleeping";
+local api = require "api";
+
+local title = api.game.title;
+local sleeping = api.player.sleeping;
 
 function on_interact(x, y, z, pid)
   player.set_spawnpoint(x, y, z);

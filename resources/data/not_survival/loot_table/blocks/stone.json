@@ -1,6 +1,0 @@
-{
-  "name": "base:stone",
-  "pools": [{ "chance": 1, "items": ["not_survival:cobblestone"], "rolls": 1 }],
-  "type": "append",
-  "version": 25
-}

@@ -1,8 +1,6 @@
-local title = require "utility/title";
+local title = require("api").game.title;
 
-local function resource(name)
-  return PACK_ID .. ":" .. name;
-end
+local resource = require "utility/resource_func"
 
 local function center_text(root, el)
   root.size = el.size;

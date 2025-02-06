@@ -1,45 +1,6 @@
-local PACK_ID = PACK_ID or nil;
+---@diagnostic disable: undefined-field
 
-local logger = {
-  __index = {
-    silentlogs = {},
-    logs = {},
-    prefix = function(self) return '[' .. PACK_ID .. '][' .. self.name .. '] ' end,
-
-    filepath = function(self)
-      return pack.shared_file(PACK_ID, self.name .. "-latest.log")
-    end,
-
-    silent = function(self, ...)
-      table.insert(self.silentlogs, self:prefix() .. table.concat({ ... }, " "));
-    end,
-
-    info = function(self, ...)
-      table.insert(self.logs, self:prefix() .. table.concat({ ... }, " "));
-      self:silent(...);
-    end,
-
-    save = function(self)
-      file.write(self:filepath(), table.concat(self.silentlogs, "\n"))
-      self.logs = {};
-    end,
-
-    print = function(self)
-      print(table.concat(self.logs, "\n"));
-      self.logs = {};
-    end,
-
-    println = function(self, ...)
-      print(self:prefix() .. table.concat({ ... }, " "))
-    end
-  }
-}
-
-local Logger = {
-  new = function(name)
-    return setmetatable({ name = name }, logger);
-  end
-}
+local Logger = require "utility/logger";
 
 ---@param res_file string
 ---@return string
@@ -126,11 +87,8 @@ local resource_loader = {
 }
 
 local ResourceLoader = {
-  set_pack_id = function(pack_id)
-    PACK_ID = pack_id;
-  end,
-  new = function(name)
-    return setmetatable({ name = name, logger = Logger.new(name) }, resource_loader);
+  new = function(packid, name)
+    return setmetatable({ name = name, logger = Logger.new(packid, name) }, resource_loader);
   end,
 
   utils = {

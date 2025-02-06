@@ -1,0 +1,6 @@
+{
+  "base:loot@append": [],
+  "not_survival:loot": {
+    "callback": "not_survival:drop_system/drops@on_ice_broken"
+  }
+}

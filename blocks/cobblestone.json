@@ -1,4 +1,6 @@
 {
   "texture": "cobblestone",
-  "rotation": "pipe"
+  "rotation": "pipe",
+  "material": "base:stone",
+  "base:durability": 13
 }

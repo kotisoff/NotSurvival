@@ -1,0 +1,8 @@
+{
+  "base:loot@append": [
+    {
+      "item": "not_survival:cobblestone.item",
+      "count": 1
+    }
+  ]
+}

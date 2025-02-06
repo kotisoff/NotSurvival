@@ -1,4 +1,7 @@
-local variables = require "utility/variables";
+---@diagnostic disable: undefined-field
+
+local resource = require "utility/resource_func"
+local variables = require "player/variables";
 
 local movement = {
   speed_limit = 7

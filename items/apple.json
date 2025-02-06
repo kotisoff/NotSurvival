@@ -1,4 +1,12 @@
 {
   "icon-type": "sprite",
-  "icon": "items:apple"
+  "icon": "items:apple",
+  "not_survival:food": {
+    "food": 3,
+    "saturation": 2,
+    "eat-anyway": false,
+    "eat-delay": 1.5,
+    "consume-item": true,
+    "type": "food"
+  }
 }

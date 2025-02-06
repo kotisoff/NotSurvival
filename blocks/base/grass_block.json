@@ -1,0 +1,8 @@
+{
+  "base:loot": [
+    {
+      "item": "base:dirt.item",
+      "count": 1
+    }
+  ]
+}

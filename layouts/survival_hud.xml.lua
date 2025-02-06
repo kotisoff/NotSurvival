@@ -1,12 +1,16 @@
-local api = require("api");
-local variables = api.variables;
-local exp = api.exp;
+---@diagnostic disable: undefined-field
+
+local resource = require "utility/resource_func"
+local api = require "api";
+local variables = api.player.variables;
+local exp = api.survival.experience;
 
 -- Generate hud keys.
 events.on(resource("hud_open"), function()
   HUD_DATA = {};
 
   local data = variables.new_player_data();
+  ---@diagnostic disable-next-line: inject-field
   data.lvl = 0;
 
   for name, _ in pairs(data) do

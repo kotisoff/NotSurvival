@@ -1,35 +1,51 @@
 local hunger = require "survival/hunger";
 local health = require "survival/health";
 local oxygen = require "survival/oxygen";
-local exp = require "survival/exp";
-local death = require "survival/death";
+local experience = require "survival/experience";
+local death = require "survival/death_manager";
+local effects = require "survival/effects";
 
-local gamemode = require "player/gamemode";
+local gamemode = require "game/gamemode";
+local title = require "game/title";
+
+local registry = require "game/registry";
+
 local movement = require "player/movement_controller";
-local sleeping = require "player/sleeping";
+local sleeping = require "player/sleep_controller";
+local variables = require "player/variables";
 
-local variables = require "utility/variables";
 local not_utils = require "utility/utils";
-local title = require "utility/title";
-local ResourceLoader = require "utility/resource_loader"
+local ResourceLoader = require "utility/resource_loader";
+local Logger = require "utility/logger";
+local base_effect = require "survival/base_effect";
 
 PACK_ID = PACK_ID or "not_survival";
 
 local not_survival_api = {
-  health = health,
-  hunger = hunger,
-  oxygen = oxygen,
-  exp = exp,
-  death = death,
-
-  gamemode = gamemode,
-  movement = movement,
-  sleeping = sleeping,
-  variables = variables,
-
-  title = title,
-  utils = not_utils,
-  ResourceLoader = ResourceLoader
+  survival = {
+    health = health,
+    hunger = hunger,
+    oxygen = oxygen,
+    experience = experience,
+    death = death,
+    effects = effects
+  },
+  game = {
+    gamemode = gamemode,
+    title = title
+  },
+  player = {
+    movement = movement,
+    sleeping = sleeping,
+    variables = variables
+  },
+  utils = {
+    utils = not_utils,
+    Logger = Logger,
+    ResourceLoader = ResourceLoader,
+    BaseEffect = base_effect
+  },
+  registry = registry
 };
 
 return not_survival_api;

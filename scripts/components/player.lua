@@ -1,8 +1,8 @@
-local PACK_ID = "not_survival"; local function resource(name) return PACK_ID .. ":" .. name end
+local resource = require "utility/resource_func"
 
 local api = require "api";
-local variables = api.variables;
-local gamemode = api.gamemode;
+local variables = api.player.variables;
+local gamemode = api.game.gamemode;
 
 local tsf = entity.transform
 local body = entity.rigidbody
