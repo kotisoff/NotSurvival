@@ -38,26 +38,14 @@ local DamageSource = {
     amount = 0
 }
 
-local component_cache = {};
-
-local function is_cache_valid(pid)
-    return component_cache[pid] and component_cache[pid].this
-end
-
 ---@param pid number
 ---@return { SAVED_DATA:table, ARGS:table }
 local function get_player_component(pid)
     local entid = player.get_entity(pid);
     local entity = entities.get(entid);
 
-    if is_cache_valid(pid) then
-        return component_cache[pid];
-    end
-
     local component = entity.components[PACK_ID .. ":player"];
     component.set_player_id(pid);
-
-    component_cache[pid] = component;
 
     return component;
 end

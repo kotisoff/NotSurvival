@@ -12,6 +12,8 @@ local function filename(res_file)
   return table.concat(name_table, ".");
 end
 
+---@param folder string Папка в resources.
+---@param priority string[] Список приоритета загрузки.
 local function scan_packs(self, folder, priority)
   self.packs = {};
   priority = priority or {};
@@ -42,6 +44,8 @@ local function scan_packs(self, folder, priority)
   end
 end
 
+---@param path string Путь к json'ам. В итоге выходит чё-то типа resources/data/<path>
+---@param filterfunc fun(res_file:string, data:any): boolean Возвращает true, если подходит под требования. По-умолчанию: true.
 local function load_folders(self, path, filterfunc)
   filterfunc = filterfunc or function(resource_path, filepath, data)
     return true;
@@ -89,11 +93,7 @@ local resource_loader = {
 local ResourceLoader = {
   new = function(packid, name)
     return setmetatable({ name = name, logger = Logger.new(packid, name) }, resource_loader);
-  end,
-
-  utils = {
-    Logger = Logger
-  }
+  end
 }
 
 return ResourceLoader;

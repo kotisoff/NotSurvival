@@ -1,5 +1,9 @@
 local logger = {
   ---@class Logger
+  ---@field private silentlogs string[]
+  ---@field private logs string[]
+  ---@field private prefix fun(self): string
+  ---@field private filepath fun(self): string
   __index = {
     silentlogs = {},
     logs = {},

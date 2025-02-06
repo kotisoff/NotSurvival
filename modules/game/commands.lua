@@ -31,7 +31,6 @@ end
 events.on("not_survival:hud_open", function()
     console.add_command("surv.add_var player:sel=$obj.id var:str='health' add:int=1", "Add to player variable",
         function(args, kwargs)
-            debug.print(args);
             local pid, var, add = unpack(args);
 
             return set_var(pid or 0, var, (variables.get_player_data(pid)[var] or 0) + add);
@@ -77,7 +76,6 @@ events.on("not_survival:hud_open", function()
     end)
 
     console.add_command("give player:sel=$obj.id item:str count:int=1", "Give player item.", function(args)
-        debug.print(args);
         local pid, itemname, count = unpack(args);
         local name = player.get_name(pid);
 
