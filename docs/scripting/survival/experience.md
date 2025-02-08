@@ -101,4 +101,4 @@ experience.calc_total(level: number) -> number
 experience.calc_lvl(total_exp: number) -> number
 ```
 
-[Вернуться на главную](index.md)
+[Вернуться на главную](../index.md)

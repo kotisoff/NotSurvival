@@ -66,7 +66,6 @@ end
 ---@param time_passed number In seconds
 local function update_status(self, pid, level, duration, time_passed)
   local status = variables.get_player_status(pid);
-  status.effects = status.effects or {};
 
   local index;
   for key, value in ipairs(status.effects) do

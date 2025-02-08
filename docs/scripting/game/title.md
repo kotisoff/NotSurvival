@@ -43,4 +43,4 @@ title.types
 title.utils.set_opacity(name: string, opacity: number)
 ```
 
-[Вернуться на главную](index.md)
+[Вернуться на главную](../index.md)

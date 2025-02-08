@@ -57,4 +57,4 @@ not_utils.sleep_with_break(timesec: number, break_callback: function, cycle_task
 not_utils.parse_callback_string(str) -> function
 ```
 
-[Вернуться на главную](index.md)
+[Вернуться на главную](../index.md)

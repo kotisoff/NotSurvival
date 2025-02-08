@@ -8,4 +8,4 @@
 movement.set_speed_limit(speed: number | nil)
 ```
 
-[Вернуться на главную](index.md)
+[Вернуться на главную](../index.md)

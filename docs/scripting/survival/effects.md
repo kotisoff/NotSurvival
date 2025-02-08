@@ -15,4 +15,4 @@ effects.give(
 effects.remove(pid: number, identifier?: string, log?: boolean)
 ```
 
-[Вернуться на главную](index.md)
+[Вернуться на главную](../index.md)

@@ -18,4 +18,4 @@ death.drop_items(player_id: number)
 death.revive(player_id: number)
 ```
 
-[Вернуться на главную](index.md)
+[Вернуться на главную](../index.md)

@@ -17,6 +17,8 @@ not_survival_api.exp.give(0, 5);
 
 ### Модули
 
+- [Регистр](game/registry.md)
+
 #### Выживание
 
 - [Опыт](survival/experience.md)
@@ -30,7 +32,6 @@ not_survival_api.exp.give(0, 5);
 
 - [Режим игры](game/gamemode.md)
 - [Текст на экране](game/title.md)
-- [Регистр](game/registry.md)
 
 #### Игрок
 

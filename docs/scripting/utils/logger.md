@@ -45,4 +45,4 @@ log:print()
 log:println(...: string[])
 ```
 
-[Вернуться на главную](index.md)
+[Вернуться на главную](../index.md)

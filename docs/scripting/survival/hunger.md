@@ -41,7 +41,7 @@ hunger.set_saturation(player_id: number, amount: number)
 Съедает выбранную в данный момент игроком еду. Устарело.
 
 Вместо этого следует использовать новое свойство: "not_survival:food".
-Подробнее в [юзер-пропах](../user-props.md)
+Подробнее в [юзер-пропах](../../user-props.md)
 
 ```lua
 hunger.eat(
@@ -99,4 +99,4 @@ hunger.consume(
 )
 ```
 
-[Вернуться на главную](index.md)
+[Вернуться на главную](../index.md)

@@ -55,4 +55,4 @@ gamemode.set_creative_player_states(
 )
 ```
 
-[Вернуться на главную](index.md)
+[Вернуться на главную](../index.md)

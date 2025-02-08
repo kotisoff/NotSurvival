@@ -45,7 +45,7 @@ local function scan_packs(self, folder, priority)
 end
 
 ---@param path string Путь к json'ам. В итоге выходит чё-то типа resources/data/<path>
----@param filterfunc fun(res_file:string, data:any): boolean Возвращает true, если подходит под требования. По-умолчанию: true.
+---@param filterfunc fun(res_pack_id:string ,res_file:string, data:any): boolean Возвращает true, если подходит под требования. По-умолчанию: true.
 local function load_folders(self, path, filterfunc)
   filterfunc = filterfunc or function(resource_path, filepath, data)
     return true;

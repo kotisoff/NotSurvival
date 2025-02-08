@@ -43,4 +43,4 @@ oxygen.add(player_id: number, amount: number)
 oxygen.sub(player_id: number, amount: number)
 ```
 
-[Вернуться на главную](index.md)
+[Вернуться на главную](../index.md)
