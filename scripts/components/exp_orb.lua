@@ -4,7 +4,7 @@ local body = entity.rigidbody
 local rig = entity.skeleton
 
 local api = require "api";
-local exp = api.exp;
+local exp = api.survival.experience;
 
 local expdata = SAVED_DATA.exp or ARGS.exp or 0;
 
