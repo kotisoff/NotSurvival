@@ -170,11 +170,10 @@ events.on("not_survival:hud_open", function()
             local status = variables.get_player_status(pid).effects;
 
             for index, effect in ipairs(status) do
-                table.insert(text, "+---**" .. effect.identifier .. "** (x" .. effect.level .. ")");
-
-                local symbol = " ";
-                if status[index + 1] then symbol = "|" end;
-                table.insert(text, symbol .. "   \\--- " .. effect.time_left .. " seconds left")
+                local symbols = { "\\", " " };
+                if status[index + 1] then symbols = { "+", "|" } end;
+                table.insert(text, symbols[1] .. "---**" .. effect.identifier .. "** (x" .. effect.level .. ")");
+                table.insert(text, symbols[2] .. "   \\--- " .. effect.time_left .. " seconds left")
             end
 
             if #text == 1 then
