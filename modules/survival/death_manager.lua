@@ -61,7 +61,7 @@ death.revive = function(pid)
   health.full(pid);
   hunger.full(pid);
   oxygen.set(pid, 20);
-  effects.remove(pid);
+  effects.remove(pid, nil, false);
 
   status.dead = false;
   hud.close_inventory();

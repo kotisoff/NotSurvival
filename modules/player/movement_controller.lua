@@ -4,14 +4,18 @@ local resource = require "utility/resource_func"
 local variables = require "player/variables";
 
 local movement = {
-  speed_limit = 7
+  ---@class movement_defaults
+  values = {
+    speed_limit = 7
+  }
 };
 
-movement.defaults = table.copy(movement);
+---@classx movement_defaults
+movement.defaults = table.copy(movement.values);
 
 function movement.set_speed_limit(speed)
   speed = speed or movement.defaults.speed_limit;
-  movement.speed_limit = speed;
+  movement.values.speed_limit = speed;
 end
 
 events.on(resource("player_tick"), function(pid)
@@ -22,10 +26,10 @@ events.on(resource("player_tick"), function(pid)
     local x, y, z = player.get_vel(pid);
 
     local speed = vec3.length({ x, 0, z });
-    if speed > movement.speed_limit then
+    if speed > movement.values.speed_limit then
       local vel = { x, y, z };
 
-      local nx, ny, nz = unpack(vec3.mul(vec3.normalize(vel), movement.speed_limit));
+      local nx, ny, nz = unpack(vec3.mul(vec3.normalize(vel), movement.values.speed_limit));
 
       player.set_vel(pid, nx, y, nz);
     end

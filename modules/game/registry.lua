@@ -29,10 +29,17 @@ function Registry:register(type, identifier, object, overwrite)
   Registries[type][identifier] = object;
 end
 
+---Do not modify if you don't know what you're doing.
 ---@param type registry_types
 ---@param identifier string
 function Registry:get(type, identifier)
   return Registries[type][identifier];
+end
+
+---Do not modify.
+---@param type registry_types
+function Registry:get_all_of(type)
+  return Registries[type];
 end
 
 return Registry;

@@ -36,4 +36,13 @@ Registry:get(
 ) -> table|nil
 ```
 
+Получение всех объектов определённого типа
+
+```lua
+Registry:get_all_of(
+  -- Тип регистра из Registry.TYPES
+  type: registry_types
+) -> table<string, table>|nil
+```
+
 [Вернуться на главную](../index.md)

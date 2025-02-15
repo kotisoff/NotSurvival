@@ -9,6 +9,8 @@ local gamemode = api.game.gamemode;
 local not_utils = api.utils.utils;
 local death = api.survival.death;
 local exp = api.survival.experience;
+local effects = api.survival.effects;
+local registry = api.registry;
 
 local index_item = not_utils.index_item;
 
@@ -99,6 +101,8 @@ events.on("not_survival:hud_open", function()
         hunger.add(pid, attributes.hunger, attributes.saturation);
     end)
 
+    -- Experience
+
     console.add_command("xp.add player:sel=$obj.id amount:int", "Add player experience points", function(args)
         local pid, amount = unpack(args);
         exp.give(pid, amount);
@@ -123,6 +127,65 @@ events.on("not_survival:hud_open", function()
             return "Entity " .. entity .. " summoned"
         end
     )
+
+    -- Effect
+
+    console.add_command("effects.give player:sel=$obj.id identifier:str level:num=1 duration:num=30",
+        "Give player effect",
+        function(args)
+            local pid, identifier, level, duration = unpack(args);
+
+            effects.give(pid, identifier, level, duration, true);
+        end
+    )
+
+    console.add_command("effects.clear player:sel=$obj.id identifier:str=nil",
+        "Clear effect(s)",
+        function(args)
+            local pid, identifier = unpack(args);
+
+
+            effects.remove(pid, identifier, true);
+        end
+    )
+
+    console.add_command("effects.list", "List of all effects registered",
+        function(args)
+            local effect_ids = { "Effects:" };
+            for key, _ in pairs(registry:get_all_of(registry.TYPES.EFFECTS)) do
+                table.insert(effect_ids, key);
+            end
+
+            console.log(table.concat(effect_ids, "\n"));
+        end
+    )
+
+    console.add_command("effects.player player:sel=$obj.id",
+        "List of effects of player",
+        function(args)
+            local pid = unpack(args);
+
+            local text = { "Effects of player " .. player.get_name(pid) .. ":" }
+
+            local status = variables.get_player_status(pid).effects;
+
+            for index, effect in ipairs(status) do
+                table.insert(text, "+---**" .. effect.identifier .. "** (x" .. effect.level .. ")");
+
+                local symbol = " ";
+                if status[index + 1] then symbol = "|" end;
+                table.insert(text, symbol .. "   \\--- " .. effect.time_left .. " seconds left")
+            end
+
+            if #text == 1 then
+                table.insert(text, "None");
+            end
+
+            console.log(table.concat(text, "\n"));
+        end
+    )
+
+    -- Etc
 
     console.add_command("logdata player:sel=$obj.id", "Log player data", function(args)
         local pid = args[1];

@@ -16,17 +16,18 @@ function effects.give(pid, identifier, level, duration, log)
   local effect = Registry:get(EFFECTSTYPE, identifier);
   if not effect then
     logger:println("Effect \"" .. identifier .. "\" not found!");
-    return
+    return false;
   end
 
   effect:apply(pid, level or 1, duration or 30);
   if log or true then
     console.log(
-      "Effect \"" .. identifier .. "\" "
-      .. level .. " applied to " .. player.get_name(pid)
+      "Effect **" .. identifier .. "** (x"
+      .. level .. ") applied to " .. player.get_name(pid)
       .. " for " .. duration .. " seconds."
     )
   end
+  return true;
 end
 
 ---@param pid number
@@ -55,7 +56,7 @@ function effects.remove(pid, identifier, log)
     effect:remove(pid);
     if log or true then
       console.log(
-        "Effect \"" .. effect.identifier .. "\" removed from " .. player.get_name(pid)
+        "Effect **" .. effect.identifier .. "** removed from " .. player.get_name(pid)
       )
     end
   end
