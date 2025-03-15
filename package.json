@@ -3,5 +3,8 @@
   "title": "Not Survival",
   "version": "0.2.6",
   "creator": "KotIsOff",
-  "description": "Точно не выживание.\nКажется... Ик! Эта бутыль сока забродила..."
+  "description": "Точно не выживание.\nКажется... Ик! Эта бутыль сока забродила...",
+  "dependencies": [
+    "~not_utils"
+  ]
 }

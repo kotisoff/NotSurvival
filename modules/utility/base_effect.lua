@@ -1,5 +1,5 @@
 local not_utils = require "utility/utils";
-local Logger = require "utility/logger";
+local Logger = require "not_utils/logger";
 local variables = require "player/variables";
 local resource = require "utility/resource_func";
 

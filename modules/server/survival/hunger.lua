@@ -1,5 +1,5 @@
 local variables = require "player/variables";
-local not_utils = require "utility/utils";
+local not_utils = require "not_utils:main";
 local movement = require "player/movement_controller";
 
 local eating_sounds = {
