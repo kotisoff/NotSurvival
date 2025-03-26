@@ -1,5 +1,5 @@
 local not_utils = require "utility/utils";
-local Logger = require "not_utils/logger";
+local Logger = not_utils.Logger;
 local variables = require "player/variables";
 local resource = require "utility/resource_func";
 
@@ -19,7 +19,7 @@ local resource = require "utility/resource_func";
 ---@param level number
 ---@param duration number In seconds
 local function apply(self, pid, level, duration)
-  not_utils.create_coroutine(function()
+  not_utils.coroutines.create_coroutine(function()
     local _break = false;
 
     events.on(resource("remove_effect"), function(identifier, target_pid)
@@ -28,15 +28,17 @@ local function apply(self, pid, level, duration)
       end
     end)
 
-    not_utils.sleep_with_break(duration,
-      function(tempdata)
-        return _break
-      end,
-      function(tempdata, time_passed)
-        self:tick(pid, level, duration, time_passed);
-        self:update_status(pid, level, duration, time_passed);
-      end
-    )
+    not_utils.coroutines.sleep(duration,
+      {
+        break_function = function(tempdata)
+          return _break
+        end,
+        cycle_task = function(tempdata, time_passed)
+          self:tick(pid, level, duration, time_passed);
+          self:update_status(pid, level, duration, time_passed);
+        end,
+        time_function = time.worldtime
+      })
 
     self:remove(pid);
   end)
@@ -80,7 +82,7 @@ local function update_status(self, pid, level, duration, time_passed)
     local effect = {
       identifier = self.identifier,
       level = level,
-      time_left = not_utils.round_to(duration - time_passed, 100)
+      time_left = not_utils.utils.round_to(duration - time_passed, 100)
     }
 
     status.effects[index] = effect;

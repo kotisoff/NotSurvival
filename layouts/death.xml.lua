@@ -1,4 +1,4 @@
-local death = require("api").survival.death;
+--local death = require("api").survival.death;
 
 function on_open(invid, x, y, z)
   document.reason.pos = {
@@ -8,5 +8,5 @@ function on_open(invid, x, y, z)
 end
 
 function respawn()
-  return death.revive(hud.get_player());
+  --return death.revive(hud.get_player());
 end

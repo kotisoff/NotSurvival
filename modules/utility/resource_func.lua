@@ -1,4 +1,4 @@
-PACK_ID = "not_survival";
+local PACK_ID = "not_survival";
 
 ---@return string
 return function(name)

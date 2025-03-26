@@ -1,6 +1,7 @@
 local resource = require "utility/resource_func"
 
-require "main";
+require "init";
+local mp = require("mp_api/init")();
 
 local first_tick = true;
 local first_player_tick = {};
