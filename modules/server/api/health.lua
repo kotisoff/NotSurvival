@@ -9,20 +9,20 @@ local DamageSource = {
   source = { 0, 0, 0 },
   knockback = true,
   type = "ns.damage.nothing",
+  attacker = nil,
   amount = 0
 }
 
----@param source number[] | nil
----@param type string | nil
----@param amount number | nil
----@param knockback boolean | nil
+---@param options? ns.api.health.DamageSource
 ---@return ns.api.health.DamageSource
-function health.new_damage_source(source, knockback, type, amount)
+function health.new_damage_source(options)
+  options = options or {};
   return {
-    source = source or DamageSource.source,
-    type = type or DamageSource.type,
-    amount = amount or DamageSource.amount,
-    knockback = knockback or DamageSource.knockback
+    source = options.source or DamageSource.source,
+    type = options.type or DamageSource.type,
+    attacker = options.attacker or DamageSource.attacker,
+    amount = options.amount or DamageSource.amount,
+    knockback = options.knockback or DamageSource.knockback
   }
 end
 
@@ -56,6 +56,7 @@ end
 ---@class ns.api.health.damage_options
 ---@field damage_type? string
 ---@field source? number[] Position of damage source.
+---@field attacker? number
 ---@field do_knockback? boolean Knockback player.
 ---@field sound? boolean | { pos: number[], name: string, volume: number, pitch: number, channel: string } Sound name, sound options or boolean.
 
@@ -69,8 +70,13 @@ function health.damage(pid, damage, options)
   options = options or {};
   options.source = options.source or { player.get_pos(pid) };
   options.do_knockback = vector3(unpack(options.source)) ~= vector3(0, 0, 0) and options.do_knockback
-
-  local playerdamage = health.new_damage_source(options.source, options.do_knockback, options.damage_type, damage);
+  local playerdamage = health.new_damage_source({
+    source = options.source,
+    knockback = options.do_knockback,
+    type = options.damage_type,
+    amount = damage,
+    attacker = options.attacker
+  });
   mp_api.server.send("player_damage", player.get_name(pid), playerdamage, options.sound or true);
 end
 

@@ -1,10 +1,13 @@
 local resource = require "utils/resource_func";
 local mp_api = require("mp_api/init")();
 local player_data = require "server/utils/player_data";
+local health = require "server/api/health"
 
 local tsf = entity.transform
 local body = entity.rigidbody
 local rig = entity.skeleton
+
+local player_damage = 1;
 
 if mp_api.server then
   ARGS.data = ARGS.data
@@ -32,6 +35,17 @@ function on_grounded(velocity)
   if ARGS.pid then
     events.emit(resource("grounded"), ARGS.pid, velocity);
   end
+end
+
+function on_attacked(attackerid, pid)
+  health.damage(pid, player_damage,
+    {
+      do_knockback = true,
+      source = { player.get_pos(attackerid) },
+      attacker = attackerid,
+      damage_type = "ns.damage.hit"
+    }
+  )
 end
 
 -- local function first_tick()
