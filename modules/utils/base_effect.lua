@@ -1,7 +1,7 @@
-local not_utils = require "utility/utils";
+local not_utils = require "utils/not_utils";
 local Logger = not_utils.Logger;
 local variables = require "player/variables";
-local resource = require "utility/resource_func";
+local resource = require "utils/resource_func";
 
 ---@class Effect
 ---@field apply fun(self, pid:number, level:number, duration:number) Do not override this, override on_applied
@@ -82,7 +82,7 @@ local function update_status(self, pid, level, duration, time_passed)
     local effect = {
       identifier = self.identifier,
       level = level,
-      time_left = not_utils.utils.round_to(duration - time_passed, 100)
+      time_left = not_utils.utils.round_to(duration - time_passed, 2)
     }
 
     status.effects[index] = effect;

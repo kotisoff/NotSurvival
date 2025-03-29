@@ -1,5 +1,5 @@
 local mp_api = require("mp_api/init")();
-local resource = require "utility/resource_func";
+local resource = require "utils/resource_func";
 
 if mp_api.server then
   require "server/init";

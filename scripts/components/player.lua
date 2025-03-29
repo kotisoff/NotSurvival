@@ -1,48 +1,38 @@
--- local resource = require "utility/resource_func"
+local resource = require "utils/resource_func";
+local mp_api = require("mp_api/init")();
+local player_data = require "server/utils/player_data";
 
--- local api = require "api";
--- local variables = api.player.variables;
--- local gamemode = api.game.gamemode;
+local tsf = entity.transform
+local body = entity.rigidbody
+local rig = entity.skeleton
 
--- local tsf = entity.transform
--- local body = entity.rigidbody
--- local rig = entity.skeleton
+if mp_api.server then
+  ARGS.data = ARGS.data
+      or SAVED_DATA.data
+      or player_data.new_data();
 
--- local attributes = ARGS.attributes
---     or SAVED_DATA.attributes
---     or variables.new_player_attributes();
+  ARGS.attributes = ARGS.attributes
+      or SAVED_DATA.attributes
+      or player_data.new_attributes();
 
--- local data = ARGS.data
---     or SAVED_DATA.data
---     or variables.new_player_data();
+  ARGS.status = ARGS.status
+      or SAVED_DATA.status
+      or player_data.new_status();
+end;
 
--- local status = ARGS.status
---     or SAVED_DATA.status
---     or variables.new_player_status();
+function on_save()
+  if mp_api.server then
+    SAVED_DATA.data = ARGS.data;
+    SAVED_DATA.attributes = ARGS.attributes;
+    SAVED_DATA.status = ARGS.status;
+  end
+end
 
--- local damage_source = ARGS.damage_source
---     or variables.new_player_damage();
-
--- ARGS.damage_source = damage_source;
--- ARGS.data = data;
--- ARGS.status = status;
--- ARGS.attributes = attributes;
-
--- function set_player_id(pid)
---   ARGS.pid = pid;
--- end
-
--- function on_save()
---   SAVED_DATA.data = data;
---   SAVED_DATA.attributes = attributes;
---   SAVED_DATA.status = status;
--- end
-
--- function on_grounded(velocity)
---   if ARGS.pid then
---     events.emit(resource("grounded"), ARGS.pid, velocity);
---   end
--- end
+function on_grounded(velocity)
+  if ARGS.pid then
+    events.emit(resource("grounded"), ARGS.pid, velocity);
+  end
+end
 
 -- local function first_tick()
 --   gamemode.set_player_mode(ARGS.pid, gamemode.get_player_mode(ARGS.pid));

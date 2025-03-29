@@ -3,9 +3,9 @@
 ---@field on fun(event: string, callback: fun(...: any)) Catch event.
 
 ---@class ns.api.mp.server
----@field send fun(event: string, player: string, ...: any) Emit event to selected player.
+---@field send fun(event: string, username: string, ...: any) Emit event to selected player.
 ---@field echo fun(event: string, ...: any) Emit event to everyone. No callback.
----@field on fun(event: string, callback: fun(player: string, ...: any)) Catch event.
+---@field on fun(event: string, callback: fun(user: { username: string, pid: number }, ...: any)) Catch event.
 
 ---@class ns.api.mp
 ---@field mode "standalone" | "server" | "client"

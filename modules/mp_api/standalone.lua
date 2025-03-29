@@ -1,4 +1,4 @@
-local resource = require "utility/resource_func";
+local resource = require "utils/resource_func";
 
 ---@type ns.api.mp
 local module = {
@@ -20,7 +20,9 @@ module.server = {
 
 module.client = {
   send = function(event, ...)
-    events.emit(resource(event), player.get_name(hud.get_player()), ...);
+    local pid = hud.get_player();
+    local name = player.get_name(pid);
+    events.emit(resource(event), { pid = pid, username = name }, ...);
   end,
   on = function(event, callback)
     events.on(resource(event), callback);

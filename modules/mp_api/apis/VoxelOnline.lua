@@ -18,7 +18,6 @@ local pack = "not_survival";
 ---@field pid number
 
 ---@class voxelonline.classes.client
----@field username string
 ---@field active boolean
 ---@field account voxelonline.classes.account
 ---@field player voxelonline.classes.player
@@ -29,8 +28,10 @@ local pack = "not_survival";
 
 ---@class voxelonline.api.server
 ---@field rpc { emitter: { create_tell: (fun(pack: string, event: string): fun(client: voxelonline.classes.client, ...)), create_echo: (fun(pack: string, event: string): fun(...)) } }
----@field events { tell: fun(pack: string, event: string, client: voxelonline.classes.client, bytes: table), echo: fun(pack: string, event: string, bytes: table), on: fun(pack: string, event: string, func: fun(Client: voxelonline.classes.client, bytes: table)), get_account_by_name: (fun(username: string): voxelonline.classes.account), get_client: (fun(account: voxelonline.classes.account): voxelonline.classes.client) }
+---@field events { tell: fun(pack: string, event: string, client: voxelonline.classes.client, bytes: table), echo: fun(pack: string, event: string, bytes: table), on: fun(pack: string, event: string, func: fun(Client: voxelonline.classes.client, bytes: table)) }
+---@field accounts { get_account_by_name: (fun(username: string): voxelonline.classes.account), get_client: (fun(account: voxelonline.classes.account): voxelonline.classes.client) }
 ---@field console { add_command: fun(scheme: string, roles: string[], func: fun(args: table<string, any>, client: voxelonline.classes.client), tell: fun(message: string, client: voxelonline.classes.client), echo: fun(message: string), execute: fun(message: string, client: voxelonline.classes.client), colors: {red:string,yellow:string,blue:string,black:string,green:string,white:string}) }
+---@field sandbox { get_all: (fun():table<string, voxelonline.classes.player>), get_in_radius: (fun(pos: number[], radius: number): table<string, voxelonline.classes.player>) }
 ---@field bson voxelonline.libs.bson
 
 ---@class voxelonline.api.client
@@ -50,9 +51,10 @@ if _G["$VoxelOnline"] then
 
     module.server = {
       send = function(event, username, ...)
-        local account = server_api.events.get_account_by_name(username);
-        local client = server_api.events.get_client(account);
-        server_api.rpc.emitter.create_tell(pack, event)(client, ...);
+        local account = server_api.accounts.get_account_by_name(username);
+        local client = server_api.accounts.get_client(account);
+        local bytes = server_api.bson.serialize({ ... });
+        server_api.events.tell(pack, event, client, bytes);
       end,
       echo = function(event, ...)
         local bytes = server_api.bson.serialize({ ... });
@@ -61,7 +63,7 @@ if _G["$VoxelOnline"] then
       on = function(event, callback)
         server_api.events.on(pack, event, function(Client, bytes)
           local args = server_api.bson.deserialize(bytes);
-          callback(Client.username, unpack(args));
+          callback(Client.player, unpack(args));
         end)
       end
     }

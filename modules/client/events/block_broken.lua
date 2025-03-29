@@ -1,6 +1,5 @@
 local mp_api = require("mp_api/init")();
 local base_util = require "base:util"
-local resource = require "utility/resource_func";
 
 ---@param drop { items: {item: number,count:number,vel:number[]}[] }
 mp_api.client.on("block_drop", function(pos, drop)

@@ -1,10 +1,9 @@
-local resource = require "utility/resource_func"
+local resource = require "utils/resource_func"
 
+require("mp_api/init")();
 require "init";
-local mp = require("mp_api/init")();
 
 local first_tick = true;
-local first_player_tick = {};
 function on_world_open()
   first_tick = true;
 end
