@@ -6,7 +6,7 @@ mp_api.client.on("block_drop", function(pos, drop)
   for _, loot in ipairs(drop.items) do
     local entity = base_util.drop(pos, loot.item, loot.count);
 
-    if (entity.rigidbody) then
+    if entity and entity.rigidbody then
       entity.rigidbody:set_vel(loot.vel);
     end
   end
