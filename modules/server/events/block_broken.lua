@@ -6,6 +6,8 @@ local drop_util = require "utils/drop_util"
 local health = require "server/api/health";
 
 events.on(resource("block_broken"), function(blockid, x, y, z, pid)
+  if not blockid or blockid == 0 then return end;
+
   local ns_drop = drop_util.block_loot(blockid);
 
   ---@type { items: {item: number,count:number,vel:number[]}[] }
@@ -26,7 +28,9 @@ events.on(resource("block_broken"), function(blockid, x, y, z, pid)
   end
 
   mp_api.server.echo("block_drop", pos, drop);
-  print("Block " .. block.name(blockid) .. " broken at (" .. table.concat({ x, y, z }, ",") .. ")")
+  print(string.format("Block %s(%d) is broken at (%d,%d,%d) by %s",
+    block.name(blockid), blockid, x, y, z, player.get_name(pid))
+  )
 
   ns_drop.callback(blockid, x, y, z, pid);
 end)
