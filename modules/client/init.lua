@@ -1,6 +1,7 @@
 local require_folder = require "utils/require_folder";
 print("loading client events");
 require_folder "client/events";
+require_folder "client/game";
 require "client/utils/player_data";
 
 print("Клиент-сайд тута.")
