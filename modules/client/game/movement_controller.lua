@@ -18,7 +18,7 @@ events.on(resource("world_tick"), function()
     local vel = vector3(player.get_vel(pid));
     local speed = vec3.length({ vel.x, 0, vel.z });
     if speed > module.values.speed_limit then
-      local new_vel = vel:norm() * module.values;
+      local new_vel = vel:norm() * module.values.speed_limit;
       player.set_vel(pid, new_vel.x, new_vel.y, new_vel.z);
     end
 
