@@ -1,6 +1,6 @@
 # NotSurvival
 
-Контент-пак добавляющий режим выживания, сделанный для [VoxelCore](https://github.com/MihailRis/VoxelEngine-Cpp).
+Контент-пак добавляющий режим выживания и сделанный для [VoxelCore](https://github.com/MihailRis/VoxelEngine-Cpp).
 
 > [!WARNING]
 > Требует [NotUtils](https://github.com/kotisoff/NotUtils)
