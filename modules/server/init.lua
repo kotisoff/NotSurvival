@@ -1,5 +1,2 @@
-local require_folder = require "utils/require_folder";
-print("loading server events");
-require_folder "server/events";
-
+require "shared/player/data"
 print("Сервер-сайд подтянулся.")

@@ -1,4 +1,3 @@
----@diagnostic disable: undefined-field
 local not_utils = require "utils/not_utils";
 
 local drop_util = {};

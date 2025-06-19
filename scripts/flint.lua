@@ -12,7 +12,7 @@ function on_use_on_block(x, y, z, pid, normal)
       return;
     end;
     block.set(x, y, z, block.index(not_crafting .. ":primitive_crafting_table"))
-    inventory.consume_selected(pid);
+    inventory.consume_selected(pid, 1);
     return true
   end
 end

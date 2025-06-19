@@ -1,30 +1,24 @@
-local resource = require "utils/resource_func";
-local mp_api = require("mp_api/init")();
-local player_data = require "server/utils/player_data";
+local resource = require "modules/shared/utils/resource_func";
+local mp = require "modules/shared/utils/not_utils".multiplayer
+local player_data = require "shared/player/data"
 
 local tsf = entity.transform
 local body = entity.rigidbody
 local rig = entity.skeleton
 
-if mp_api.server then
-  ARGS.data = ARGS.data
-      or SAVED_DATA.data
-      or player_data.new_data();
+if mp.api.server then
+  print("Подгружаем данные игрока")
 
-  ARGS.attributes = ARGS.attributes
-      or SAVED_DATA.attributes
-      or player_data.new_attributes();
-
-  ARGS.status = ARGS.status
-      or SAVED_DATA.status
-      or player_data.new_status();
+  if #SAVED_DATA ~= 3 then
+    ARGS = { player_data.new_data(), player_data.new_attributes(), player_data.new_status() }
+  else
+    ARGS = SAVED_DATA
+  end
 end;
 
 function on_save()
-  if mp_api.server then
-    SAVED_DATA.data = ARGS.data;
-    SAVED_DATA.attributes = ARGS.attributes;
-    SAVED_DATA.status = ARGS.status;
+  if mp.api.server then
+    SAVED_DATA = ARGS
   end
 end
 
@@ -35,7 +29,7 @@ function on_grounded(velocity)
 end
 
 function on_attacked(attackerid, pid)
-  if mp_api.client then
+  if mp.api.client then
     events.emit(resource("attacked"), attackerid, pid);
   end
 end

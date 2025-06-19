@@ -1,5 +1,5 @@
--- Entry in not_utils pack.
+--- NotUtils entry
 ---@type NotUtils
-local not_utils = require "not_utils:main";
+local NotUtils = require "not_utils:main"
 
-return not_utils;
+return NotUtils

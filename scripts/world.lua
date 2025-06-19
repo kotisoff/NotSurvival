@@ -1,6 +1,5 @@
 local resource = require "utils/resource_func"
 
-require("mp_api/init")();
 require "init";
 
 local first_tick = true;

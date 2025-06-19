@@ -1,18 +1,16 @@
----@diagnostic disable: undefined-field
-
 local resource = require "utils/resource_func";
-local player_data = require "client/utils/player_data";
-local exp = require "server/api/experience";
+local player_data = require "shared/player/data";
+local experience = require "shared/survival/experience"
 
 -- Generate hud keys.
 events.on(resource("hud_open"), function()
   HUD_DATA = {};
 
-  local data = player_data.new_data();
-  ---@diagnostic disable-next-line: inject-field
-  data.lvl = 0;
+  local data_keys = player_data.CategoryFields.data
+  table.insert(data_keys, "lvl")
+  table.insert(data_keys, "xp")
 
-  for name, _ in pairs(data) do
+  for _, name in ipairs(data_keys) do
     local barname = name .. "_bar";
 
     local status_bar = pcall(function() return document[barname].pos end);
@@ -42,42 +40,52 @@ local function calculate_width(max_width, value, max)
 end
 
 -- Set hud values.
-local player = table.copy(player_data.data);
-events.on(resource("world_tick"), function()
-  player = table.copy(player_data.data);
+events.on(resource("hud_open"), function()
+  local player
+  local xp
 
-  player.lvl = math.floor(exp.calc_lvl(player.xp));
-  player.xp = math.floor(player.xp - exp.calc_total(player.lvl));
+  local attributes
 
 
-  local attributes = table.copy(player_data.attributes);
-  attributes.xp = exp.calc_max(player.lvl);
+  local pid = hud.get_player();
+  events.on(resource("player_tick"), function()
+    player = player_data.get_data_dict(pid);
 
-  for label, data in pairs(HUD_DATA) do
-    local barname = data.barname;
+    ---@diagnostic disable-next-line: cast-local-type
+    xp = player_data.get_status(pid, "xp");
 
-    local value = player[label];
-    local max = attributes[label];
+    player.lvl = math.floor(experience.calc_lvl(xp)) or "";
+    player.xp = math.floor(xp - experience.calc_total(player.lvl));
 
-    local visible = is_visible(label, value, max);
+    attributes = player_data.get_attributes_dict(pid);
+    attributes.xp = experience.calc_next(player.lvl);
 
-    if barname then
-      local max_width = data.size;
-      local size = document[barname].size;
-      local calculated_width = calculate_width(max_width, value, max);
-      document[barname].size = { calculated_width, size[2] };
+    for label, data in pairs(HUD_DATA) do
+      local barname = data.barname;
 
-      document[barname].visible = visible;
-    end
+      local value = player[label];
+      local max = attributes[label];
 
-    if data.has_label then
-      local text = tostring(math.floor(value));
-      if max then
-        text = text .. "/" .. max;
+      local visible = is_visible(label, value, max);
+
+      if barname then
+        local max_width = data.size;
+        local size = document[barname].size;
+        local calculated_width = calculate_width(max_width, value, max);
+        document[barname].size = { calculated_width, size[2] };
+
+        document[barname].visible = visible;
       end
 
-      document[label].text = text;
-      document[label].visible = visible;
+      if data.has_label then
+        local text = tostring(math.floor(value));
+        if max then
+          text = text .. "/" .. max;
+        end
+
+        document[label].text = text;
+        document[label].visible = visible;
+      end
     end
-  end
+  end)
 end)
