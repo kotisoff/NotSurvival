@@ -1,5 +1,5 @@
 local data = require "shared/player/data"
-local exp_shared = require "shared/survival/experience"
+local exp_shared = require "shared/lib/experience"
 
 local module = {}
 

@@ -1,6 +1,6 @@
 local resource = require "utils/resource_func";
 local player_data = require "shared/player/data";
-local experience = require "shared/survival/experience"
+local experience = require "shared/lib/experience"
 
 -- Generate hud keys.
 events.on(resource("hud_open"), function()
@@ -29,10 +29,10 @@ events.on(resource("hud_open"), function()
 end)
 
 local function is_visible(name, value, max)
-  local less_than_zero = (value > 0);
+  local more_than_zero = (value > 0);
   local oxygen_visible = not (name == "oxygen" and value >= max)
 
-  return less_than_zero and oxygen_visible
+  return more_than_zero and oxygen_visible
 end
 
 local function calculate_width(max_width, value, max)

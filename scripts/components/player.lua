@@ -1,5 +1,5 @@
-local resource = require "modules/shared/utils/resource_func";
-local mp = require "modules/shared/utils/not_utils".multiplayer
+local resource = require "utils/resource_func";
+local mp = require "utils/not_utils".multiplayer
 local player_data = require "shared/player/data"
 
 local tsf = entity.transform
@@ -7,8 +7,6 @@ local body = entity.rigidbody
 local rig = entity.skeleton
 
 if mp.api.server then
-  print("Подгружаем данные игрока")
-
   if #SAVED_DATA ~= 3 then
     ARGS = { player_data.new_data(), player_data.new_attributes(), player_data.new_status() }
   else

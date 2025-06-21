@@ -4,6 +4,9 @@ local mp = require "utils/not_utils".multiplayer.api.client
 local resource = require "utils/resource_func"
 local data = require "shared/player/data"
 
+local require_folder = require "utils/require_folder"
+require_folder "client/event"
+
 events.on(resource("hud_open"), function()
   print("Открываем худ")
   hud.open_permanent(resource("survival_hud"))
