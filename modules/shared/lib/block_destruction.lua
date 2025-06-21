@@ -18,6 +18,7 @@ function module.get_speed_multiplier(pid)
   return speed
 end
 
+---@return number
 function module.get_durability(id)
   local durability = block.properties[id]["base:durability"]
   if durability ~= nil then
@@ -27,6 +28,17 @@ function module.get_durability(id)
     return 0.0
   end
   return 5.0
+end
+
+function module.get_breaking_speed(pid, blockid)
+  return 1 / math.max(module.get_durability(blockid), 0.00001) * module.get_speed_multiplier(pid)
+end
+
+---@param progress number [0,1]
+function module.get_breaking_texture(progress)
+  return string.format(
+    "cracks/cracks_%s", math.floor(progress * 11)
+  )
 end
 
 return module

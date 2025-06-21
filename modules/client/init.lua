@@ -1,6 +1,5 @@
 print("Клиент-сайд тута.")
 
-local mp = require "utils/not_utils".multiplayer.api.client
 local resource = require "utils/resource_func"
 local data = require "shared/player/data"
 

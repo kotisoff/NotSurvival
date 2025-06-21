@@ -31,7 +31,6 @@ events.on(resource("player_tick"), function(pid, tps)
         return stop_breaking()
       end
     elseif x ~= nil then
-      debug.print(target)
       target.breaking = true
       target.pos = { x, y, z }
       target.id = block.get(x, y, z)
