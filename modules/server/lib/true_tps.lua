@@ -7,6 +7,7 @@ local start = time.uptime()
 local ticks = 0
 
 local event = resource("player_tick")
+if events.handlers["server:main_tick"] then events = "server:main_tick" end
 
 events.on(event, function(_, tps)
   ticks = ticks + 1
@@ -16,8 +17,6 @@ events.on(event, function(_, tps)
     start = time.uptime()
 
     module.tps = tps / timeout
-
-    print(timeout, module.tps)
   end
 end)
 

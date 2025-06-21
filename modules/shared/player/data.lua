@@ -186,17 +186,32 @@ function module.update(username, category, field)
   local f_id = get_field_index(category, field)
   local c_id = get_category_index(category)
 
+
   if mp_server then
     local account = mp_server.accounts.get_account_by_name(username)
     local client = mp_server.accounts.get_client(account)
 
-    local data = module["get_" .. category](client.player.pid, field)
+    local get_fun = module["get_" .. category]
+    local data = get_fun(client.player.pid, field)
+
+    -- ============standalone===============
+    if mp.mode == "standalone" then
+      if field then
+        session_storage[category][field] = data
+      else
+        session_storage[category] = data
+      end
+      return
+    end
+    -- =====================================
 
     mp_server.events.tell(pack_id, packets.request_player_data, client,
       mp_server.bson.serialize({ c = c_id, f = f_id, d = data }))
+    return
   elseif mp_client then
     mp_client.events.send(pack_id, packets.request_player_data,
       mp_client.bson.serialize({ c = c_id, f = f_id }))
+    return
   end
 end
 
