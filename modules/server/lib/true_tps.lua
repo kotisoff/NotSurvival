@@ -1,23 +1,26 @@
 local resource = require "utils/resource_func"
+local mp = require "utils/not_utils".multiplayer
 local module = {
   tps = 20
 }
 
-local start = time.uptime()
-local ticks = 0
+if mp.mode == "server" then
+  local start = time.uptime()
+  local ticks = 0
 
-local event = resource("player_tick")
-if events.handlers["server:main_tick"] then events = "server:main_tick" end
+  local event = resource("player_tick")
+  if events.handlers["server:main_tick"] then events = "server:main_tick" end
 
-events.on(event, function(_, tps)
-  ticks = ticks + 1
-  if ticks == tps then
-    ticks = 0
-    local timeout = time.uptime() - start
-    start = time.uptime()
+  events.on(event, function(_, tps)
+    ticks = ticks + 1
+    if ticks == tps then
+      ticks = 0
+      local timeout = time.uptime() - start
+      start = time.uptime()
 
-    module.tps = tps / timeout
-  end
-end)
+      module.tps = tps / timeout
+    end
+  end)
+end
 
 return module
