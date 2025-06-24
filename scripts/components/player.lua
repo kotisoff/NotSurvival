@@ -1,12 +1,17 @@
+local pack_id = "not_survival"
+
 local resource = require "shared/utils/resource_func";
 local mp = require "shared/utils/not_utils".multiplayer
+local mp_c, mp_s = mp.api.client, mp.api.server
 local player_data = require "shared/player/data"
+local packets = require "shared/utils/declarations/packets"
+local fall_distance = require "shared/lib/fall_distance"
 
 local tsf = entity.transform
 local body = entity.rigidbody
 local rig = entity.skeleton
 
-if mp.api.server then
+if mp_s then
   if #SAVED_DATA ~= 3 then
     ARGS = { player_data.new_data(), player_data.new_attributes(), player_data.new_status() }
   else
@@ -21,14 +26,16 @@ function on_save()
 end
 
 function on_grounded(velocity)
-  if ARGS.pid then
-    events.emit(resource("grounded"), ARGS.pid, velocity);
+  if mp_c then
+    if fall_distance.calculate_damage(velocity) > 0 then
+      mp_c.events.send(pack_id, packets.player_grounded, mp_c.bson.serialize({ velocity }))
+    end
   end
 end
 
 function on_attacked(attackerid, pid)
-  if mp.api.client then
-    events.emit(resource("attacked"), attackerid, pid);
+  if mp_c then
+    mp_c.events.send(pack_id, packets.player_attacked, mp_c.bson.serialize({ attackerid, pid }))
   end
 end
 

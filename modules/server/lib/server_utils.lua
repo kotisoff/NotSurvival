@@ -4,6 +4,12 @@ local module = {
   tps = 20
 }
 
+function module.get_player_event()
+  local event = resource("player_tick")
+  if events.handlers["server:main_tick"] then event = "server:main_tick" end
+  return event
+end
+
 if mp.mode == "server" then
   local start = time.uptime()
   local ticks = 0

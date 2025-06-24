@@ -10,19 +10,22 @@ local DamageSource = {
 }
 
 local damage_sounds = {
-  hit = {
+  ["ns.damage.fall"] = {
     "not_survival/damage/hit1",
     "not_survival/damage/hit2",
     "not_survival/damage/hit3"
   },
-  fall = {
+  ["ns.damage.hit"] = {
     "not_survival/damage/fallsmall",
     "not_survival/damage/fallbig1",
     "not_survival/damage/fallbig2"
   }
 }
-local default_sound_type = "hit"
+local default_sound_type = "ns.damage.hit"
 
+---@alias damage_types "ns.damage.hit" | "ns.damage.fall"
+
+---@param type damage_types
 function module.random_sound(type)
   local sounds = damage_sounds[type] or damage_sounds[default_sound_type];
   return sounds[math.random(#sounds)];
@@ -33,10 +36,9 @@ function module.calculate_knockback(pid, source, knockback_multiplier)
   source = source or playerpos
   knockback_multiplier = knockback_multiplier or 6
 
-  local player_vel = { player.get_vel(pid) }
   local knockback_vel = vec3.normalize(vec3.sub(playerpos, source))
 
-  local vel = vec3.add(player_vel, vec3.mul(knockback_vel, knockback_multiplier))
+  local vel = vec3.mul(knockback_vel, knockback_multiplier)
 
   return vel
 end

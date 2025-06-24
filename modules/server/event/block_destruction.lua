@@ -1,16 +1,16 @@
-local not_utils  = require "shared/utils/not_utils"
-local mode       = not_utils.multiplayer.mode
-local mp         = not_utils.multiplayer.api.server
+local not_utils    = require "shared/utils/not_utils"
+local mode         = not_utils.multiplayer.mode
+local mp           = not_utils.multiplayer.api.server
 
-local block_dest = require "shared/lib/block_destruction"
-local packets    = require "shared/utils/declarations/packets"
-local resource   = require "shared/utils/resource_func"
-local true_tps   = require "server/lib/true_tps"
+local block_dest   = require "shared/lib/block_destruction"
+local packets      = require "shared/utils/declarations/packets"
+local resource     = require "shared/utils/resource_func"
+local server_utils = require "server/lib/server_utils"
 
-local packid     = "not_survival"
+local packid       = "not_survival"
 
 ---@type {pos: vec3, id: int, progress: number, tick: int, wrap: int, stage: int}[]
-local breaking   = {}
+local breaking     = {}
 
 -- =========================funcs===========================
 
@@ -90,7 +90,7 @@ events.on(event, function(pid, default_tps)
   if not is_breaking(pid) then return end
   local target = get_target(pid)
 
-  local tps = true_tps.tps
+  local tps = server_utils.tps
   local speed = block_dest.get_breaking_speed(pid, target.id)
 
   target.progress = target.progress + (1 / tps) * speed
@@ -140,4 +140,11 @@ events.on(resource("l:block_broken"), function(blockid, x, y, z, pid)
   end
 
   ns_drop.callback(blockid, x, y, z, pid)
+end)
+
+-- =========================test============================
+local health = require "server/lib/health"
+
+events.on(resource("l:block_broken"), function(blockid, x, y, z, pid)
+  -- health.damage(pid, 1, { source = vec3.sub({ player.get_pos(pid) }, { 0, 5, 0 }) })
 end)

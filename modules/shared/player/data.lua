@@ -40,19 +40,21 @@ local PlayerStatusKeys = { "xp", "gamemode", "dead", "effects" }
 module.Categories = { "data", "attributes", "status" }
 module.CategoryFields = { data = PlayerDataKeys, attributes = PlayerDataKeys, status = PlayerStatusKeys }
 
+---@alias playerdata.categories "data" | "attributes" | "status"
+
 -- =============================================
 
----@param category string | number
+---@param category playerdata.categories|string|number
 ---@return integer
-local function get_category_index(category)
+function module.get_category_index(category)
   if type(category) == "number" then return category end
   return table.index(module.Categories, category)
 end
 
----@param category string|number
----@param field string|nil
+---@param category playerdata.categories|string|number
+---@param field status_field|attribute_field|string|nil
 ---@return integer|nil
-local function get_field_index(category, field)
+function module.get_field_index(category, field)
   if type(field) ~= "string" then return field end
 
   local c_name = category
@@ -73,7 +75,6 @@ local function get_component(pid)
     local entity = entities.get(entid);
 
     local component = entity.components[pack_id .. ":player"];
-    component.ARGS.pid = pid;
 
     return component.ARGS
   else
@@ -91,7 +92,7 @@ end
 function module.get_data(pid, field)
   local component = get_component(pid)
 
-  local data = component[get_category_index("data")]
+  local data = component[module.get_category_index("data")]
 
   if field then
     return data[table.index(PlayerDataKeys, field)]
@@ -114,7 +115,7 @@ end
 function module.get_attributes(pid, field)
   local component = get_component(pid)
 
-  local data = component[get_category_index("attributes")]
+  local data = component[module.get_category_index("attributes")]
 
   if field then
     return data[table.index(PlayerDataKeys, field)]
@@ -139,7 +140,7 @@ end
 function module.get_status(pid, field)
   local component = get_component(pid)
 
-  local data = component[get_category_index("status")]
+  local data = component[module.get_category_index("status")]
 
   if field then
     return data[table.index(PlayerStatusKeys, field)]
@@ -176,8 +177,8 @@ end
 ---@param value any
 function module.set_field(pid, category, field, value)
   local component = get_component(pid)
-  local c_id = get_category_index(category)
-  local f_id = get_field_index(category, field)
+  local c_id = module.get_category_index(category)
+  local f_id = module.get_field_index(category, field)
 
   if f_id then
     component[c_id][f_id] = value
@@ -190,8 +191,8 @@ end
 ---@param category "data" | "status" | "attributes"
 ---@param field string | nil
 function module.update(username, category, field)
-  local f_id = get_field_index(category, field)
-  local c_id = get_category_index(category)
+  local f_id = module.get_field_index(category, field)
+  local c_id = module.get_category_index(category)
 
 
   if mp_server then
@@ -212,12 +213,14 @@ function module.update(username, category, field)
     end
     -- =====================================
 
-    mp_server.events.tell(pack_id, packets.request_player_data, client,
-      mp_server.bson.serialize({ c = c_id, f = f_id, d = data }))
+    mp_server.events.tell(pack_id, packets.update_player_data, client,
+      mp_server.bson.serialize({ c_id, f_id or 0, data })
+    )
     return
   elseif mp_client then
-    mp_client.events.send(pack_id, packets.request_player_data,
-      mp_client.bson.serialize({ c = c_id, f = f_id }))
+    mp_client.events.send(pack_id, packets.update_player_data,
+      mp_client.bson.serialize({ c_id, f_id or 0 })
+    )
     return
   end
 end
@@ -226,7 +229,7 @@ if mp_server then
   ---@param client neutron.class.client
   events.on("server:client_connected", function(client)
     local component = get_component(client.player.pid)
-    local c_id = get_category_index("data")
+    local c_id = module.get_category_index("data")
 
     if not component[c_id] or #component[c_id] ~= #PlayerData then
       for index, value in ipairs(module.Categories) do
@@ -235,13 +238,15 @@ if mp_server then
     end
   end)
 
-  mp_server.events.on(pack_id, packets.request_player_data, function(client, bytes)
+  mp_server.events.on(pack_id, packets.update_player_data, function(client, bytes)
     local args = mp_server.bson.deserialize(bytes)
+    local c, f = unpack(args)
 
-    local category = module.Categories[args.c]
+    local category = module.Categories[c]
+
     local field = nil
-    if args.f then
-      field = module.Categories[category][args.f]
+    if (f or 0) > 0 then
+      field = module.Categories[category][f]
     end
 
     module.update(client.player.username, category, field)
@@ -255,15 +260,16 @@ if mp_client then
     module.new_status()
   }
 
-  mp_client.events.on(pack_id, packets.request_player_data, function(bytes)
+  mp_client.events.on(pack_id, packets.update_player_data, function(bytes)
     local args = mp_client.bson.deserialize(bytes)
+    local c, f, d = unpack(args)
 
-    if not args.d then return end
+    if not d then return end
 
-    if args.f then
-      session_storage[args.c][args.f] = args.d
+    if f > 0 then
+      session_storage[c][f] = d
     else
-      session_storage[args.c] = args.d
+      session_storage[c] = d
     end
   end)
 end
