@@ -7,7 +7,7 @@ function module.get_tool_speed(pid)
 
   local props = item.properties[itemid]
   if not props then return 1 end
-  return props[properties.tool_speed] or 1
+  return props[properties.tool.speed] or 1
 end
 
 function module.get_speed_multiplier(pid)

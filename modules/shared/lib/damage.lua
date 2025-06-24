@@ -1,4 +1,5 @@
 local module = {}
+local sounds = require "shared/lib/sounds_registry"
 
 ---@class ns.shared.health.DamageSource
 local DamageSource = {
@@ -9,26 +10,13 @@ local DamageSource = {
   amount = 0
 }
 
-local damage_sounds = {
-  ["ns.damage.fall"] = {
-    "not_survival/damage/hit1",
-    "not_survival/damage/hit2",
-    "not_survival/damage/hit3"
-  },
-  ["ns.damage.hit"] = {
-    "not_survival/damage/fallsmall",
-    "not_survival/damage/fallbig1",
-    "not_survival/damage/fallbig2"
-  }
-}
 local default_sound_type = "ns.damage.hit"
 
 ---@alias damage_types "ns.damage.hit" | "ns.damage.fall"
 
 ---@param type damage_types
 function module.random_sound(type)
-  local sounds = damage_sounds[type] or damage_sounds[default_sound_type];
-  return sounds[math.random(#sounds)];
+  return sounds.random(type) or sounds.random(default_sound_type)
 end
 
 function module.calculate_knockback(pid, source, knockback_multiplier)

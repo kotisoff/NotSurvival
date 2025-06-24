@@ -55,13 +55,6 @@ end
 ---@field do_knockback? boolean Knockback player.
 ---@field play_sound? boolean Allows to play sound
 ---@field sound_settings? { volume?: number, pitch?: number, channel?: "regular"|str }
-local damage_options_template = {
-  damage_type = "ns.damage.hit",
-  source = { 0, 0, 0 },
-  do_knockback = true,
-  play_sound = true,
-  sound_settings = { volume = 1, pitch = 1, channel = "regular" }
-}
 
 ---@param pid int
 ---@param amount number

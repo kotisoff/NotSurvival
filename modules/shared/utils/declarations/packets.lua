@@ -3,7 +3,8 @@ local packets = {
   block_breaking = tohex(2),
   deal_knockback = tohex(3),
   player_attacked = tohex(4),
-  player_grounded = tohex(5)
+  player_grounded = tohex(5),
+  food_eating = tohex(6)
 }
 
 return packets

@@ -6,7 +6,7 @@ local module = {
 
 function module.get_player_event()
   local event = resource("player_tick")
-  if events.handlers["server:main_tick"] then event = "server:main_tick" end
+  -- if events.handlers["server:main_tick"] then event = "server:main_tick" end
   return event
 end
 
@@ -15,7 +15,7 @@ if mp.mode == "server" then
   local ticks = 0
 
   local event = resource("player_tick")
-  if events.handlers["server:main_tick"] then events = "server:main_tick" end
+  -- if events.handlers["server:main_tick"] then events = "server:main_tick" end
 
   events.on(event, function(_, tps)
     ticks = ticks + 1

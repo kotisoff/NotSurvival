@@ -6,6 +6,12 @@ local packid   = "not_survival"
 
 local target
 
+local function check_player_rules()
+  local pid = hud.get_player()
+  player.set_instant_destruction(pid, false)
+  player.set_infinite_items(pid, false)
+end
+
 local function start_destroy()
   mp.events.send(packid, packets.block_breaking, mp.bson.serialize(target.pos))
 end
@@ -19,6 +25,7 @@ events.on(resource("player_tick"), function(pid, tps)
   if pid ~= hud.get_player() then return end
 
   if not target then
+    check_player_rules()
     target = { breaking = false, pos = {} }
   end
 
@@ -39,6 +46,8 @@ events.on(resource("player_tick"), function(pid, tps)
       target.pos = { x, y, z }
       target.id = block.get(x, y, z)
       target.tick = 0
+
+      check_player_rules()
       start_destroy()
     end
   elseif target.breaking then
