@@ -1,5 +1,5 @@
-local resource = require "utils/resource_func"
-local mp = require "utils/not_utils".multiplayer
+local resource = require "shared/utils/resource_func"
+local mp = require "shared/utils/not_utils".multiplayer
 local module = {
   tps = 20
 }

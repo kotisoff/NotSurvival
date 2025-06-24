@@ -1,7 +1,7 @@
-local not_utils = require "utils/not_utils"
+local not_utils = require "shared/utils/not_utils"
 local mp = not_utils.multiplayer
 local mp_client, mp_server = mp.api.client, mp.api.server
-local packets = require "utils/packets"
+local packets = require "shared/utils/declarations/packets"
 local pack_id = "not_survival"
 
 local module = {}
@@ -82,9 +82,12 @@ local function get_component(pid)
   end
 end
 
+---@alias attribute_field "health" | "hunger" | "saturation" | "oxygen" | "armor"
+
 ---Get player data as array. I.e.: health, hunger, etc.
 ---@param pid number
----@param field string | nil
+---@param field string | attribute_field | nil
+---@return any
 function module.get_data(pid, field)
   local component = get_component(pid)
 
@@ -104,31 +107,10 @@ function module.get_data_dict(pid)
   return table.to_dict(data, module.CategoryFields.data)
 end
 
----Get player status as. I.e.: death, effects
----@param pid number
----@param field string | nil
-function module.get_status(pid, field)
-  local component = get_component(pid)
-
-  local data = component[get_category_index("status")]
-
-  if field then
-    return data[table.index(PlayerStatusKeys, field)]
-  end
-
-  return data
-end
-
----Get player status as dict. I.e.: health, hunger, etc.
----@param pid number
-function module.get_status_dict(pid)
-  local data = module.get_status(pid)
-  return table.to_dict(data, module.CategoryFields.status)
-end
-
 ---Get player attributes. I.e. max health, max hunger, etc.
 ---@param pid number
----@param field string | nil
+---@param field string | attribute_field | nil
+---@return any
 function module.get_attributes(pid, field)
   local component = get_component(pid)
 
@@ -148,6 +130,31 @@ function module.get_attributes_dict(pid)
   return table.to_dict(data, module.CategoryFields.attributes)
 end
 
+---@alias status_field "xp" | "gamemode" | "dead" | "effects"
+
+---Get player status as. I.e.: death, effects
+---@param pid number
+---@param field string | status_field | nil
+---@return any
+function module.get_status(pid, field)
+  local component = get_component(pid)
+
+  local data = component[get_category_index("status")]
+
+  if field then
+    return data[table.index(PlayerStatusKeys, field)]
+  end
+
+  return data
+end
+
+---Get player status as dict. I.e.: health, hunger, etc.
+---@param pid number
+function module.get_status_dict(pid)
+  local data = module.get_status(pid)
+  return table.to_dict(data, module.CategoryFields.status)
+end
+
 function module.new_data()
   ---@diagnostic disable-next-line: undefined-field
   return table.copy(PlayerData);
@@ -165,7 +172,7 @@ end
 
 ---@param pid number
 ---@param category "data" | "attributes" | "status"
----@param field string
+---@param field string | attribute_field | status_field
 ---@param value any
 function module.set_field(pid, category, field, value)
   local component = get_component(pid)

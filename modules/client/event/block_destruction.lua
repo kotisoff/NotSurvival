@@ -1,6 +1,6 @@
-local mp       = require "utils/not_utils".multiplayer.api.client
-local packets  = require "utils/packets"
-local resource = require "utils/resource_func"
+local mp       = require "shared/utils/not_utils".multiplayer.api.client
+local packets  = require "shared/utils/declarations/packets"
+local resource = require "shared/utils/resource_func"
 
 local packid   = "not_survival"
 

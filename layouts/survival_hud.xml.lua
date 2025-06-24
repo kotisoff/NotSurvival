@@ -1,4 +1,4 @@
-local resource = require "utils/resource_func";
+local resource = require "shared/utils/resource_func";
 local player_data = require "shared/player/data";
 local experience = require "shared/lib/experience"
 

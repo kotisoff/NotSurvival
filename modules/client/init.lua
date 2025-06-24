@@ -1,9 +1,9 @@
 print("Клиент-сайд тута.")
 
-local resource = require "utils/resource_func"
+local resource = require "shared/utils/resource_func"
 local data = require "shared/player/data"
 
-local require_folder = require "utils/require_folder"
+local require_folder = require "shared/utils/require_folder"
 require_folder "client/event"
 
 events.on(resource("hud_open"), function()

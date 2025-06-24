@@ -1,4 +1,4 @@
-local properties = require "utils/properties"
+local properties = require "shared/utils/declarations/properties"
 local module     = {}
 
 function module.get_tool_speed(pid)

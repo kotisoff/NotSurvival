@@ -1,4 +1,4 @@
-local not_utils = require "utils/not_utils";
+local utils = require "shared/utils/not_utils".utils;
 
 local drop_util = {};
 
@@ -7,12 +7,13 @@ local function calculate_experience(loot)
 
 
   return exp_loot.count
-      or not_utils.utils.round_to(
+      or math.round_to(
         math.rand(exp_loot.min or 0, exp_loot.max or 0),
         2
       )
 end
 
+---@return { experience: number, callback: fun(blockid: int, x: int, y: int, z: int, pid: int) }
 function drop_util.block_loot(blockid)
   local loot = block.properties[blockid]["not_survival:loot"]
   if loot then
@@ -20,7 +21,7 @@ function drop_util.block_loot(blockid)
     local cb = function(...) end;
 
     if loot.callback then
-      cb = not_utils.utils.parse_function_string(loot.callback)
+      cb = utils.parse_function_string(loot.callback)
     end
 
     return { experience = exp, callback = cb };
