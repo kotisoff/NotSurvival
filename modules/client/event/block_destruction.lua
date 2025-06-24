@@ -50,7 +50,7 @@ mp.events.on(packid, packets.block_breaking, function()
   target.breaking = false
 end)
 
-events.on(resource("player_tick"), function(pid, tps)
+events.on(resource("player_tick"), function(pid)
   if pid ~= hud.get_player() or not target.breaking then return end
   local x, y, z = unpack(target.pos)
 

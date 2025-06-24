@@ -2,7 +2,7 @@ local properties = require "utils/properties"
 local module     = {}
 
 function module.get_tool_speed(pid)
-  local inv, slot = player.get_entity(pid)
+  local inv, slot = player.get_inventory(pid)
   local itemid = inventory.get(inv, slot)
 
   local props = item.properties[itemid]
@@ -11,7 +11,7 @@ function module.get_tool_speed(pid)
 end
 
 function module.get_speed_multiplier(pid)
-  local speed = module.get_tool_speed()
+  local speed = module.get_tool_speed(pid)
   if not player.is_on_ground(pid) then
     speed = speed / 5
   end
@@ -39,6 +39,12 @@ function module.get_breaking_texture(progress)
   return string.format(
     "cracks/cracks_%s", math.floor(progress * 11)
   )
+end
+
+---@return number, number, number
+function module.get_block_center(pos)
+  ---@diagnostic disable-next-line: redundant-return-value
+  return unpack(vec3.add(pos, 0.5))
 end
 
 return module

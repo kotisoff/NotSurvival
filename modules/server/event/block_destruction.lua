@@ -1,4 +1,7 @@
-local mp         = require "utils/not_utils".multiplayer.api.server
+local _mp        = require "utils/not_utils".multiplayer
+local mode       = _mp.mode
+local mp         = _mp.api.server
+
 local block_dest = require "shared/lib/block_destruction"
 local packets    = require "utils/packets"
 local resource   = require "utils/resource_func"
@@ -9,45 +12,91 @@ local packid     = "not_survival"
 ---@type {pos: vec3, id: int, progress: number, tick: int, wrap: int, stage: int}[]
 local breaking   = {}
 
+-- =========================funcs===========================
+
+local function start_breaking(pos, pid)
+  local hexpid = tohex(pid)
+  local texture = block_dest.get_breaking_texture(0)
+  local id = mp.blockwraps.wrap(pos, texture)
+
+  breaking[hexpid] = {
+    pos = pos,
+    id = block.get(unpack(pos)),
+    progress = 0,
+    tick = 0,
+    wrap = id,
+    texture = block_dest.get_breaking_texture(0)
+  }
+
+  return breaking[hexpid]
+end
+
+local function get_target(pid)
+  return breaking[tohex(pid)]
+end
+local function is_breaking(pid)
+  return not not breaking[tohex(pid)]
+end
+
+local function stop_breaking(pid)
+  local hexpid = tohex(pid)
+
+  mp.blockwraps.unwrap(breaking[hexpid].wrap)
+  breaking[hexpid] = nil
+end
+
+
+local function destruct(pid, target)
+  local x, y, z = unpack(target.pos)
+  block.destruct(x, y, z, pid)
+
+  if mode ~= "standalone" then
+    local sound = block.materials[block.material(target.id)].breakSound
+    local sx, sy, sz = block_dest.get_block_center(target.pos)
+    mp.audio.play_sound(sound, sx, sy, sz, 1, 1)
+  end
+end
+
+local function checkVector(vec)
+  return vec and #vec == 3 and is_array(vec)
+end
+
+-- ========================network==========================
+
 mp.events.on(packid, packets.block_breaking, function(client, bytes)
   local pid = client.player.pid
   local status, pos = pcall(mp.bson.deserialize, bytes)
 
-  if status and #pos == 3 then
-    local texture = block_dest.get_breaking_texture(0)
-    local id = mp.blockwraps.wrap(pos, texture)
+  if status and checkVector(pos) then
+    start_breaking(pos, pid)
+  elseif is_breaking(pid) then
+    local target = get_target(pid)
+    if block_dest.get_durability(target.id) == 0 then
+      destruct(pid, target)
+    end
 
-    breaking[pid] = {
-      pos = pos,
-      id = block.get(unpack(pos)),
-      progress = 0,
-      tick = 0,
-      wrap = id,
-      texture = block_dest.get_breaking_texture(0)
-    }
-  elseif breaking[pid] then
-    mp.blockwraps.unwrap(breaking[pid].wrap)
-    breaking[pid] = nil
+    stop_breaking(pid)
   end
 end)
+
+-- ================server=breaking=handler==================
 
 local event = resource("player_tick")
 if events.handlers["server:main_tick"] then event = "server:main_tick" end
 
 events.on(event, function(pid, default_tps)
-  local target = breaking[pid]
-  if not target then return end
+  if not is_breaking(pid) then return end
+  local target = get_target(pid)
 
   local tps = true_tps.tps
   local speed = block_dest.get_breaking_speed(pid, target.id)
 
   target.progress = target.progress + (1 / tps) * speed
   target.tick = target.tick + (default_tps / tps)
-  local x, y, z = unpack(target.pos)
 
   if target.progress >= 1 then
-    block.destruct(x, y, z, pid)
-    breaking[pid] = nil
+    destruct(pid, target)
+    stop_breaking(pid)
     return
   end
 
