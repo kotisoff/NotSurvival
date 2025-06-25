@@ -32,16 +32,12 @@ local function start_breaking(pos, pid)
     target.wrap = wrap_id
     mp.blockwraps.set_pos(wrap_id, pos)
     mp.blockwraps.set_texture(wrap_id, texture)
-    print("Изменили обёрточку")
   else
     local wrap_id = mp.blockwraps.wrap(pos, texture)
     target.wrap = wrap_id
-    print("Обёрточку создали")
   end
 
   breaking[pid] = target
-
-  debug.print(breaking)
 
   return breaking[pid]
 end

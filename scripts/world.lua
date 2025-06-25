@@ -13,7 +13,7 @@ function on_world_tick(tps)
     first_tick = false;
   end
 
-  events.emit(resource("world_tick"))
+  events.emit(resource("world_tick"), tps)
 end
 
 function on_player_tick(pid, tps)

@@ -1,8 +1,9 @@
 {
   "icon-type": "sprite",
-  "icon": "items:potion",
+  "icon": "items:potion_water",
   "not_survival:food": {
     "type": "drink",
-    "eat-anyway": true
+    "eat-anyway": true,
+    "replace-item": "not_survival:bottle"
   }
 }

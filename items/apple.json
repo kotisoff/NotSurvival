@@ -4,7 +4,7 @@
   "not_survival:food": {
     "food": 3,
     "saturation": 2,
-    "eat-anyway": true,
+    "eat-anyway": false,
     "eat-delay": 1.5,
     "consume-item": true,
     "type": "food"
