@@ -55,8 +55,9 @@ local function is_breaking(pid)
 end
 
 local function stop_breaking(pid)
-  print("Получили стоп брейкинга")
-  get_target(pid).breaking = false
+  local target = get_target(pid)
+  mp.blockwraps.set_texture(target.wrap, "blocks:transparent")
+  target.breaking = false
 end
 
 
@@ -102,8 +103,6 @@ events.on(resource("player_tick"), function(pid, default_tps)
   local target = get_target(pid)
   if not target or not target.breaking then return end
 
-  print(string.format("Игрок %d ломает...", pid))
-
   local tps = server_utils.tps
   local speed = block_dest.get_breaking_speed(pid, target.id)
 
@@ -116,7 +115,6 @@ events.on(resource("player_tick"), function(pid, default_tps)
   end
 
   local texture = block_dest.get_breaking_texture(target.progress)
-  print("Текстура обёрточки: " .. texture)
   if target.stage ~= texture then
     mp.blockwraps.set_texture(target.wrap, texture)
   end

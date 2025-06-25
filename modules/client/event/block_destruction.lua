@@ -29,7 +29,7 @@ events.on(resource("player_tick"), function(pid, tps)
     target = { breaking = false, pos = {} }
   end
 
-  if input.is_active("player.destroy") then
+  if input.is_active("player.destroy") and not hud.is_inventory_open() and not hud.is_paused() then
     local x, y, z = player.get_selected_block(pid)
 
     if target.breaking then

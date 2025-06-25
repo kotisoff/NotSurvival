@@ -15,8 +15,7 @@ local eating        = {}
 local function start_eating(pid)
   local key = tohex(pid)
   local inv, slot = player.get_inventory(pid)
-  local itemid, count = inventory.get(inv, slot)
-  print(itemid, item.name(itemid), count)
+  local itemid = inventory.get(inv, slot)
 
   eating[key] = {
     id = itemid,
