@@ -1,13 +1,18 @@
 print("Клиент-сайд тута.")
 
 local resource = require "shared/utils/resource_func"
+
+-- ========================systems==========================
 local data = require "shared/player/data"
 
 local require_folder = require "shared/utils/require_folder"
+
 require_folder "client/event"
+require_folder "client/system"
+
+-- =========================================================
 
 events.on(resource("hud_open"), function()
-  print("Открываем худ")
   hud.open_permanent(resource("survival_hud"))
 
   console.log("[#00ff00]NotSurvival - 0.3.0-mp-preview-1[#ffffff]")

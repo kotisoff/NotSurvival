@@ -1,0 +1,8 @@
+{
+  "icon-type": "sprite",
+  "icon": "items:potion",
+  "not_survival:food": {
+    "type": "drink",
+    "eat-anyway": true
+  }
+}

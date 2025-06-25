@@ -1,6 +1,4 @@
-local sounds = require "shared/lib/sounds_registry"
 local data = require "shared/player/data"
-local properties = require "shared/utils/declarations/properties"
 
 local module = {}
 
@@ -22,23 +20,6 @@ end
 function module.get_max_saturation()
   local pid = hud.get_player()
   return data.get_attributes(pid, "saturation")
-end
-
-local food_type = {
-  ["not_survival:potion"] = "drink",
-  ["not_survival:food"] = "food"
-}
-
----@return food_type|nil
-function module.get_food_type(itemid)
-  local props = item.properties[itemid]
-  local type = nil
-  for _, key in pairs(properties.food.types) do
-    if props[key] then
-      type = food_type[key]
-    end
-  end
-  return type
 end
 
 return module

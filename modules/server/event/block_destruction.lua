@@ -7,7 +7,7 @@ local packets      = require "shared/utils/declarations/packets"
 local resource     = require "shared/utils/resource_func"
 local server_utils = require "server/lib/server_utils"
 
-local packid       = "not_survival"
+local pack_id      = "not_survival"
 
 ---@type {pos: vec3, id: int, progress: number, tick: int, wrap: int, stage: int}[]
 local breaking     = {}
@@ -23,7 +23,6 @@ local function start_breaking(pos, pid)
     pos = pos,
     id = block.get(unpack(pos)),
     progress = 0,
-    tick = 0,
     wrap = id,
     texture = block_dest.get_breaking_texture(0)
   }
@@ -65,7 +64,7 @@ end
 
 -- ========================network==========================
 
-mp.events.on(packid, packets.block_breaking, function(client, bytes)
+mp.events.on(pack_id, packets.block_breaking, function(client, bytes)
   local pid = client.player.pid
   local status, pos = pcall(mp.bson.deserialize, bytes)
 
@@ -94,7 +93,6 @@ events.on(event, function(pid, default_tps)
   local speed = block_dest.get_breaking_speed(pid, target.id)
 
   target.progress = target.progress + (1 / tps) * speed
-  target.tick = target.tick + (default_tps / tps)
 
   if target.progress >= 1 then
     destruct(pid, target)

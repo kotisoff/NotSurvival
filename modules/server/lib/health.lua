@@ -5,7 +5,7 @@ local data = require "shared/player/data"
 local packets = require "shared/utils/declarations/packets"
 local damage = require "shared/lib/damage"
 
-local packid = "not_survival"
+local pack_id = "not_survival"
 
 local module = {}
 
@@ -17,6 +17,17 @@ end
 ---@return number
 function module.get_max(pid)
   return data.get_attributes(pid, "health")
+end
+
+function module.update(pid)
+  local client = mp.accounts.get_client(mp.accounts.get_account_by_name(player.get_name(pid)))
+  mp.events.tell(pack_id, packets.update_player_data, client,
+    mp.bson.serialize({
+      data.get_category_index("data"),
+      data.get_field_index("data", "health"),
+      module.get(pid)
+    })
+  )
 end
 
 function module.set(pid, value)
@@ -36,17 +47,6 @@ function module.add(pid, amount)
   local value = module.get(pid)
   module.set(pid, value + (amount or 1))
   module.update(pid)
-end
-
-function module.update(pid)
-  local client = mp.accounts.get_client(mp.accounts.get_account_by_name(player.get_name(pid)))
-  mp.events.tell(packid, packets.update_player_data, client,
-    mp.bson.serialize({
-      data.get_category_index("data"),
-      data.get_field_index("data", "health"),
-      module.get(pid)
-    })
-  )
 end
 
 ---@class ns.api.health.damage_options
@@ -85,10 +85,10 @@ function module.damage(pid, amount, options)
 
   if options.do_knockback then
     local vel = damage.calculate_knockback(pid, source, 6)
-    mp.events.tell(packid, packets.deal_knockback, client, mp.bson.serialize(vel))
+    mp.events.tell(pack_id, packets.deal_knockback, client, mp.bson.serialize(vel))
   end
 
-  mp.events.tell(packid, packets.update_player_data, client,
+  mp.events.tell(pack_id, packets.update_player_data, client,
     mp.bson.serialize({
       data.get_category_index("data"),
       data.get_field_index("data", "health"),
