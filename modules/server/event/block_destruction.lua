@@ -9,46 +9,59 @@ local server_utils = require "server/lib/server_utils"
 
 local pack_id      = "not_survival"
 
----@type {pos: vec3, id: int, progress: number, tick: int, wrap: int, stage: int, pid: int}[]
+---@type {pos: vec3, id: int, progress: number, tick: int, wrap: int, stage: int, breaking: bool}[]
 local breaking     = {}
 
 -- =========================funcs===========================
 
 local function start_breaking(pos, pid)
   local texture = block_dest.get_breaking_texture(0)
-  local wrap_id = mp.blockwraps.wrap(pos, texture)
 
   local target = {
+    breaking = true,
     pos = pos,
     id = block.get(unpack(pos)),
     progress = 0,
-    wrap = wrap_id,
-    texture = block_dest.get_breaking_texture(0),
-    pid = pid
+    texture = texture
   }
 
-  table.insert(breaking, target)
+  local old_target = breaking[pid]
+  if old_target then
+    local wrap_id = old_target.wrap
+
+    target.wrap = wrap_id
+    mp.blockwraps.set_pos(wrap_id, pos)
+    mp.blockwraps.set_texture(wrap_id, texture)
+    print("Изменили обёрточку")
+  else
+    local wrap_id = mp.blockwraps.wrap(pos, texture)
+    target.wrap = wrap_id
+    print("Обёрточку создали")
+  end
+
+  breaking[pid] = target
+
+  debug.print(breaking)
+
+  return breaking[pid]
 end
 
 local function get_target(pid)
-  for index, value in ipairs(breaking) do
-    if value.pid == pid then
-      return value, index
-    end
-  end
+  return breaking[pid]
 end
 
 local function is_breaking(pid)
-  return not not get_target(pid)
+  return get_target(pid).breaking
 end
 
 local function stop_breaking(pid)
-  local _, index = get_target(pid)
-  table.remove(breaking, index)
+  print("Получили стоп брейкинга")
+  get_target(pid).breaking = false
 end
 
 
-local function destruct(pid, target)
+local function destruct(pid)
+  local target = get_target(pid)
   local x, y, z = unpack(target.pos)
   block.destruct(x, y, z, pid)
 
@@ -76,7 +89,7 @@ mp.events.on(pack_id, packets.block_breaking, function(client, bytes)
   elseif is_breaking(pid) then
     local target = get_target(pid)
     if block_dest.get_durability(target.id) == 0 then
-      destruct(pid, target)
+      destruct(pid)
     end
 
     stop_breaking(pid)
@@ -86,8 +99,10 @@ end)
 -- ================server=breaking=handler==================
 
 events.on(resource("player_tick"), function(pid, default_tps)
-  if not is_breaking(pid) then return end
   local target = get_target(pid)
+  if not target or not target.breaking then return end
+
+  print(string.format("Игрок %d ломает...", pid))
 
   local tps = server_utils.tps
   local speed = block_dest.get_breaking_speed(pid, target.id)
@@ -95,12 +110,13 @@ events.on(resource("player_tick"), function(pid, default_tps)
   target.progress = target.progress + (1 / tps) * speed
 
   if target.progress >= 1 then
-    destruct(pid, target)
+    destruct(pid)
     stop_breaking(pid)
     return
   end
 
   local texture = block_dest.get_breaking_texture(target.progress)
+  print("Текстура обёрточки: " .. texture)
   if target.stage ~= texture then
     mp.blockwraps.set_texture(target.wrap, texture)
   end
