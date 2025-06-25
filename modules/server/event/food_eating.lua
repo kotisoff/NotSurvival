@@ -69,7 +69,9 @@ events.on(server_utils.get_player_event(), function(pid)
     server_hunger.add(pid, food_data.food, food_data.saturation)
 
     local invid, slot = player.get_inventory(pid)
-    inventory.decrement(invid, slot, 1)
+    local itemid, count = inventory.get(invid, slot)
+    inventory.set(invid, slot, itemid, math.clamp(count - 1, 0, count))
+
     if food_data.replace_item then
       inventory.add(invid, food_data.replace_item, 1)
     end

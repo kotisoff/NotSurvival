@@ -58,7 +58,7 @@ events.on(resource("player_tick"), function(pid, tps)
 end)
 
 mp.events.on(packid, packets.food_eating, function()
-  utils.random_cb(0.5,
+  utils.random_cb(0.6,
     function()
       audio.play_sound_2d(sounds.get("ns.hunger.burp"), 0.35, 1, "regular");
     end

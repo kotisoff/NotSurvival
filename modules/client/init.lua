@@ -1,9 +1,12 @@
+local mp = require "shared/utils/not_utils".multiplayer.api.client
+
 print("Клиент-сайд тута.")
 
 local resource = require "shared/utils/resource_func"
 
 -- ========================systems==========================
 local data = require "shared/player/data"
+require "client/overrides"
 
 local require_folder = require "shared/utils/require_folder"
 
@@ -20,8 +23,7 @@ events.on(resource("hud_open"), function()
     "[#ffff00]Используйте мод с осторожностью, поскольку из-за постоянных обновлений многие механики могут менятся от версии к версии[#ffffff]")
   console.log("[#aeaeae]Ой как я надеюсь что ничё не ёбнет за время эксплуатации мода[#ffffff]")
 
-  local username = player.get_name(hud.get_player())
-  data.update(username, "data")
-  data.update(username, "status")
-  data.update(username, "attributes")
+  data.update("data")
+  data.update("status")
+  data.update("attributes")
 end)

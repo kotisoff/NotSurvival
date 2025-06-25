@@ -187,18 +187,15 @@ end
 
 -- ================Network====================
 
----@param username string
 ---@param category "data" | "status" | "attributes"
 ---@param field string | nil
-function module.update(username, category, field)
+---@param client neutron.class.client | nil Only on server
+function module.update(category, field, client)
   local f_id = module.get_field_index(category, field)
   local c_id = module.get_category_index(category)
 
 
-  if mp_server then
-    local account = mp_server.accounts.get_account_by_name(username)
-    local client = mp_server.accounts.get_client(account)
-
+  if mp_server and client then
     local get_fun = module["get_" .. category]
     local data = get_fun(client.player.pid, field)
 
@@ -213,7 +210,7 @@ function module.update(username, category, field)
     end
     -- =====================================
 
-    mp_server.events.tell(pack_id, packets.update_player_data, client,
+    mp_server.events.tell(pack_id, packets.update_player_data, client --[[@as neutron.class.client]],
       mp_server.bson.serialize({ c_id, f_id or 0, data })
     )
     return
@@ -249,7 +246,7 @@ if mp_server then
       field = module.Categories[category][f]
     end
 
-    module.update(client.player.username, category, field)
+    module.update(category, field, client)
   end)
 end
 

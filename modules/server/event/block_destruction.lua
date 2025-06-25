@@ -9,39 +9,42 @@ local server_utils = require "server/lib/server_utils"
 
 local pack_id      = "not_survival"
 
----@type {pos: vec3, id: int, progress: number, tick: int, wrap: int, stage: int}[]
+---@type {pos: vec3, id: int, progress: number, tick: int, wrap: int, stage: int, pid: int}[]
 local breaking     = {}
 
 -- =========================funcs===========================
 
 local function start_breaking(pos, pid)
-  local hexpid = tohex(pid)
   local texture = block_dest.get_breaking_texture(0)
-  local id = mp.blockwraps.wrap(pos, texture)
+  local wrap_id = mp.blockwraps.wrap(pos, texture)
 
-  breaking[hexpid] = {
+  local target = {
     pos = pos,
     id = block.get(unpack(pos)),
     progress = 0,
-    wrap = id,
-    texture = block_dest.get_breaking_texture(0)
+    wrap = wrap_id,
+    texture = block_dest.get_breaking_texture(0),
+    pid = pid
   }
 
-  return breaking[hexpid]
+  table.insert(breaking, target)
 end
 
 local function get_target(pid)
-  return breaking[tohex(pid)]
+  for index, value in ipairs(breaking) do
+    if value.pid == pid then
+      return value, index
+    end
+  end
 end
+
 local function is_breaking(pid)
-  return not not breaking[tohex(pid)]
+  return not not get_target(pid)
 end
 
 local function stop_breaking(pid)
-  local hexpid = tohex(pid)
-
-  mp.blockwraps.unwrap(breaking[hexpid].wrap)
-  breaking[hexpid] = nil
+  local _, index = get_target(pid)
+  table.remove(breaking, index)
 end
 
 
@@ -82,10 +85,7 @@ end)
 
 -- ================server=breaking=handler==================
 
-local event = resource("player_tick")
-if events.handlers["server:main_tick"] then event = "server:main_tick" end
-
-events.on(event, function(pid, default_tps)
+events.on(resource("player_tick"), function(pid, default_tps)
   if not is_breaking(pid) then return end
   local target = get_target(pid)
 
