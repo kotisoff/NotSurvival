@@ -63,6 +63,12 @@ module.add("ns.damage.fall",
   "not_survival/damage/fallbig2"
 )
 
+module.add("ns.damage.drown",
+  "not_survival/entity/player/hurt/drown1",
+  "not_survival/entity/player/hurt/drown2",
+  "not_survival/entity/player/hurt/drown3",
+  "not_survival/entity/player/hurt/drown4"
+)
 
 -- =========================================================
 

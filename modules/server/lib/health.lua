@@ -40,13 +40,11 @@ end
 
 function module.full(pid)
   module.set(pid, module.get_max(pid))
-  module.update(pid)
 end
 
 function module.add(pid, amount)
   local value = module.get(pid)
   module.set(pid, value + (amount or 1))
-  module.update(pid)
 end
 
 ---@class ns.api.health.damage_options
