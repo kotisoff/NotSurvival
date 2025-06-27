@@ -13,7 +13,6 @@ events.on(server_utils.get_player_event(), function(pid)
     death.set(pid, true)
 
     local name = player.get_name(pid)
-    print(string.format("Игрок %s умер 💀", name))
     local message = string.format("%s died.", name)
     mp.console.echo(message)
   end

@@ -26,7 +26,7 @@ function on_save()
 end
 
 function on_grounded(velocity)
-  if mp_c then
+  if mp_c and entity:get_player() == hud.get_player() then
     if fall_distance.calculate_damage(velocity) > 0 then
       mp_c.events.send(pack_id, packets.player_grounded, mp_c.bson.serialize({ velocity }))
     end
