@@ -12,7 +12,7 @@ local body = entity.rigidbody
 local rig = entity.skeleton
 
 if mp_s then
-  if #SAVED_DATA ~= 3 then
+  if #SAVED_DATA ~= 3 or not SAVED_DATA[0] then
     ARGS = { player_data.new_data(), player_data.new_attributes(), player_data.new_status() }
   else
     ARGS = SAVED_DATA

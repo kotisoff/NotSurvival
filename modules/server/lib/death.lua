@@ -80,8 +80,8 @@ function module.revive(pid)
   end
 
   local x, y, z = player.get_spawnpoint(pid)
-  mp.sandbox.players.set_pos(client.player, { x = x, y = y, z = z })
-  -- player.set_pos(pid, x, y, z)
+  local status = pcall(function() mp.sandbox.players.set_pos(client.player, { x = x, y = y, z = z }) end)
+  if not status then player.set_pos(pid, x, y, z) end
 
   health.full(pid)
   hunger.full(pid)

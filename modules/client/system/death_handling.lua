@@ -37,7 +37,6 @@ mp.events.on(pack_id, packets.update_player_data, function(bytes)
     death.show_overlay(experience.get_exp())
     block_inputs(true)
   else
-    print("ну вроде бы как мы должны были воскреснуть нахуй")
     death.close_overlay()
     hud.close_inventory()
     block_inputs(false)

@@ -249,7 +249,7 @@ if mp_client then
     local args = mp_client.bson.deserialize(bytes)
     local c, f, d = unpack(args)
 
-    if type(d) ~= "nil" then return end
+    if type(d) == "nil" then return end
 
     if f > 0 then
       session_storage[c][f] = d
