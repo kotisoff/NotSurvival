@@ -36,7 +36,7 @@ end
 function on_attacked(attacker, attacker_pid)
   local pid = entity:get_player()
   if mp_c and attacker_pid ~= pid then
-    mp_c.events.send(pack_id, packets.player_attacked, mp_c.bson.serialize({ attacker_pid, pid }))
+    mp_c.events.send(pack_id, packets.player_attacked, mp_c.bson.serialize({ attacker_pid }))
   end
 end
 
