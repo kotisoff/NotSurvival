@@ -53,6 +53,7 @@ end
 local function stop_breaking(pid)
   local target = get_target(pid)
   mp.blockwraps.set_texture(target.wrap, "blocks:transparent")
+  mp.blockwraps.set_pos(target.wrap, vec3.mul(target.pos, { 1, 0, 1 }))
   target.breaking = false
 end
 
@@ -64,7 +65,7 @@ local function destruct(pid)
 
   if mode ~= "standalone" then
     local sound = block.materials[block.material(target.id)].breakSound
-    mp.audio.register_duration(sound, 5) -- Для автоматического удаления источника звука на сервере.
+    mp.audio.register_duration(sound, 3) -- Для автоматического удаления источника звука на сервере.
 
     local sx, sy, sz = block_dest.get_block_center(target.pos)
     mp.audio.play_sound(sound, sx, sy, sz, 1, 1)
@@ -150,11 +151,4 @@ events.on(resource("l:block_broken"), function(blockid, x, y, z, pid)
   end
 
   ns_drop.callback(blockid, x, y, z, pid)
-end)
-
--- =========================test============================
-local health = require "server/lib/health"
-
-events.on(resource("l:block_broken"), function(blockid, x, y, z, pid)
-  -- health.damage(pid, 1, { source = vec3.sub({ player.get_pos(pid) }, { 0, 5, 0 }) })
 end)

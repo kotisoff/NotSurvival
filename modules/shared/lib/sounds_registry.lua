@@ -62,7 +62,7 @@ end
 
 -- ========================sounds===========================
 
-local duration = 5
+local duration = 3
 
 module.add("ns.hunger.eating", duration,
   "not_survival/random/eat1",

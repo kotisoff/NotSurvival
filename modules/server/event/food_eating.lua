@@ -81,6 +81,6 @@ events.on(server_utils.get_player_event(), function(pid)
     local client = mp.accounts.get_client(mp.accounts.get_account_by_name(player.get_name(pid)))
     mp.events.tell(pack_id, packets.food_eating, client, mp.bson.serialize({}))
 
-    food_data.callback(pid)
+    pcall(food_data.callback, pid)
   end
 end)
