@@ -33,9 +33,10 @@ function on_grounded(velocity)
   end
 end
 
-function on_attacked(attackerid, pid)
-  print("Пиздим.")
-  mp_c.events.send(pack_id, packets.player_attacked, mp_c.bson.serialize({ attackerid, pid }))
+function on_attacked(victim)
+  if mp_c then
+    mp_c.events.send(pack_id, packets.player_attacked, mp_c.bson.serialize({ victim }))
+  end
 end
 
 -- local function first_tick()

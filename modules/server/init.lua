@@ -4,6 +4,7 @@ local mp = _mp.api.server
 
 require "shared/player/data"
 require "server/lib/util/server_utils"
+require "server/commands"
 
 local resource = require "shared/utils/resource_func"
 

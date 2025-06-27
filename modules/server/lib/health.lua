@@ -84,7 +84,7 @@ function module.damage(pid, amount, options)
   if not status or not client then return end
 
   if options.do_knockback then
-    local vel = damage.calculate_knockback(pid, source, 6)
+    local vel = damage.calculate_knockback(pid, source, 7)
     mp.events.tell(pack_id, packets.deal_knockback, client, mp.bson.serialize(vel))
   end
 
