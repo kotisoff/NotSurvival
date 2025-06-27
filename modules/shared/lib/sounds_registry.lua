@@ -25,8 +25,9 @@ function module.remove(category, ...)
   if not reg then return end
 
   for _, value in ipairs({ ... }) do
-    if reg[value] then
-      table.remove(reg, value)
+    local index = table.index(reg, value)
+    if index > -1 then
+      table.remove(reg, index)
     end
   end
 end

@@ -1,0 +1,12 @@
+{
+  "caption": "Выдать опыт",
+  "icon-type": "sprite",
+  "icon": "items:apple",
+  "not_survival:food": {
+    "eat-anyway": true,
+    "eat-delay": 0.01,
+    "consume-item": false,
+    "type": "food",
+    "callback": "function(pid) require('not_survival:server/lib/experience').give(pid, math.random(10,20)) end"
+  }
+}

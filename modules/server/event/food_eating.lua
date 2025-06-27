@@ -1,5 +1,5 @@
 local not_utils     = require "shared/utils/not_utils"
-local server_utils  = require "server/lib/server_utils"
+local server_utils  = require "server/lib/util/server_utils"
 local hunger        = require "shared/lib/hunger"
 local server_hunger = require "server/lib/hunger"
 local mp            = not_utils.multiplayer.api.server
@@ -80,6 +80,6 @@ events.on(server_utils.get_player_event(), function(pid)
     local client = mp.accounts.get_client(mp.accounts.get_account_by_name(player.get_name(pid)))
     mp.events.tell(pack_id, packets.food_eating, client, mp.bson.serialize({}))
 
-    pcall(food_data.callback, pid)
+    food_data.callback(pid)
   end
 end)

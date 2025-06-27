@@ -3,7 +3,7 @@ local mode = _mp.mode
 local mp = _mp.api.server
 
 require "shared/player/data"
-require "server/lib/server_utils"
+require "server/lib/util/server_utils"
 
 local resource = require "shared/utils/resource_func"
 

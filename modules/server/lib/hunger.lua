@@ -1,7 +1,5 @@
 local data = require "shared/player/data"
-local mp = require "shared/utils/not_utils".multiplayer.api.server
-local packets = require "shared/utils/declarations/packets"
-local pack_id = "not_survival"
+local module_utils = require "server/lib/util/module_utils"
 
 local module = {}
 
@@ -21,28 +19,20 @@ function module.get_max_saturation(pid)
   return data.get_attributes(pid, "saturation")
 end
 
----@param field "hunger"|"saturation"
-function module.update(pid, field)
-  local client = mp.accounts.get_client(mp.accounts.get_account_by_name(player.get_name(pid)))
-  mp.events.tell(pack_id, packets.update_player_data, client,
-    mp.bson.serialize({
-      data.get_category_index("data"),
-      data.get_field_index("data", field),
-      module["get_" .. field](pid)
-    })
-  )
-end
-
 function module.set_hunger(pid, amount)
   local max = module.get_max_hunger(pid)
-  data.set_field(pid, "data", "hunger", math.clamp(amount, 0, max))
-  module.update(pid, "hunger")
+  local value = math.clamp(amount, 0, max)
+
+  data.set_field(pid, "data", "hunger", value)
+  module_utils.update(pid, "data", "hunger", value)
 end
 
 function module.set_saturation(pid, amount)
   local max = module.get_max_saturation(pid)
-  data.set_field(pid, "data", "saturation", math.clamp(amount, 0, max))
-  module.update(pid, "saturation")
+  local value = math.clamp(amount, 0, max)
+
+  data.set_field(pid, "data", "saturation", value)
+  module_utils.update(pid, "data", "saturation", value)
 end
 
 function module.full(pid)

@@ -5,7 +5,7 @@ local mp           = not_utils.multiplayer.api.server
 local block_dest   = require "shared/lib/block_destruction"
 local packets      = require "shared/utils/declarations/packets"
 local resource     = require "shared/utils/resource_func"
-local server_utils = require "server/lib/server_utils"
+local server_utils = require "server/lib/util/server_utils"
 
 local pack_id      = "not_survival"
 

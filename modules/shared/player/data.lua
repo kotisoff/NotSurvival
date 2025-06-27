@@ -40,19 +40,21 @@ local PlayerStatusKeys = { "xp", "gamemode", "dead", "effects" }
 module.Categories = { "data", "attributes", "status" }
 module.CategoryFields = { data = PlayerDataKeys, attributes = PlayerDataKeys, status = PlayerStatusKeys }
 
----@alias playerdata.categories "data" | "attributes" | "status"
+---@alias ns.categories "data" | "attributes" | "status"
+---@alias ns.attributefield "health" | "hunger" | "saturation" | "oxygen" | "armor"
+---@alias ns.statusfield "xp" | "gamemode" | "dead" | "effects"
 
 -- =============================================
 
----@param category playerdata.categories|string|number
+---@param category ns.categories|string|number
 ---@return integer
 function module.get_category_index(category)
   if type(category) == "number" then return category end
   return table.index(module.Categories, category)
 end
 
----@param category playerdata.categories|string|number
----@param field status_field|attribute_field|string|nil
+---@param category ns.categories|string|number
+---@param field ns.statusfield|ns.attributefield|string|nil
 ---@return integer|nil
 function module.get_field_index(category, field)
   if type(field) ~= "string" then return field end
@@ -83,22 +85,27 @@ local function get_component(pid)
   end
 end
 
----@alias attribute_field "health" | "hunger" | "saturation" | "oxygen" | "armor"
-
----Get player data as array. I.e.: health, hunger, etc.
----@param pid number
----@param field string | attribute_field | nil
+---@param pid int
+---@param cat ns.categories
+---@param field ns.attributefield|ns.statusfield|str|nil
 ---@return any
-function module.get_data(pid, field)
+function module.get(pid, cat, field)
   local component = get_component(pid)
 
-  local data = component[module.get_category_index("data")]
-
+  local data = component[module.get_category_index(cat)]
   if field then
-    return data[table.index(PlayerDataKeys, field)]
+    return data[module.get_field_index(cat, field)]
   end
 
   return data
+end
+
+---Get player data as array. I.e.: health, hunger, etc.
+---@param pid number
+---@param field string | ns.attributefield | nil
+---@return any
+function module.get_data(pid, field)
+  return module.get(pid, "data", field)
 end
 
 ---Get player data as dict. I.e.: health, hunger, etc.
@@ -110,18 +117,10 @@ end
 
 ---Get player attributes. I.e. max health, max hunger, etc.
 ---@param pid number
----@param field string | attribute_field | nil
+---@param field string | ns.attributefield | nil
 ---@return any
 function module.get_attributes(pid, field)
-  local component = get_component(pid)
-
-  local data = component[module.get_category_index("attributes")]
-
-  if field then
-    return data[table.index(PlayerDataKeys, field)]
-  end
-
-  return data
+  return module.get(pid, "attributes", field)
 end
 
 ---Get player attributes as dict. I.e.: health, hunger, etc.
@@ -131,22 +130,12 @@ function module.get_attributes_dict(pid)
   return table.to_dict(data, module.CategoryFields.attributes)
 end
 
----@alias status_field "xp" | "gamemode" | "dead" | "effects"
-
 ---Get player status as. I.e.: death, effects
 ---@param pid number
----@param field string | status_field | nil
+---@param field string | ns.statusfield | nil
 ---@return any
 function module.get_status(pid, field)
-  local component = get_component(pid)
-
-  local data = component[module.get_category_index("status")]
-
-  if field then
-    return data[table.index(PlayerStatusKeys, field)]
-  end
-
-  return data
+  return module.get(pid, "status", field)
 end
 
 ---Get player status as dict. I.e.: health, hunger, etc.
@@ -173,7 +162,7 @@ end
 
 ---@param pid number
 ---@param category "data" | "attributes" | "status"
----@param field string | attribute_field | status_field
+---@param field string | ns.attributefield | ns.statusfield
 ---@param value any
 function module.set_field(pid, category, field, value)
   local component = get_component(pid)
@@ -187,8 +176,8 @@ end
 
 -- ================Network====================
 
----@param category "data" | "status" | "attributes"
----@param field string | nil
+---@param category ns.categories
+---@param field ns.attributefield | ns.statusfield | str | nil
 ---@param client neutron.class.client | nil Only on server
 function module.update(category, field, client)
   local f_id = module.get_field_index(category, field)
@@ -196,8 +185,7 @@ function module.update(category, field, client)
 
 
   if mp_server and client then
-    local get_fun = module["get_" .. category]
-    local data = get_fun(client.player.pid, field)
+    local data = module.get(client.player.pid, category, field)
 
     -- ============standalone===============
     if mp.mode == "standalone" then
@@ -261,7 +249,7 @@ if mp_client then
     local args = mp_client.bson.deserialize(bytes)
     local c, f, d = unpack(args)
 
-    if not d then return end
+    if type(d) ~= "nil" then return end
 
     if f > 0 then
       session_storage[c][f] = d

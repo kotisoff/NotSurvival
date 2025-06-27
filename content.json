@@ -11,7 +11,9 @@
     "stick",
     "wooden_pickaxe",
     "potion",
-    "bottle"
+    "bottle",
+    "death",
+    "exp_test"
   ],
   "blocks": [
     "sapling",

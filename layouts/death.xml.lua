@@ -1,12 +1,23 @@
---local death = require("api").survival.death;
+local _mp = require "shared/utils/not_utils".multiplayer
+local mode = _mp.mode
+local mp = _mp.api.client
+
+local packets = require "shared/utils/declarations/packets"
+local pack_id = "not_survival"
 
 function on_open(invid, x, y, z)
-  document.reason.pos = {
-    (document.death_window.size[1] - document.reason.size[1]) / 2,
+  document.score.pos = {
+    (document.death_window.size[1] - document.score.size[1]) / 2,
     40
   }
+
+  document.pause_btn.visible = mode == "standalone"
 end
 
 function respawn()
-  --return death.revive(hud.get_player());
+  mp.events.send(pack_id, packets.player_respawn, mp.bson.serialize({}))
+end
+
+function pause()
+  hud.pause()
 end

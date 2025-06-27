@@ -21,3 +21,5 @@ function module.can_drain_lvl(amount)
   local lvl = module.get_lvl() - amount
   return lvl > 0
 end
+
+return module

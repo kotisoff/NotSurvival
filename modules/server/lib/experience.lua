@@ -1,4 +1,5 @@
 local _nu = require "shared/utils/not_utils"
+local module_utils = require "server/lib/util/module_utils"
 
 local mp = _nu.multiplayer.api.server
 local data = require "shared/player/data"
@@ -10,27 +11,16 @@ local pack_id = "not_survival"
 local module = {}
 
 function module.get_exp(pid)
-  return data.get_status(pid, "xp")
+  return data.get_status(pid, "xp") or 0
 end
 
 function module.get_lvl(pid)
   return exp_shared.calc_lvl(module.get_exp(pid))
 end
 
-function module.update(pid)
-  local client = mp.accounts.get_client(mp.accounts.get_account_by_name(player.get_name(pid)))
-  mp.events.tell(pack_id, packets.update_player_data, client,
-    mp.bson.serialize({
-      data.get_category_index("status"),
-      data.get_field_index("status", "xp"),
-      module.get(pid)
-    })
-  )
-end
-
 function module.set_xp(pid, value)
   data.set_field(pid, "status", "xp", value)
-  module.update(pid)
+  module_utils.update(pid, "status", "xp", value)
 end
 
 function module.set_lvl(pid, value)
@@ -39,7 +29,7 @@ function module.set_lvl(pid, value)
 end
 
 function module.give(pid, amount)
-  module.set_xp(module.get_exp(pid) + amount)
+  module.set_xp(pid, module.get_exp(pid) + amount)
 end
 
 function module.can_drain(pid, amount)
@@ -68,4 +58,7 @@ end
 
 ---WIP
 function module.summon(pos, amount)
+  return {}
 end
+
+return module

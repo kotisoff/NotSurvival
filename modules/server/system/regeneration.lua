@@ -1,31 +1,24 @@
-local data = require "shared/player/data"
-local health = require "server/lib/health"
-local hunger = require "server/lib/hunger"
-local server_utils = require "server/lib/server_utils"
+local health          = require "server/lib/health"
+local hunger          = require "server/lib/hunger"
+local death           = require "server/lib/death"
+local system_handlers = require "server/lib/util/system_handlers"
 
-local tick = {}
-local function add_tick(pid, val)
-  tick[pid] = (tick[pid] or 1) + val
-end
-
-events.on(server_utils.get_player_event(), function(pid, tps)
-  local dead = data.get_status(pid, "dead")
-
+system_handlers.set_ticking_event("ns.regeneration", function(pid, tps, regen)
   local hp = health.get(pid)
   local max_hp = health.get_max(pid)
 
   local hunger_lvl = hunger.get_hunger(pid)
   local max_hunger = hunger.get_max_hunger(pid)
 
-  if hp < max_hp and hunger_lvl > max_hunger - 2 and not dead then
-    add_tick(pid, 1)
-    if tick[pid] > server_utils.tps then
-      tick[pid] = 1
+  if hp < max_hp and hunger_lvl > max_hunger - 2 and not death.get(pid) then
+    regen:add(1)
+    if regen:get(0) > tps then
+      regen:set(1)
 
       health.add(pid, 1)
       hunger.consume(pid, 1)
     end
-  elseif tick[pid] then
-    tick[pid] = nil
+  elseif regen:get() then
+    regen:set(nil)
   end
 end)

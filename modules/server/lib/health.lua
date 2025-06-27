@@ -9,33 +9,32 @@ local pack_id = "not_survival"
 
 local module = {}
 
+-- ====================module=template======================
+local module_utils = require "server/lib/util/module_utils"
+
+-- ====values====
+
+---@type ns.statusfield | ns.attributefield
+local field = "health"
+
+-- ====funcs=====
+
 ---@return number
 function module.get(pid)
-  return data.get_data(pid, "health")
+  return data.get_data(pid, field)
 end
 
 ---@return number
 function module.get_max(pid)
-  return data.get_attributes(pid, "health")
-end
-
-function module.update(pid)
-  local client = mp.accounts.get_client(mp.accounts.get_account_by_name(player.get_name(pid)))
-  mp.events.tell(pack_id, packets.update_player_data, client,
-    mp.bson.serialize({
-      data.get_category_index("data"),
-      data.get_field_index("data", "health"),
-      module.get(pid)
-    })
-  )
+  return data.get_attributes(pid, field)
 end
 
 function module.set(pid, value)
   local max = module.get_max(pid)
   local new_val = math.clamp(value, 0, max)
 
-  data.set_field(pid, "data", "health", new_val)
-  module.update(pid)
+  data.set_field(pid, "data", field, new_val)
+  module_utils.update(pid, "data", field, new_val)
 end
 
 function module.full(pid)
@@ -46,6 +45,8 @@ function module.add(pid, amount)
   local value = module.get(pid)
   module.set(pid, value + (amount or 1))
 end
+
+-- =========================================================
 
 ---@class ns.api.health.damage_options
 ---@field damage_type? damage_types

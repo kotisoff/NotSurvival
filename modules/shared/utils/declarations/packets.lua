@@ -5,7 +5,8 @@ local packets = {
   food_eating = tohex(4),
   player_attacked = tohex(5),
   player_grounded = tohex(6),
-  player_sprinting = tohex(7)
+  player_sprinting = tohex(7),
+  player_respawn = tohex(8)
 }
 
 return packets
