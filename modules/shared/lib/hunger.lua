@@ -32,13 +32,27 @@ local food_data_defaults = {
   food = 0,
   saturation = 0,
   food_type = "food",
-  eat_delay = 1.5
+  eat_delay = 1.5,
+  consume_item = true
 }
 
 ---@param data food_data
 local function process_food_data(data, prop)
   for data_key, prop_key in pairs(food_data_keys) do
-    data[data_key] = prop[prop_key] or data[data_key] or food_data_defaults[data_key]
+    local d = data[data_key]
+    local p = prop[prop_key]
+    local def = food_data_defaults[data_key]
+
+    local val
+    if type(p) ~= "nil" then
+      val = p
+    elseif type(d) ~= "nil" then
+      val = d
+    else
+      val = def
+    end
+
+    data[data_key] = val
   end
   data.food_type = data.food_type or prop.type
   data.replace_item = utils.index_item(data.replace_item)

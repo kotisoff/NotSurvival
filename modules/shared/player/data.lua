@@ -160,6 +160,10 @@ function module.new_attributes()
   return table.copy(PlayerAttributes);
 end
 
+function module.new_player_data()
+  return { module.new_data(), module.new_attributes(), module.new_status() }
+end
+
 ---@param pid number
 ---@param category "data" | "attributes" | "status"
 ---@param field string | ns.attributefield | ns.statusfield
@@ -239,11 +243,7 @@ if mp_server then
 end
 
 if mp_client then
-  session_storage = {
-    module.new_data(),
-    module.new_attributes(),
-    module.new_status()
-  }
+  session_storage = module.new_player_data()
 
   mp_client.events.on(pack_id, packets.update_player_data, function(bytes)
     local args = mp_client.bson.deserialize(bytes)

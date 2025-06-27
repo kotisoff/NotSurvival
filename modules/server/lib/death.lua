@@ -33,8 +33,6 @@ function module.kill(pid, damage_type)
 
   local max = health.get(pid)
   health.damage(pid, max, { damage_type = damage_type, do_knockback = false })
-
-  module.set(pid, true)
 end
 
 ---@param pid int

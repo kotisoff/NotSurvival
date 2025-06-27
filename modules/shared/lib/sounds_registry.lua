@@ -62,17 +62,19 @@ end
 
 -- ========================sounds===========================
 
-module.add("ns.hunger.eating", nil,
+local duration = 5
+
+module.add("ns.hunger.eating", duration,
   "not_survival/random/eat1",
   "not_survival/random/eat2",
   "not_survival/random/eat3"
 )
 
-module.set("ns.hunger.burp", nil, "not_survival/random/burp")
-module.set("ns.hunger.drink", nil, "not_survival/random/drink")
+module.set("ns.hunger.burp", duration, "not_survival/random/burp")
+module.set("ns.hunger.drink", duration, "not_survival/random/drink")
 
 
-module.add("ns.damage.hit", nil,
+module.add("ns.damage.hit", duration,
   "not_survival/damage/hit1",
   "not_survival/damage/hit2",
   "not_survival/damage/hit3"
