@@ -80,7 +80,8 @@ function module.damage(pid, amount, options)
     mp.audio.play_sound(damage.random_sound(options.damage_type), x, y, z, volume, pitch, channel)
   end
 
-  local client = mp.accounts.get_client(mp.accounts.get_account_by_name(player.get_name(pid)))
+  local status, client = pcall(mp.accounts.get_client_by_name, player.get_name(pid))
+  if not status or not client then return end
 
   if options.do_knockback then
     local vel = damage.calculate_knockback(pid, source, 6)

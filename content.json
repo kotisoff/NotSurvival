@@ -21,8 +21,7 @@
     "potion",
     "bottle",
     "death",
-    "exp_test",
-    "clear_player"
+    "exp_test"
   ],
   "entities": [
     "base:player",

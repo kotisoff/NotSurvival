@@ -12,7 +12,9 @@ local module = {}
 ---@param field ns.statusfield | ns.attributefield | str
 ---@param value any
 function module.update(pid, cat, field, value)
-  local client = mp.accounts.get_client(mp.accounts.get_account_by_name(player.get_name(pid)))
+  local status, client = pcall(mp.accounts.get_client_by_name, player.get_name(pid))
+  if not status or not client then return end
+
   mp.events.tell(pack_id, packets.update_player_data, client,
     mp.bson.serialize({
       data.get_category_index(cat),

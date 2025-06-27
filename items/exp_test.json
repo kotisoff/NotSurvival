@@ -7,6 +7,6 @@
     "eat-delay": 0.01,
     "consume-item": false,
     "type": "food",
-    "callback": "function(pid) require('not_survival:server/lib/experience').give(pid, math.random(10,20)) end"
+    "callback": "function(pid) require('not_survival:server/lib/experience').give(pid, math.random(1,10)) end"
   }
 }

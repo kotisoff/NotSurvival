@@ -75,14 +75,22 @@ function module.revive(pid)
     experience.set_xp(pid, 0)
 
     module.drop_items(pid)
+  end
+  mp.console.tell("You died at " .. table.concat(vec3.round({ player.get_pos(pid) }), " "), client)
 
-    mp.console.tell("You died at " .. table.concat(vec3.round({ player.get_pos(pid) }), " "), client)
+  -- Телепорт на спавн
+  local x, y, z = player.get_spawnpoint(pid)
+  local status = pcall(function()
+    mp.sandbox.players.sync_states(client.player,
+      { pos = { x = x, y = y, z = z }, rot = { yaw = 0, pitch = 0 } })
+  end)
+  if not status then
+    player.set_pos(pid, x, y, z)
+    player.set_rot(pid, 0, 0, 0)
+    player.set_vel(pid, 0, 0, 0)
   end
 
-  local x, y, z = player.get_spawnpoint(pid)
-  local status = pcall(function() mp.sandbox.players.set_pos(client.player, { x = x, y = y, z = z }) end)
-  if not status then player.set_pos(pid, x, y, z) end
-
+  -- Восстановление игрока
   health.full(pid)
   hunger.full(pid)
   oxygen.full(pid)

@@ -64,6 +64,8 @@ local function destruct(pid)
 
   if mode ~= "standalone" then
     local sound = block.materials[block.material(target.id)].breakSound
+    -- mp.audio.register_duration(sound, 3) -- Для автоматического удаления источника звука на сервере.
+
     local sx, sy, sz = block_dest.get_block_center(target.pos)
     mp.audio.play_sound(sound, sx, sy, sz, 1, 1)
   end

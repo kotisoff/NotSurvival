@@ -8,7 +8,6 @@ require "server/lib/util/server_utils"
 local resource = require "shared/utils/resource_func"
 
 if mode ~= "standalone" then
-  events.handlers[resource("player_tick")] = nil
   events.on(resource("world_tick"), function(tps)
     local players = mp.sandbox.players.get_all()
 

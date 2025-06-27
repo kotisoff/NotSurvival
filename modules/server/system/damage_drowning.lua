@@ -1,4 +1,5 @@
 local health          = require "server/lib/health"
+local death           = require "server/lib/death"
 local oxygen          = require "server/lib/oxygen"
 local system_handlers = require "server/lib/util/system_handlers"
 
@@ -24,7 +25,7 @@ system_handlers.set_ticking_event("ns.drown", function(pid, tps, drown, get_tick
     drown:set(0)
   end
 
-  if under_water and drown:get(0) > tps * 2 then
+  if under_water and not death.get(pid) and oxygen.get(pid) > 0 and drown:get(0) > tps * 2 then
     drown:set(0)
 
     oxygen.add(pid, -1)
