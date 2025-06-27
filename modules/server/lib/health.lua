@@ -95,6 +95,8 @@ function module.damage(pid, amount, options)
       module.get(pid)
     })
   )
+
+  print(string.format("Игроку %s нанесено %d урона", client.player.username, amount))
 end
 
 return module

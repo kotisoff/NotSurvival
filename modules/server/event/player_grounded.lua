@@ -7,6 +7,7 @@ local fall_distance = require "shared/lib/fall_distance"
 
 
 mp.events.on(pack_id, packets.player_grounded, function(client, bytes)
+  print(string.format("Игрок %s упал", client.player.username))
   local args = mp.bson.deserialize(bytes)
   local velocity = unpack(args)
 
