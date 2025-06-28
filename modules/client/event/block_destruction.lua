@@ -127,9 +127,8 @@ end
 
 local function remove_wrap(pos)
   local el, index = get_wrap(pos)
-  gfx.blockwraps.unwrap(el.wrap)
-
   if index then
+    gfx.blockwraps.unwrap(el.wrap)
     table.remove(wraps, index)
     return true
   end
@@ -161,9 +160,7 @@ mp.events.on(pack_id, packets.block_breaking, function(bytes)
       remove_wrap(pos)
     end
   elseif state == breaking_states.broken then
-    if vec_equals(target.pos, pos) then
-      print("Ахуенно.")
-    else
+    if not vec_equals(target.pos, pos) then
       local x, y, z = unpack(pos)
       block.set(x, y, z, 0)
       local sound = block.materials[block.material(id)].breakSound
