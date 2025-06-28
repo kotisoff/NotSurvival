@@ -1,121 +1,101 @@
-local not_utils    = require "shared/utils/not_utils"
-local mode         = not_utils.multiplayer.mode
-local mp           = not_utils.multiplayer.api.server
+local not_utils       = require "shared/utils/not_utils"
+local mode            = not_utils.multiplayer.mode
+local mp              = not_utils.multiplayer.api.server
 
-local block_dest   = require "shared/lib/block_destruction"
-local packets      = require "shared/utils/declarations/packets"
-local resource     = require "shared/utils/resource_func"
-local server_utils = require "server/lib/util/server_utils"
+local block_dest      = require "shared/lib/block_destruction"
+local packets         = require "shared/utils/declarations/packets"
+local resource        = require "shared/utils/resource_func"
+local server_utils    = require "server/lib/util/server_utils"
 
-local pack_id      = "not_survival"
+local pack_id         = "not_survival"
 
----@type {pos: vec3, id: int, progress: number, tick: int, wrap: int, stage: int, breaking: bool}[]
-local breaking     = {}
+local breaking_states = block_dest.breaking_states
+
+---@type {pos: vec3, id: int, start: number}[][]
+local breaking        = {}
 
 -- =========================funcs===========================
 
-local function start_breaking(pos, pid)
-  local texture = block_dest.get_breaking_texture(0)
+local function vec_equals(veca, vecb)
+  if #veca ~= #vecb then return false end
 
-  local target = {
-    breaking = true,
-    pos = pos,
-    id = block.get(unpack(pos)),
-    progress = 0,
-    texture = texture
-  }
-
-  local old_target = breaking[pid]
-  if old_target then
-    local wrap_id = old_target.wrap
-
-    target.wrap = wrap_id
-    mp.blockwraps.set_pos(wrap_id, pos)
-    mp.blockwraps.set_texture(wrap_id, texture)
-  else
-    local wrap_id = mp.blockwraps.wrap(pos, texture)
-    target.wrap = wrap_id
+  for index, value in ipairs(veca) do
+    if value ~= vecb[index] then
+      return false
+    end
   end
 
-  breaking[pid] = target
-
-  return breaking[pid]
+  return true
 end
 
-local function get_target(pid)
-  return breaking[pid]
-end
-
-local function is_breaking(pid)
-  return get_target(pid).breaking
-end
-
-local function stop_breaking(pid)
-  local target = get_target(pid)
-  mp.blockwraps.set_texture(target.wrap, "blocks:transparent")
-  mp.blockwraps.set_pos(target.wrap, vec3.mul(target.pos, { 1, 0, 1 }))
-  target.breaking = false
-end
-
-
-local function destruct(pid)
-  local target = get_target(pid)
-  local x, y, z = unpack(target.pos)
-  block.destruct(x, y, z, pid)
-
-  if mode ~= "standalone" then
-    local sound = block.materials[block.material(target.id)].breakSound
-    mp.audio.register_duration(sound, 3) -- Для автоматического удаления источника звука на сервере.
-
-    local sx, sy, sz = block_dest.get_block_center(target.pos)
-    mp.audio.play_sound(sound, sx, sy, sz, 1, 1)
+local function get_target(pid, pos)
+  for index, value in ipairs(breaking[pid]) do
+    if vec_equals(pos, value.pos) then
+      return value, index
+    end
   end
-
-  events.emit(resource("l:block_broken"), target.id, x, y, z, pid)
-end
-
-local function checkVector(vec)
-  return vec and #vec == 3 and is_array(vec)
 end
 
 -- ========================network==========================
 
-mp.events.on(pack_id, packets.block_breaking, function(client, bytes)
-  local pid = client.player.pid
-  local status, pos = pcall(mp.bson.deserialize, bytes)
+---@param state ns.breaking.states
+---@param target {pos: vec3, id: int, start: number}
+---@param ignore_client neutron.class.client | nil
+local function echo_state(state, target, ignore_client)
+  local pos = target.pos
+  local players = mp.sandbox.players.get_in_radius({ x = pos[1], y = pos[2], z = pos[3] }, 50)
+  for name, _player in pairs(players) do
+    if ignore_client and name == ignore_client.player.username then return end
+    local _client = mp.accounts.get_client_by_name(name)
 
-  if status and checkVector(pos) then
-    start_breaking(pos, pid)
-  elseif is_breaking(pid) then
-    local target = get_target(pid)
-    if block_dest.get_durability(target.id) == 0 then
-      destruct(pid)
+    mp.events.tell(pack_id, packets.block_breaking, _client, mp.bson.serialize({ state, pos, target.id }))
+  end
+end
+
+mp.events.on(pack_id, packets.block_breaking, function(client, bytes)
+  local pid        = client.player.pid
+  ---@type [ ns.breaking.states, vec3 ]
+  local args       = mp.bson.deserialize(bytes)
+  local state, pos = unpack(args)
+
+  if state == breaking_states.start then
+    breaking[pid] = breaking[pid] or {}
+    local target = { pos = pos, id = block.get(unpack(pos)), start = time.uptime() }
+    table.insert(breaking[pid], target)
+
+    echo_state(breaking_states.start, target, client)
+  elseif state == breaking_states.interrupted then
+    local target, index = get_target(pid, pos)
+
+    if target then
+      echo_state(breaking_states.interrupted, target, client)
+      table.remove(breaking[pid], index)
+    end
+  elseif state == breaking_states.broken then
+    local target, index = get_target(pid, pos)
+    local id = block.get(unpack(pos))
+
+    if not target or id ~= target.id then return end
+
+    local durability = block_dest.get_durability(target.id)
+    if durability > 0 then
+      local _end = time.uptime()
+      local total = _end - target.start
+      local expected_time = durability / block_dest.get_speed_multiplier(pid)
+      local deviation = 0.5
+
+      if (expected_time - deviation) >= total then
+        mp.events.tell(pack_id, packets.block_breaking, client,
+          mp.bson.serialize({ breaking_states.interrupted, pos, target.id, block.get_states(unpack(target.pos)) }))
+      end
     end
 
-    stop_breaking(pid)
-  end
-end)
+    echo_state(breaking_states.broken, target, nil)
 
--- ================server=breaking=handler==================
+    local x, y, z = unpack(target.pos)
+    events.emit(resource("l:block_broken"), target.id, x, y, z, pid)
 
-events.on(resource("player_tick"), function(pid, default_tps)
-  local target = get_target(pid)
-  if not target or not target.breaking then return end
-
-  local tps = server_utils.tps
-  local speed = block_dest.get_breaking_speed(pid, target.id)
-
-  target.progress = target.progress + (1 / tps) * speed
-
-  if target.progress >= 1 then
-    destruct(pid)
-    stop_breaking(pid)
-    return
-  end
-
-  local texture = block_dest.get_breaking_texture(target.progress)
-  if target.stage ~= texture then
-    mp.blockwraps.set_texture(target.wrap, texture)
+    table.remove(breaking[pid], index)
   end
 end)
 

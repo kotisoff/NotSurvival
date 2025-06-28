@@ -1,13 +1,21 @@
-local properties = require "shared/utils/declarations/properties"
-local module     = {}
+local properties       = require "shared/utils/declarations/properties"
+local module           = {}
 
+---@enum ns.breaking.states
+module.breaking_states = {
+  start = 0,
+  broken = 1,
+  interrupted = 2
+}
+
+---@return number
 function module.get_tool_speed(pid)
   local inv, slot = player.get_inventory(pid)
   local itemid = inventory.get(inv, slot)
 
   local props = item.properties[itemid]
   if not props then return 1 end
-  return props[properties.tool.speed] or 1
+  return props[properties.tool.speed] or 1 --[[@as number]]
 end
 
 function module.get_speed_multiplier(pid)
@@ -30,8 +38,15 @@ function module.get_durability(id)
   return 5.0
 end
 
+---@param pid int|nil
+---@param blockid int
 function module.get_breaking_speed(pid, blockid)
-  return 1 / math.max(module.get_durability(blockid), 0.00001) * module.get_speed_multiplier(pid)
+  local multiplier = 1
+  if pid then
+    multiplier = module.get_speed_multiplier(pid)
+  end
+
+  return 1 / math.max(module.get_durability(blockid), 0.00001) * multiplier
 end
 
 ---@param progress number [0,1]
