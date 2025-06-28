@@ -201,15 +201,15 @@ end
 
 local function animate_all_wraps(tps)
   for _, wrap in pairs(wraps) do
-    local speed = block_dest.get_breaking_speed(nil, target.id)
-    target.progress = target.progress + (1 / tps) * speed
-    target.tick = target.tick + 1
+    local speed = block_dest.get_breaking_speed(nil, wrap.id)
+    wrap.progress = wrap.progress + (1 / tps) * speed
+    wrap.tick = wrap.tick + 1
 
     gfx.blockwraps.set_texture(wrap.wrap, block_dest.get_breaking_texture(wrap.progress))
 
     if wrap.tick % 4 == 0 then
       local x, y, z = unpack(wrap.pos)
-      local sound = block.materials[block.material(target.id)].stepsSound
+      local sound = block.materials[block.material(wrap.id)].stepsSound
       audio.play_sound(sound, x + 0.5, y + 0.5, z + 0.5, 1, 1)
     end
   end
