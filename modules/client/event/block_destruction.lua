@@ -27,6 +27,68 @@ local target          = {
 
 local breaking_states = block_dest.breaking_states
 
+-- ========================network==========================
+-- ниже пиздец
+
+---@type { pos: vec3, id: int, pid: int, tick: int, progress: number, wrap: int }[]
+local wraps           = {}
+
+local function get_wrap(pos)
+  for index, value in ipairs(wraps) do
+    if vec3.equals(pos, value.pos) then
+      return value, index
+    end
+  end
+end
+
+local function remove_wrap(pos)
+  local el, index = get_wrap(pos)
+  if index then
+    gfx.blockwraps.unwrap(el.wrap)
+    table.remove(wraps, index)
+    return true
+  end
+  return false
+end
+
+mp.events.on(pack_id, packets.block_breaking, function(bytes)
+  ---@type [ ns.breaking.states, vec3, int, int, int | nil ]
+  local args = mp.bson.deserialize(bytes)
+  local state, pos, id, pid, states = unpack(args)
+
+  if state == breaking_states.start then
+    local wrap = gfx.blockwraps.wrap(pos, block_dest.get_breaking_texture(0))
+    local element = {
+      progress = 0,
+      tick = 0,
+      pos = pos,
+      id = block.get(unpack(pos)),
+      pid = pid,
+      wrap = wrap
+    }
+    table.insert(wraps, element)
+  elseif state == breaking_states.interrupted then
+    if states and vec3.equals(target.pos, pos) then
+      -- Сервер блять не доволен тем что ты насрал!
+      -- Ну короче этот перец уже сломал свой блок, но слишком быстро, поэтому сервер сейчас отправит его нахуй.
+      local x, y, z = unpack(pos)
+      block.set(x, y, z, id, states)
+    else
+      remove_wrap(pos)
+    end
+  elseif state == breaking_states.broken then
+    if not vec3.equals(target.pos, pos) then
+      local x, y, z = unpack(pos)
+      block.set(x, y, z, 0)
+      local sound = block.materials[block.material(id)].breakSound
+      audio.play_sound(sound, x, y, z, 1, 1)
+      remove_wrap(pos)
+    end
+  end
+end)
+
+-- ================managing=all=that=shit===================
+
 local function set_player_rules(pid)
   player.set_instant_destruction(pid, false)
   player.set_infinite_items(pid, false)
@@ -98,80 +160,6 @@ local function manage_breaking(pid, tps)
   end
 end
 
-
--- ========================network==========================
--- ниже пиздец
-
----@type { pos: vec3, id: int, tick: int, progress: number, wrap: int }[]
-local wraps = {}
-
-local function vec_equals(veca, vecb)
-  if #veca ~= #vecb then return false end
-
-  for index, value in ipairs(veca) do
-    if value ~= vecb[index] then
-      return false
-    end
-  end
-
-  return true
-end
-
-local function get_wrap(pos)
-  for index, value in ipairs(wraps) do
-    if vec_equals(pos, value.pos) then
-      return value, index
-    end
-  end
-end
-
-local function remove_wrap(pos)
-  local el, index = get_wrap(pos)
-  if index then
-    gfx.blockwraps.unwrap(el.wrap)
-    table.remove(wraps, index)
-    return true
-  end
-  return false
-end
-
-mp.events.on(pack_id, packets.block_breaking, function(bytes)
-  ---@type [ ns.breaking.states, vec3, int, int | nil ]
-  local args = mp.bson.deserialize(bytes)
-  local state, pos, id, states = unpack(args)
-
-  if state == breaking_states.start then
-    local wrap = gfx.blockwraps.wrap(pos, block_dest.get_breaking_texture(0))
-    local element = {
-      progress = 0,
-      tick = 0,
-      pos = pos,
-      id = block.get(unpack(pos)),
-      wrap = wrap
-    }
-    table.insert(wraps, element)
-  elseif state == breaking_states.interrupted then
-    if states and vec_equals(target.pos, pos) then
-      -- Сервер блять не доволен тем что ты насрал!
-      -- Ну короче этот перец уже сломал свой блок, но слишком быстро, поэтому сервер сейчас отправит его нахуй.
-      local x, y, z = unpack(pos)
-      block.set(x, y, z, id, states)
-    else
-      remove_wrap(pos)
-    end
-  elseif state == breaking_states.broken then
-    if not vec_equals(target.pos, pos) then
-      local x, y, z = unpack(pos)
-      block.set(x, y, z, 0)
-      local sound = block.materials[block.material(id)].breakSound
-      audio.play_sound(sound, x, y, z, 1, 1)
-      remove_wrap(pos)
-    end
-  end
-end)
-
--- ================managing=all=that=shit===================
-
 local function animate_breaking()
   gfx.blockwraps.set_texture(target.wrap, block_dest.get_breaking_texture(target.progress))
 
@@ -201,11 +189,15 @@ end
 
 local function animate_all_wraps(tps)
   for _, wrap in pairs(wraps) do
-    local speed = block_dest.get_breaking_speed(nil, wrap.id)
+    local speed = block_dest.get_breaking_speed(wrap.pid, wrap.id)
     wrap.progress = wrap.progress + (1 / tps) * speed
     wrap.tick = wrap.tick + 1
 
     gfx.blockwraps.set_texture(wrap.wrap, block_dest.get_breaking_texture(wrap.progress))
+
+    if wrap.progress >= 1 then
+      remove_wrap(wrap.pos)
+    end
 
     if wrap.tick % 4 == 0 then
       local x, y, z = unpack(wrap.pos)

@@ -5,32 +5,19 @@ local mp              = not_utils.multiplayer.api.server
 local block_dest      = require "shared/lib/block_destruction"
 local packets         = require "shared/utils/declarations/packets"
 local resource        = require "shared/utils/resource_func"
-local server_utils    = require "server/lib/util/server_utils"
 
 local pack_id         = "not_survival"
 
 local breaking_states = block_dest.breaking_states
 
----@type {pos: vec3, id: int, start: number}[][]
+---@type {pos: vec3, id: int, pid: int, start: number}[][]
 local breaking        = {}
 
 -- =========================funcs===========================
 
-local function vec_equals(veca, vecb)
-  if #veca ~= #vecb then return false end
-
-  for index, value in ipairs(veca) do
-    if value ~= vecb[index] then
-      return false
-    end
-  end
-
-  return true
-end
-
 local function get_target(pid, pos)
   for index, value in ipairs(breaking[pid]) do
-    if vec_equals(pos, value.pos) then
+    if vec3.equals(pos, value.pos) then
       return value, index
     end
   end
@@ -39,16 +26,18 @@ end
 -- ========================network==========================
 
 ---@param state ns.breaking.states
----@param target {pos: vec3, id: int, start: number}
+---@param target {pos: vec3, id: int, pid: int, start: number}
 ---@param ignore_client neutron.class.client | nil
 local function echo_state(state, target, ignore_client)
   local pos = target.pos
-  local players = mp.sandbox.players.get_in_radius({ x = pos[1], y = pos[2], z = pos[3] }, 50)
+  local players = mp.sandbox.players.get_in_radius({ x = pos[1], y = pos[2], z = pos[3] }, mp.constants.render_distance)
   for name, _player in pairs(players) do
-    if ignore_client and name == ignore_client.player.username then return end
+    if ignore_client and name == ignore_client.player.username then goto continue end
     local _client = mp.accounts.get_client_by_name(name)
 
-    mp.events.tell(pack_id, packets.block_breaking, _client, mp.bson.serialize({ state, pos, target.id }))
+    mp.events.tell(pack_id, packets.block_breaking, _client, mp.bson.serialize({ state, pos, target.id, target.pid }))
+
+    ::continue::
   end
 end
 
@@ -60,7 +49,7 @@ mp.events.on(pack_id, packets.block_breaking, function(client, bytes)
 
   if state == breaking_states.start then
     breaking[pid] = breaking[pid] or {}
-    local target = { pos = pos, id = block.get(unpack(pos)), start = time.uptime() }
+    local target = { pos = pos, id = block.get(unpack(pos)), pid = pid, start = time.uptime() }
     table.insert(breaking[pid], target)
 
     echo_state(breaking_states.start, target, client)
@@ -85,8 +74,11 @@ mp.events.on(pack_id, packets.block_breaking, function(client, bytes)
       local deviation = 0.5
 
       if (expected_time - deviation) >= total then
-        mp.events.tell(pack_id, packets.block_breaking, client,
-          mp.bson.serialize({ breaking_states.interrupted, pos, target.id, block.get_states(unpack(target.pos)) }))
+        return mp.events.tell(pack_id, packets.block_breaking, client,
+          mp.bson.serialize(
+            { breaking_states.interrupted, pos, target.id, target.pid, block.get_states(unpack(target.pos)) }
+          )
+        )
       end
     end
 
