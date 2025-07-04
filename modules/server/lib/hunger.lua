@@ -1,7 +1,7 @@
 local data = require "shared/player/data"
 local module_utils = require "server/lib/util/module_utils"
 
-local module = {}
+local module = {} -- эту хуету через генератор оптимизировать также вообще не вариант.
 
 function module.get_hunger(pid)
   return data.get_data(pid, "hunger")

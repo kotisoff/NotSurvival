@@ -1,7 +1,7 @@
 local data = require "shared/player/data"
 local exp_shared = require "shared/lib/experience"
 
-local module = {}
+local module = {} -- тоже оптимизировать юзлесс.
 
 function module.get_exp()
   local pid = hud.get_player()

@@ -1,14 +1,9 @@
-local data = require "shared/player/data"
+local module_gen = require "shared/player/module_gen"
 
-local module = {}
+local module = module_gen.cli.create_bool("status", "dead")
 
 local death_overlay = "not_survival:death"
 local document = Document.new(death_overlay)
-
-function module.get()
-  local pid = hud.get_player()
-  return data.get_status(pid, "dead")
-end
 
 ---@param score? int
 function module.show_overlay(score)

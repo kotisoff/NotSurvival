@@ -14,7 +14,7 @@ mp.events.on(pack_id, packets.player_sprinting, function(client, bytes)
   sprinting[client.player.pid] = status
 end)
 
-system_handlers.set_ticking_event("ns.sprinting", function(pid, tps, sprint)
+system_handlers.add_ticking_event("ns.sprinting", function(pid, tps, sprint)
   is_sprinting = sprinting[pid] or false
 
   if is_sprinting then

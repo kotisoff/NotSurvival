@@ -1,17 +1,5 @@
-local data = require "shared/player/data"
+local module_gen = require "shared/player/module_gen"
 
-local module = {}
-
----@return number
-function module.get()
-  local pid = hud.get_player()
-  return data.get_data(pid, "health")
-end
-
----@return number
-function module.get_max()
-  local pid = hud.get_player()
-  return data.get_attributes(pid, "health")
-end
+local module = module_gen.cli.create_data("health")
 
 return module

@@ -1,14 +1,9 @@
-local _nu = require "shared/utils/not_utils"
 local module_utils = require "server/lib/util/module_utils"
-
-local mp = _nu.multiplayer.api.server
 local data = require "shared/player/data"
-local packets = require "shared/utils/declarations/packets"
 local exp_shared = require "shared/lib/experience"
 
-local pack_id = "not_survival"
 
-local module = {}
+local module = {} -- эту хуету через генератор оптимизировать вообще не вариант.
 
 function module.get_exp(pid)
   return data.get_status(pid, "xp") or 0

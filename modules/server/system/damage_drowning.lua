@@ -16,7 +16,7 @@ local is_under_water = function(pid)
   return under_block and blockid == water
 end
 
-system_handlers.set_ticking_event("ns.drown", function(pid, tps, drown, get_ticker)
+system_handlers.add_ticking_event("ns.damage.drown", function(pid, tps, drown, get_ticker)
   local under_water = is_under_water(pid)
 
   if under_water then
@@ -25,7 +25,7 @@ system_handlers.set_ticking_event("ns.drown", function(pid, tps, drown, get_tick
     drown:set(0)
   end
 
-  if under_water and not death.get(pid) and drown:get(0) > tps * 2 then
+  if under_water and not death.get(pid) and drown:get(0) > tps then
     drown:set(0)
 
     oxygen.add(pid, -1)
@@ -33,9 +33,9 @@ system_handlers.set_ticking_event("ns.drown", function(pid, tps, drown, get_tick
       health.damage(pid, 2, { damage_type = "ns.damage.drown", do_knockback = false })
     end
   elseif not under_water and oxygen.get(pid) < oxygen.get_max(pid) then
-    local regen = get_ticker(pid, "ns.drown.regen")
+    local regen = get_ticker(pid, "ns.damage.drown.regen")
     regen:add(1)
-    if regen:get(0) > tps then
+    if regen:get(0) > tps / 2 then
       regen:set(0)
       oxygen.add(pid, 1)
     end

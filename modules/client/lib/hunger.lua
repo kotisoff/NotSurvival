@@ -1,6 +1,6 @@
 local data = require "shared/player/data"
 
-local module = {}
+local module = {} -- мда.
 
 function module.get_hunger()
   local pid = hud.get_player()

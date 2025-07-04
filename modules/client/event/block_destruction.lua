@@ -77,7 +77,7 @@ mp.events.on(pack_id, packets.block_breaking, function(bytes)
       remove_wrap(pos)
     end
   elseif state == breaking_states.broken then
-    if not vec3.equals(target.pos, pos) then
+    if pid ~= hud.get_player() then
       local x, y, z = unpack(pos)
       block.set(x, y, z, 0)
       local sound = block.materials[block.material(id)].breakSound
