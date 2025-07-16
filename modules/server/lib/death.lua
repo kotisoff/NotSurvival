@@ -1,18 +1,33 @@
-local _mp        = require "shared/utils/not_utils".multiplayer
-local mode       = _mp.mode
-local mp         = _mp.api.server
+local _mp          = require "shared/utils/not_utils".multiplayer;
+local mode         = _mp.mode;
+local mp           = _mp.api.server;
 
-local data       = require "shared/player/data"
-local module_gen = require "shared/player/module_gen"
+local data         = require "shared/player/data";
+local module_utils = require "server/lib/util/module_utils"
 
-local health     = require "server/lib/health"
-local experience = require "server/lib/experience"
-local hunger     = require "server/lib/hunger"
-local oxygen     = require "server/lib/oxygen"
+local health       = require "server/lib/health";
+local experience   = require "server/lib/experience";
+local hunger       = require "server/lib/hunger";
+local oxygen       = require "server/lib/oxygen";
 
-local base_util  = require "base:util"
+local base_util    = require "base:util";
 
-local module     = module_gen.srv.create_bool("status", "dead")
+---@type ns.categories, ns.statusfield
+local cat, field   = "status", "dead";
+
+local module       = {}
+
+---@return bool
+function module.get(pid)
+  return data.get_status(pid, field)
+end
+
+---@param pid int
+---@param flag bool
+function module.set(pid, flag)
+  data.set_field(pid, cat, field, flag)
+  module_utils.update(pid, cat, field, flag)
+end
 
 ---@param pid int
 ---@param damage_type damage_types

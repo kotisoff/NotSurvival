@@ -2,11 +2,13 @@ local module_utils = require "server/lib/util/module_utils"
 local data = require "shared/player/data"
 local exp_shared = require "shared/lib/experience"
 
+---@type ns.categories, ns.statusfield
+local cat, field = "status", "xp";
 
-local module = {} -- эту хуету через генератор оптимизировать вообще не вариант.
+local module = {}
 
 function module.get_exp(pid)
-  return data.get_status(pid, "xp") or 0
+  return data.get_status(pid, field) or 0
 end
 
 function module.get_lvl(pid)
@@ -14,8 +16,8 @@ function module.get_lvl(pid)
 end
 
 function module.set_xp(pid, value)
-  data.set_field(pid, "status", "xp", value)
-  module_utils.update(pid, "status", "xp", value)
+  data.set_field(pid, cat, field, value)
+  module_utils.update(pid, cat, field, value)
 end
 
 function module.set_lvl(pid, value)

@@ -4,11 +4,42 @@ local mp = _nu.multiplayer.api.server
 local data = require "shared/player/data"
 local packets = require "shared/utils/declarations/packets"
 local damage = require "shared/lib/damage"
-local module_gen = require "shared/player/module_gen"
+local module_utils = require "server/lib/util/module_utils"
 
 local pack_id = "not_survival"
+local cat, field = "data", "health";
 
-local module = module_gen.srv.create_data("health")
+local module = {}
+
+
+-- ====funcs=====
+
+---@return number
+function module.get(pid)
+  return data.get_data(pid, field)
+end
+
+---@return number
+function module.get_max(pid)
+  return data.get_attributes(pid, field)
+end
+
+function module.set(pid, value)
+  local max = module.get_max(pid)
+  local new_val = math.clamp(value, 0, max)
+
+  data.set_field(pid, cat, field, new_val)
+  module_utils.update(pid, cat, field, new_val)
+end
+
+function module.full(pid)
+  module.set(pid, module.get_max(pid))
+end
+
+function module.add(pid, amount)
+  local value = module.get(pid)
+  module.set(pid, value + (amount or 1))
+end
 
 ---@class ns.api.health.damage_options
 ---@field damage_type? damage_types
@@ -52,8 +83,8 @@ function module.damage(pid, amount, options)
 
   mp.events.tell(pack_id, packets.update_player_data, client,
     mp.bson.serialize({
-      data.get_category_index("data"),
-      data.get_field_index("data", "health"),
+      data.get_category_index(cat),
+      data.get_field_index(cat, field),
       module.get(pid)
     })
   )
