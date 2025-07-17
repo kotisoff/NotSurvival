@@ -1,17 +1,19 @@
-local _nu           = require "shared/utils/not_utils"
-local cor           = _nu.coroutines
-local utils         = _nu.utils
-local mp            = _nu.multiplayer.api.client
-local packets       = require "shared/utils/declarations/packets"
-local resource      = require "shared/utils/resource_func"
-local sounds        = require "shared/lib/sounds_registry"
-local hunger        = require "shared/lib/hunger"
+local _nu = require "shared/utils/not_utils"
+local cor = _nu.coroutines
+local utils = _nu.utils
+local mp = _nu.multiplayer.api.client
+local packets = require "shared/utils/declarations/packets"
+local resource = require "shared/utils/resource_func"
+local sounds = require "shared/lib/sounds_registry"
+local hunger = require "shared/lib/hunger"
 local client_hunger = require "client/lib/hunger"
 local speed_limiter = require "client/system/speed_limiter"
 
-local packid        = "not_survival"
+local packid = "not_survival"
 
-local food
+local food = {
+  eating = false
+}
 
 local function start_eating()
   speed_limiter.set_limit(2.5)
@@ -26,10 +28,6 @@ end
 
 events.on(resource("player_tick"), function(pid, tps)
   if pid ~= hud.get_player() then return end
-
-  if not food then
-    food = { eating = false }
-  end
 
   if input.is_active("player.build") and not hud.is_inventory_open() and not hud.is_paused() then
     local inv, slot = player.get_inventory(pid)
