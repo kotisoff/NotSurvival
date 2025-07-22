@@ -27,3 +27,7 @@ end
 function on_block_broken(blockid, x, y, z, pid)
   events.emit(resource("block_broken"), blockid, x, y, z, pid);
 end
+
+function on_world_quit()
+  events.remove_by_prefix(PACK_ID);
+end

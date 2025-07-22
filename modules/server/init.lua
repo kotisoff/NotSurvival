@@ -1,4 +1,6 @@
-local _mp = require "shared/utils/not_utils".multiplayer
+local nu = require "shared/utils/not_utils";
+local _mp = nu.multiplayer
+local logger = nu.Logger.new("not_survival");
 local mode = _mp.mode
 local mp = _mp.api.server
 
@@ -22,4 +24,4 @@ local require_folder = require "shared/utils/require_folder"
 require_folder "server/event"
 require_folder "server/system"
 
-print("Сервер-сайд подтянулся.")
+logger:log("I", "Сервер-сайд подтянулся.")

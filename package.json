@@ -1,10 +1,11 @@
 {
   "id": "not_survival",
-  "title": "Not Survival",
+  "title": "NotSurvival",
   "version": "0.3.0-mp-preview",
   "creator": "KotIsOff",
   "description": "Точно не выживание.\nСкока на*уй игроков???",
   "dependencies": [
-    "not_utils"
+    "not_utils",
+    "~simpleitemtags"
   ]
 }

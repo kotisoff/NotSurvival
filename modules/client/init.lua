@@ -1,6 +1,8 @@
-local mp = require "shared/utils/not_utils".multiplayer.api.client
+local nu = require "shared/utils/not_utils";
+local mp = nu.multiplayer
+local logger = nu.Logger.new("not_survival");
 
-print("Клиент-сайд тута.")
+logger:log("I", "Клиент-сайд тута.")
 
 local resource = require "shared/utils/resource_func"
 

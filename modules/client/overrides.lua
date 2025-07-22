@@ -1,20 +1,19 @@
 local data = require "shared/player/data"
 
 local function is_survival(pid)
-  return data and data.get_status(pid, "gamemode") == 0
+  return data.get_status(pid, "gamemode") == 0
 end
-local tmp
 
-tmp = player.set_flight
+local set_flight = player.set_flight
 player.set_flight = function(playerid, flag)
-  if not is_survival(playerid) then
-    tmp(playerid, flag)
+  if not pack.is_installed("not_survival") or not is_survival(playerid) then
+    set_flight(playerid, flag)
   end
 end
 
-tmp = player.set_noclip
+local set_noclip = player.set_noclip
 player.set_noclip = function(playerid, flag)
-  if not is_survival(playerid) then
-    tmp(playerid, flag)
+  if not pack.is_installed("not_survival") or not is_survival(playerid) then
+    set_noclip(playerid, flag)
   end
 end

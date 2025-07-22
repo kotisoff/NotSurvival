@@ -2,5 +2,6 @@
   "texture": "cobblestone",
   "rotation": "none",
   "material": "base:stone",
-  "base:durability": 13
+  "base:durability": 13,
+  "simpleitemtags:tags@append": ["cobblestone"]
 }

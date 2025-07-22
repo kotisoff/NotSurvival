@@ -1,4 +1,7 @@
-local mp = require "shared/utils/not_utils".multiplayer
+local nu = require "shared/utils/not_utils";
+local mp = nu.multiplayer
+local logger = nu.Logger.new("not_survival");
+
 local resource = require "shared/utils/resource_func"
 
 if mp.api.server then
@@ -10,5 +13,5 @@ if mp.api.client then
 end
 
 events.on(resource("first_tick"), function()
-  print("NotSurvival is running in " .. mp.mode .. " mode.")
+  logger:log("I", "NotSurvival is running in " .. mp.mode .. " mode.")
 end)

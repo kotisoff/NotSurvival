@@ -4,5 +4,6 @@
   "stack-size": 1,
   "not_survival:tool_speed": 4,
   "not_survival:tool_type": ["pickaxe"],
-  "not_crafting:fuel_burn_time": 200
+  "not_crafting:fuel_burn_time": 200,
+  "simpleitemtags:tags@append": ["tools"]
 }

@@ -8,5 +8,6 @@
     "eat-delay": 1.5,
     "consume-item": true,
     "type": "food"
-  }
+  },
+  "simpleitemtags:tags@append": ["food"]
 }

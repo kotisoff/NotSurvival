@@ -1,6 +1,6 @@
 {
-  "type": "minecraft:smelting",
-  "category": "blocks",
+  "type": "not_crafting:smelting",
+  "category": "building",
   "cookingtime": 200,
   "experience": 0.1,
   "ingredient": {

@@ -1,10 +1,10 @@
-local mp              = require "shared/utils/not_utils".multiplayer.api.client
-local packets         = require "shared/utils/declarations/packets"
-local data            = require "shared/player/data"
-local resource        = require "shared/utils/resource_func"
-local death           = require "client/lib/death"
-local experience      = require "client/lib/experience"
-local pack_id         = "not_survival"
+local mp = require "shared/utils/not_utils".multiplayer.api.client
+local packets = require "shared/utils/declarations/packets"
+local data = require "shared/player/data"
+local resource = require "shared/utils/resource_func"
+local death = require "client/lib/death"
+local experience = require "client/lib/experience"
+local pack_id = "not_survival"
 
 local movement_inputs = {
   "movement.forward",
