@@ -72,9 +72,10 @@ end
 ---@param pid number
 ---@return [ {}, {}, {} ]
 local function get_component(pid)
-  if mp.api.server then
+  if mp_server then
     local entid = player.get_entity(pid);
     local entity = entities.get(entid);
+    if not entity then return {} end
 
     local component = entity.components[pack_id .. ":player"];
 
@@ -215,18 +216,6 @@ function module.update(category, field, client)
 end
 
 if mp_server then
-  ---@param client neutron.class.client
-  events.on("server:client_connected", function(client)
-    local component = get_component(client.player.pid)
-    local c_id = module.get_category_index("data")
-
-    if not component[c_id] or #component[c_id] ~= #PlayerData then
-      for index, value in ipairs(module.Categories) do
-        component[index] = module['new_' .. value]()
-      end
-    end
-  end)
-
   mp_server.events.on(pack_id, packets.update_player_data, function(client, bytes)
     local args = mp_server.bson.deserialize(bytes)
     local c, f = unpack(args)
