@@ -75,7 +75,6 @@ local function get_component(pid)
   if mp_server then
     local entid = player.get_entity(pid);
     local entity = entities.get(entid);
-    if not entity then return {} end
 
     local component = entity.components[pack_id .. ":player"];
 
