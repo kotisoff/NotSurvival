@@ -6,5 +6,5 @@
   "rotation": "pane",
   "material": "base:wood",
   "base:durability": 4,
-  "simpleitemtags:tags@append": ["beds"]
+  "not_utils:tags@append": ["beds"]
 }
