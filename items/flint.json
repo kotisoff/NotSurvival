@@ -1,5 +1,5 @@
 {
   "icon-type": "sprite",
   "icon": "items:flint",
-  "simpleitemtags:tags": ["not_crafting:craft_item"]
+  "not_utils:tags": ["not_crafting:craft_item"]
 }

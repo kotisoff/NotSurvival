@@ -9,5 +9,5 @@
     "consume-item": true,
     "type": "food"
   },
-  "simpleitemtags:tags@append": ["food"]
+  "not_utils:tags@append": ["food"]
 }
