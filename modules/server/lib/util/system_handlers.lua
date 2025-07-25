@@ -66,7 +66,7 @@ function module.clear_ticking_event(name)
 end
 
 events.on(server_utils.get_player_event(), function(pid)
-  local tps = mp.constants.tps.tps;
+  local tps = (mp.constants.tps or { tps = 20 }).tps;
 
   for _, event in pairs(ticking_events) do
     for _, handler in ipairs(event) do

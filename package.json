@@ -5,7 +5,6 @@
   "creator": "KotIsOff",
   "description": "Точно не выживание.\nСкока на*уй игроков???",
   "dependencies": [
-    "not_utils",
-    "~simpleitemtags"
+    "not_utils"
   ]
 }
