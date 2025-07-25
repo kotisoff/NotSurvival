@@ -55,7 +55,7 @@ events.on(server_utils.get_player_event(), function(pid)
   if not is_eating(pid) then return end
   local target = get_eating(pid)
 
-  local tps = server_utils.tps
+  local tps = mp.constants.tps.tps;
 
   local food_data = hunger.get_food_data(target.id)
   if not food_data then return end

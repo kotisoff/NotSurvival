@@ -1,4 +1,5 @@
 local server_utils = require "server/lib/util/server_utils"
+local mp = require "shared/utils/not_utils".multiplayer.api.server;
 local module = {}
 
 local ticking = {}
@@ -65,7 +66,7 @@ function module.clear_ticking_event(name)
 end
 
 events.on(server_utils.get_player_event(), function(pid)
-  local tps = server_utils.tps
+  local tps = mp.constants.tps.tps;
 
   for _, event in pairs(ticking_events) do
     for _, handler in ipairs(event) do
