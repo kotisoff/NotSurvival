@@ -2,7 +2,7 @@ local nu = require "shared/utils/not_utils";
 local mp = nu.multiplayer
 local logger = nu.Logger.new("not_survival");
 
-logger:log("I", "Клиент-сайд тута.")
+logger.println("I", "Клиент-сайд тута.")
 
 local resource = require "shared/utils/resource_func"
 
