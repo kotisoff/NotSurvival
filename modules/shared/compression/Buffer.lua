@@ -7,7 +7,7 @@ local module = {};
 ---@field value any[]
 
 ---@param buffer ns.network.Buffer
-local function append_buffer(buffer, data)
+local function append(buffer, data)
   table.insert(buffer.value, data);
 end
 
@@ -26,7 +26,7 @@ function module.new(data)
     value = data or {},
     next = 1,
     read_next = read_next,
-    append = append_buffer
+    append = append
   }
 
   return buffer;
