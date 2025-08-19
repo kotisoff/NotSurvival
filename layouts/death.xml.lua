@@ -3,7 +3,8 @@ local mode = _mp.mode
 local mp = _mp.api.client
 
 local packets = require "shared/utils/declarations/packets"
-local pack_id = "not_survival"
+local constants = require "constants";
+local pack_id = constants.pack_id;
 
 function on_open(invid, x, y, z)
   document.score.pos = {

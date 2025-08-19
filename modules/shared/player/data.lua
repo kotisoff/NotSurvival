@@ -2,7 +2,8 @@ local not_utils = require "shared/utils/not_utils"
 local mp = not_utils.multiplayer
 local mp_client, mp_server = mp.api.client, mp.api.server
 local packets = require "shared/utils/declarations/packets"
-local pack_id = "not_survival"
+local constants = require "constants";
+local pack_id = constants.pack_id;
 
 local module = {}
 

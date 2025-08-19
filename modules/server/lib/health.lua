@@ -6,7 +6,8 @@ local packets = require "shared/utils/declarations/packets"
 local damage = require "shared/lib/damage"
 local module_utils = require "server/lib/util/module_utils"
 
-local pack_id = "not_survival"
+local constants = require "constants";
+local pack_id = constants.pack_id;
 local cat, field = "data", "health";
 
 local module = {}

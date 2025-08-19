@@ -4,7 +4,8 @@ local data = require "shared/player/data"
 local resource = require "shared/utils/resource_func"
 local death = require "client/lib/death"
 local experience = require "client/lib/experience"
-local pack_id = "not_survival"
+local constants = require "constants";
+local pack_id = constants.pack_id;
 
 local movement_inputs = {
   "movement.forward",

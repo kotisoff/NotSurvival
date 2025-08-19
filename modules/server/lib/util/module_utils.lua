@@ -3,7 +3,8 @@ local mp = _nu.multiplayer.api.server
 local data = require "shared/player/data"
 local packets = require "shared/utils/declarations/packets"
 
-local pack_id = "not_survival"
+local constants = require "constants";
+local pack_id = constants.pack_id;
 
 local module = {}
 

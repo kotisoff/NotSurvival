@@ -1,11 +1,12 @@
-local pack_id = "not_survival"
+local constants = require "constants";
+local pack_id = constants.pack_id;
 
-local resource = require "shared/utils/resource_func";
 local mp = require "shared/utils/not_utils".multiplayer
 local mp_c, mp_s = mp.api.client, mp.api.server
 local player_data = require "shared/player/data"
 local packets = require "shared/utils/declarations/packets"
 local fall_distance = require "shared/lib/fall_distance"
+local speed_limiter = require "client/system/movement_controller";
 
 local tsf = entity.transform
 local body = entity.rigidbody
@@ -37,6 +38,12 @@ function on_attacked(attacker, attacker_pid)
   local pid = entity:get_player()
   if mp_c and attacker_pid ~= pid then
     mp_c.events.send(pack_id, packets.player_attacked, mp_c.bson.serialize({ attacker_pid }))
+  end
+end
+
+function on_render(delta)
+  if mp_c then
+    speed_limiter.__update(entity);
   end
 end
 

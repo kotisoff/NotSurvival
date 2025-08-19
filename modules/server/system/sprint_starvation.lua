@@ -3,7 +3,8 @@ local packets = require "shared/utils/declarations/packets"
 local hunger = require "server/lib/hunger"
 local system_handlers = require "server/lib/util/system_handlers"
 
-local pack_id = "not_survival"
+local constants = require "constants";
+local pack_id = constants.pack_id;
 
 ---@type bool[]
 local sprinting = {}

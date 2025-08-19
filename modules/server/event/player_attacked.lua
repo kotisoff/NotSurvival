@@ -1,4 +1,5 @@
-local pack_id = "not_survival"
+local constants = require "constants";
+local pack_id = constants.pack_id;
 
 local mp = require "shared/utils/not_utils".multiplayer.api.server
 local packets = require "shared/utils/declarations/packets"

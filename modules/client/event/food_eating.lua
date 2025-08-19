@@ -7,7 +7,7 @@ local resource = require "shared/utils/resource_func"
 local sounds = require "shared/lib/sounds_registry"
 local hunger = require "shared/lib/hunger"
 local client_hunger = require "client/lib/hunger"
-local speed_limiter = require "client/system/speed_limiter"
+local speed_limiter = require "client/system/movement_controller"
 
 local packid = "not_survival"
 
@@ -16,12 +16,14 @@ local food = {
 }
 
 local function start_eating()
-  speed_limiter.set_limit(2.5)
+  speed_limiter.set_limit("speed_in_air", 2.5);
+  speed_limiter.set_limit("speed_on_ground", 2.5);
   mp.events.send(packid, packets.food_eating, mp.bson.serialize({ true }))
 end
 
 local function stop_eating()
-  speed_limiter.set_limit()
+  speed_limiter.set_limit("speed_in_air");
+  speed_limiter.set_limit("speed_on_ground");
   food.eating = false
   mp.events.send(packid, packets.food_eating, mp.bson.serialize({ false }))
 end
@@ -65,7 +67,8 @@ mp.events.on(packid, packets.food_eating, function()
   food.sound = false
   cor.create(function()
     cor.sleep(0.2)
-    speed_limiter.set_limit()
+    speed_limiter.set_limit("speed_in_air")
+    speed_limiter.set_limit("speed_on_ground")
     food.eating = false
   end)
 end)
