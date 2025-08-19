@@ -1,11 +1,11 @@
-local data = require "shared/player/data"
+local data = require "shared/player/data_manager"
 local exp_shared = require "shared/lib/experience"
 
 local module = {};
 
 function module.get_exp()
   local pid = hud.get_player()
-  return data.get_status(pid, "xp")
+  return data.get_status(pid).xp
 end
 
 function module.get_lvl()

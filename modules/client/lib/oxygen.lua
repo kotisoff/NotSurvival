@@ -1,20 +1,17 @@
-local data = require "shared/player/data"
+local data = require "shared/player/data_manager"
 
 local module = {}
-
----@type ns.attributefield
-local field = "oxygen";
 
 ---@return number
 function module.get()
   local pid = hud.get_player()
-  return data.get_data(pid, field)
+  return data.get_data(pid).oxygen
 end
 
 ---@return number
 function module.get_max()
   local pid = hud.get_player()
-  return data.get_attributes(pid, field)
+  return data.get_attributes(pid).oxygen
 end
 
 return module

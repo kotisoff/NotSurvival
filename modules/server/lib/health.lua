@@ -1,10 +1,11 @@
 local _nu = require "shared/utils/not_utils"
 
 local mp = _nu.multiplayer.api.server
-local data = require "shared/player/data"
-local packets = require "shared/utils/declarations/packets"
-local damage = require "shared/lib/damage"
-local module_utils = require "server/lib/util/module_utils"
+local data = require "shared/player/data_manager";
+local data_types = require "shared/player/data_types";
+local packets = require "shared/utils/declarations/packets";
+local damage = require "shared/lib/damage";
+local module_utils = require "server/lib/util/module_utils";
 
 local constants = require "constants";
 local pack_id = constants.pack_id;
@@ -17,12 +18,12 @@ local module = {}
 
 ---@return number
 function module.get(pid)
-  return data.get_data(pid, field)
+  return data.get_data(pid).health
 end
 
 ---@return number
 function module.get_max(pid)
-  return data.get_attributes(pid, field)
+  return data.get_attributes(pid).health
 end
 
 function module.set(pid, value)
@@ -84,8 +85,8 @@ function module.damage(pid, amount, options)
 
   mp.events.tell(pack_id, packets.update_player_data, client,
     mp.bson.serialize({
-      data.get_category_index(cat),
-      data.get_field_index(cat, field),
+      data_types.get_category_index(cat),
+      data_types.get_field_index(cat, field),
       module.get(pid)
     })
   )

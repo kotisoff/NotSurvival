@@ -1,4 +1,4 @@
-local data = require "shared/player/data"
+local data = require "shared/player/data_manager"
 local module_utils = require "server/lib/util/module_utils"
 
 ---@type ns.categories, ns.statusfield | ns.attributefield
@@ -8,12 +8,12 @@ local module = {}
 
 ---@return number
 function module.get(pid)
-  return data.get_data(pid, field)
+  return data.get_data(pid).oxygen
 end
 
 ---@return number
 function module.get_max(pid)
-  return data.get_attributes(pid, field)
+  return data.get_attributes(pid).oxygen
 end
 
 function module.set(pid, value)

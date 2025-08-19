@@ -7,8 +7,7 @@ logger:log("I", "Клиент-сайд тута.")
 local resource = require "shared/utils/resource_func"
 
 -- ========================systems==========================
-local data = require "shared/player/data"
-require "client/overrides"
+local data = require "shared/player/data_manager"
 
 local require_folder = require "shared/utils/require_folder"
 

@@ -1,5 +1,6 @@
+---@diagnostic disable: inject-field
 local resource = require "shared/utils/resource_func";
-local player_data = require "shared/player/data";
+local player_data = require "shared/player/data_manager";
 local experience = require "shared/lib/experience"
 
 local bars_size = {};
@@ -55,9 +56,9 @@ events.on(resource("hud_open"), function()
 
   local pid = hud.get_player();
   events.on(resource("player_tick"), function()
-    local data = player_data.get_data_dict(pid);
+    local data = player_data.get_data(pid);
 
-    xp = player_data.get_status(pid, "xp");
+    xp = player_data.get_status(pid).xp;
     data.lvl = math.floor(experience.calc_lvl(xp)) or "";
     data.xp = math.floor(xp - experience.calc_total(data.lvl));
 
@@ -70,9 +71,9 @@ events.on(resource("hud_open"), function()
       end
     end
 
-    xp = player_data.get_status(pid, "xp");
+    -- xp = player_data.get_status(pid).xp;
 
-    attributes = player_data.get_attributes_dict(pid);
+    attributes = player_data.get_attributes(pid);
     attributes.xp = experience.calc_next(data.lvl);
 
     for name, _ in pairs(upd_queue) do

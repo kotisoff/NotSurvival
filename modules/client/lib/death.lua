@@ -1,4 +1,4 @@
-local data = require "shared/player/data"
+local data = require "shared/player/data_manager"
 
 local module = {};
 
@@ -6,7 +6,7 @@ local death_overlay = "not_survival:death"
 local document = Document.new(death_overlay)
 
 function module.get()
-  return data.get_status(hud.get_player(), "dead");
+  return data.get_status(hud.get_player()).dead;
 end
 
 ---@param score? int

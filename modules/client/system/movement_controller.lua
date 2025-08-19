@@ -1,4 +1,4 @@
-local data = require "shared/player/data"
+local data = require "shared/player/data_manager"
 local allow_cheats = require "client/hooks/allow_cheats"
 
 local module = {}
@@ -34,7 +34,7 @@ function module.__update(entity)
   local pid = entity:get_player();
   if not pid or hud.get_player() ~= pid then return end
 
-  local gm = data.get_status(pid, "gamemode")
+  local gm = data.get_status(pid).gamemode
   if gm == 0 then
     local x, y, z, _ = player.get_vel(pid) -- _ for nil
     local speed = vec2.length({ x, z })

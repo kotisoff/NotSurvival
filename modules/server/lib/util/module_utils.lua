@@ -1,6 +1,6 @@
 local _nu = require "shared/utils/not_utils"
 local mp = _nu.multiplayer.api.server
-local data = require "shared/player/data"
+local data = require "shared/player/data_types"
 local packets = require "shared/utils/declarations/packets"
 
 local constants = require "constants";

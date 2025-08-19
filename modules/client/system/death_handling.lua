@@ -1,9 +1,10 @@
-local mp = require "shared/utils/not_utils".multiplayer.api.client
-local packets = require "shared/utils/declarations/packets"
-local data = require "shared/player/data"
-local resource = require "shared/utils/resource_func"
-local death = require "client/lib/death"
-local experience = require "client/lib/experience"
+local mp = require "shared/utils/not_utils".multiplayer.api.client;
+local packets = require "shared/utils/declarations/packets";
+local data = require "shared/player/data_manager";
+local compression = require "shared/compression/player_data";
+local resource = require "shared/utils/resource_func";
+local death = require "client/lib/death";
+local experience = require "client/lib/experience";
 local constants = require "constants";
 local pack_id = constants.pack_id;
 
@@ -22,19 +23,17 @@ local function block_inputs(flag)
 end
 
 mp.events.on(pack_id, packets.update_player_data, function(bytes)
-  ---@type [int, int, bool]
-  local args = mp.bson.deserialize(bytes)
-  local c, f, d = unpack(args)
+  local category, field, value = compression.from_bytes(bytes);
 
-  if f == 0 then return end
+  if category ~= "status"
+      or not field
+      or field ~= "dead"
+      or data.get_status(hud.get_player()).gamemode ~= 0
+  then
+    return
+  end
 
-  local cat = data.Categories[c]
-  ---@type ns.statusfield | ns.attributefield | str
-  local field = data.CategoryFields[cat][f]
-
-  if field ~= "dead" or data.get_status(hud.get_player(), "gamemode") ~= 0 then return end
-
-  if d then
+  if value == true then
     death.show_overlay(experience.get_exp())
     block_inputs(true)
   else

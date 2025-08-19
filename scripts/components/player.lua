@@ -3,7 +3,7 @@ local pack_id = constants.pack_id;
 
 local mp = require "shared/utils/not_utils".multiplayer
 local mp_c, mp_s = mp.api.client, mp.api.server
-local player_data = require "shared/player/data"
+local player_data = require "shared/player/data_manager"
 local packets = require "shared/utils/declarations/packets"
 local fall_distance = require "shared/lib/fall_distance"
 local speed_limiter = require "client/system/movement_controller";
@@ -13,7 +13,7 @@ local body = entity.rigidbody
 local rig = entity.skeleton
 
 if mp_s then
-  if #SAVED_DATA ~= 3 or not SAVED_DATA[1] then
+  if not SAVED_DATA.data then
     ARGS = player_data.new_player_data()
   else
     ARGS = SAVED_DATA

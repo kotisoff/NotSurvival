@@ -1,5 +1,5 @@
 local module_utils = require "server/lib/util/module_utils"
-local data = require "shared/player/data"
+local data = require "shared/player/data_manager"
 local exp_shared = require "shared/lib/experience"
 
 ---@type ns.categories, ns.statusfield
@@ -8,7 +8,7 @@ local cat, field = "status", "xp";
 local module = {}
 
 function module.get_exp(pid)
-  return data.get_status(pid, field) or 0
+  return data.get_status(pid).xp or 0
 end
 
 function module.get_lvl(pid)

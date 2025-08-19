@@ -2,7 +2,7 @@ local _mp          = require "shared/utils/not_utils".multiplayer;
 local mode         = _mp.mode;
 local mp           = _mp.api.server;
 
-local data         = require "shared/player/data";
+local data         = require "shared/player/data_manager";
 local module_utils = require "server/lib/util/module_utils"
 
 local health       = require "server/lib/health";
@@ -19,7 +19,7 @@ local module       = {}
 
 ---@return bool
 function module.get(pid)
-  return data.get_status(pid, field)
+  return data.get_status(pid).dead
 end
 
 ---@param pid int
@@ -32,7 +32,7 @@ end
 ---@param pid int
 ---@param damage_type damage_types
 function module.kill(pid, damage_type)
-  if data.get_status(pid, "gamemode") ~= 0 then return end
+  if data.get_status(pid).gamemode ~= 0 then return end
 
   local max = health.get(pid)
   health.damage(pid, max, { damage_type = damage_type, do_knockback = false })

@@ -4,7 +4,7 @@ local logger = nu.Logger.new("not_survival");
 local mode = _mp.mode
 local mp = _mp.api.server
 
-require "shared/player/data"
+require "shared/player/data_manager"
 require "server/lib/util/server_utils"
 require "server/commands"
 

@@ -1,40 +1,38 @@
-local data          = require "shared/player/data"
-local module_utils  = require "server/lib/util/module_utils"
+local data         = require "shared/player/data_manager"
+local module_utils = require "server/lib/util/module_utils"
 
-local cat, f_h, f_s = "data", "hunger", "saturation";
-
-local module        = {} -- эту хуету через генератор оптимизировать также вообще не вариант.
+local module       = {} -- эту хуету через генератор оптимизировать также вообще не вариант.
 
 function module.get_hunger(pid)
-  return data.get_data(pid, f_h)
+  return data.get_data(pid).hunger
 end
 
 function module.get_max_hunger(pid)
-  return data.get_attributes(pid, f_h)
+  return data.get_attributes(pid).hunger
 end
 
 function module.get_saturation(pid)
-  return data.get_data(pid, f_s)
+  return data.get_data(pid).saturation
 end
 
 function module.get_max_saturation(pid)
-  return data.get_attributes(pid, f_s)
+  return data.get_attributes(pid).saturation
 end
 
 function module.set_hunger(pid, amount)
   local max = module.get_max_hunger(pid)
   local value = math.clamp(amount, 0, max)
 
-  data.set_field(pid, cat, f_h, value)
-  module_utils.update(pid, cat, f_h, value)
+  data.get_data(pid).hunger = value;
+  module_utils.update(pid, "data", "hunger", value)
 end
 
 function module.set_saturation(pid, amount)
   local max = module.get_max_saturation(pid)
   local value = math.clamp(amount, 0, max)
 
-  data.set_field(pid, cat, f_s, value)
-  module_utils.update(pid, cat, f_s, value)
+  data.get_data(pid).saturation = value
+  module_utils.update(pid, "data", "saturation", value)
 end
 
 function module.full(pid)
