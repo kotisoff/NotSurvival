@@ -2,31 +2,19 @@ local resource = require "shared/utils/resource_func";
 local player_data = require "shared/player/data";
 local experience = require "shared/lib/experience"
 
--- Generate hud keys.
-events.on(resource("hud_open"), function()
-  HUD_DATA = {};
+local bars_size = {};
 
-  local data_keys = player_data.CategoryFields.data
-  table.insert(data_keys, "lvl")
-  table.insert(data_keys, "xp")
+local function exists(name)
+  local status = pcall(function()
+    return document[name].pos
+  end)
 
-  for _, name in ipairs(data_keys) do
-    local barname = name .. "_bar";
+  return status;
+end
 
-    local status_bar = pcall(function() return document[barname].pos end);
-    local status_val = pcall(function() return document[name].pos end);
-
-    if status_bar or status_val then
-      HUD_DATA[name] = {
-        has_label = status_val
-      };
-      if status_bar then
-        HUD_DATA[name].barname = barname;
-        HUD_DATA[name].size = document[barname].size[1]
-      end
-    end
-  end
-end)
+local function calculate_width(max_width, value, max)
+  return math.floor(max_width * value / (max or value));
+end
 
 local function is_visible(name, value, max)
   local more_than_zero = (value > 0);
@@ -35,57 +23,63 @@ local function is_visible(name, value, max)
   return more_than_zero and oxygen_visible
 end
 
-local function calculate_width(max_width, value, max)
-  return math.floor(max_width * value / (max or value));
+local function update_value(name, value, max)
+  local label_id = name .. "_label";
+  local bar_id = name .. "_bar";
+
+  local visible = is_visible(name, value, max);
+
+  if exists(label_id) then
+    local label = document[label_id];
+
+    local text = string.format("%s%s", value, max and "/" .. max or "");
+    label.text = text;
+    label.visible = visible;
+  end
+  if exists(bar_id) then
+    local bar = document[bar_id];
+    bars_size[bar_id] = math.max(bar.size[1], bars_size[bar_id] or 0);
+    local max_width = bars_size[bar_id];
+
+    bar.size = { calculate_width(max_width, value, max), bar.size[2] };
+    bar.visible = visible;
+  end
 end
+
 
 -- Set hud values.
 events.on(resource("hud_open"), function()
-  local player
-  local xp
-
-  local attributes
-
+  local old_data = {};
+  local xp = 0;
+  local attributes = {};
 
   local pid = hud.get_player();
   events.on(resource("player_tick"), function()
-    player = player_data.get_data_dict(pid);
+    local data = player_data.get_data_dict(pid);
 
-    ---@diagnostic disable-next-line: cast-local-type
+    xp = player_data.get_status(pid, "xp");
+    data.lvl = math.floor(experience.calc_lvl(xp)) or "";
+    data.xp = math.floor(xp - experience.calc_total(data.lvl));
+
+    local upd_queue = {};
+
+    for key, value in pairs(data) do
+      if not old_data[key] or old_data[key] ~= value then
+        old_data[key] = value;
+        upd_queue[key] = true;
+      end
+    end
+
     xp = player_data.get_status(pid, "xp");
 
-    player.lvl = math.floor(experience.calc_lvl(xp)) or "";
-    player.xp = math.floor(xp - experience.calc_total(player.lvl));
-
     attributes = player_data.get_attributes_dict(pid);
-    attributes.xp = experience.calc_next(player.lvl);
+    attributes.xp = experience.calc_next(data.lvl);
 
-    for label, data in pairs(HUD_DATA) do
-      local barname = data.barname;
+    for name, _ in pairs(upd_queue) do
+      local value = data[name];
+      local max = attributes[name];
 
-      local value = player[label];
-      local max = attributes[label];
-
-      local visible = is_visible(label, value, max);
-
-      if barname then
-        local max_width = data.size;
-        local size = document[barname].size;
-        local calculated_width = calculate_width(max_width, value, max);
-        document[barname].size = { calculated_width, size[2] };
-
-        document[barname].visible = visible;
-      end
-
-      if data.has_label then
-        local text = tostring(math.floor(value));
-        if max then
-          text = text .. "/" .. max;
-        end
-
-        document[label].text = text;
-        document[label].visible = visible;
-      end
+      update_value(name, value, max);
     end
   end)
 end)

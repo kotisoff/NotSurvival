@@ -45,7 +45,7 @@ end)
 
 events.on(resource("player_tick"), function()
   if death.get() then
-    if not hud.is_paused() then
+    if not hud.is_inventory_open() then
       death.show_overlay(experience.get_exp())
     end
   end

@@ -14,6 +14,7 @@ function module.show_overlay(score)
   if score then
     document.score.text = string.format("Score: [#FFFF00]%d", score)
   end
+
   hud.show_overlay(death_overlay, false)
 end
 

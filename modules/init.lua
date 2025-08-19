@@ -4,8 +4,6 @@ local logger = nu.Logger.new("not_survival");
 
 local resource = require "shared/utils/resource_func"
 
-require "tags";
-
 if mp.api.server then
   require "server/init"
 end
