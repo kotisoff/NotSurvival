@@ -1,4 +1,5 @@
 local constants = require "constants";
+local ns_events = require "shared/utils/ns_events"
 local pack_id = constants.pack_id;
 
 local mp = require "shared/utils/not_utils".multiplayer
@@ -34,11 +35,8 @@ function on_grounded(velocity)
   end
 end
 
-function on_attacked(attacker, attacker_pid)
-  local pid = entity:get_player()
-  if mp_c and attacker_pid ~= pid then
-    mp_c.events.send(pack_id, packets.player_attacked, mp_c.bson.serialize({ attacker_pid }))
-  end
+function on_attacked(attacker_eid, attacker_pid)
+  ns_events.emit("player_attacked", entity:get_player());
 end
 
 function on_render(delta)

@@ -68,7 +68,7 @@ mp.as_server(function(server, mode)
     if not module.get(pid) then return end
 
     --TODO: add ns rules.
-    local client = mp.accounts.get_client_by_name(player.get_name(pid))
+    local client = server.accounts.get_client_by_name(player.get_name(pid))
 
     if not true then
       local pos = { player.get_pos(pid) }
@@ -86,12 +86,12 @@ mp.as_server(function(server, mode)
 
       module.drop_items(pid)
     end
-    mp.console.tell("You died at " .. table.concat(vec3.round({ player.get_pos(pid) }), " "), client)
+    server.console.tell("You died at " .. table.concat(vec3.round({ player.get_pos(pid) }), " "), client)
 
     -- Телепорт на спавн
     local x, y, z = player.get_spawnpoint(pid)
     local status = pcall(function()
-      mp.sandbox.players.sync_states(client.player,
+      server.sandbox.players.sync_states(client.player,
         { pos = { x = x, y = y, z = z }, rot = { yaw = 0, pitch = 0 } })
     end)
     if not status then

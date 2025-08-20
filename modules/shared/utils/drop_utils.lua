@@ -7,7 +7,7 @@ local function calculate_experience(loot)
 
 
   return exp_loot.count
-      or math.round_to(
+      or math.round(
         math.rand(exp_loot.min or 0, exp_loot.max or 0),
         2
       )
