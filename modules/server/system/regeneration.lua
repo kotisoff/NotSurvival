@@ -1,6 +1,6 @@
-local health          = require "server/lib/health"
-local hunger          = require "server/lib/hunger"
-local death           = require "server/lib/death"
+local health          = require "shared/survival/health"
+local hunger          = require "shared/survival/hunger"
+local death           = require "shared/survival/death"
 local system_handlers = require "server/lib/util/system_handlers"
 
 system_handlers.add_ticking_event("ns.regeneration", function(pid, tps, regen)

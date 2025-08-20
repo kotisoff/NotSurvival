@@ -6,7 +6,7 @@ local packets = require "shared/utils/declarations/packets"
 local resource = require "shared/utils/resource_func"
 local sounds = require "shared/lib/sounds_registry"
 local hunger = require "shared/lib/hunger"
-local client_hunger = require "client/lib/hunger"
+local hunger_mgr = require "shared/survival/hunger"
 local speed_limiter = require "client/system/movement_controller"
 
 local packid = "not_survival"
@@ -35,7 +35,7 @@ events.on(resource("player_tick"), function(pid, tps)
     local inv, slot = player.get_inventory(pid)
     local itemid = inventory.get(inv, slot)
     local data = hunger.get_food_data(itemid)
-    local is_not_max = client_hunger.get_hunger() ~= client_hunger.get_max_hunger()
+    local is_not_max = hunger_mgr.get_hunger() ~= hunger_mgr.get_max_hunger()
 
     if food.eating then
       if food.id ~= itemid or food.slot ~= slot then

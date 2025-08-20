@@ -1,14 +1,14 @@
-local not_utils     = require "shared/utils/not_utils"
-local server_utils  = require "server/lib/util/server_utils"
-local hunger        = require "shared/lib/hunger"
-local server_hunger = require "server/lib/hunger"
-local mp            = not_utils.multiplayer.api.server
+local not_utils    = require "shared/utils/not_utils"
+local server_utils = require "server/lib/util/server_utils"
+local hunger       = require "shared/lib/hunger"
+local hunger_mgr   = require "shared/survival/hunger"
+local mp           = not_utils.multiplayer.api.server
 
-local packets       = require "shared/utils/declarations/packets"
-local pack_id       = "not_survival"
+local packets      = require "shared/utils/declarations/packets"
+local pack_id      = "not_survival"
 
 ---@type table<str, { id: int, progress: number }>
-local eating        = {}
+local eating       = {}
 
 -- =========================funcs===========================
 
@@ -65,7 +65,7 @@ events.on(server_utils.get_player_event(), function(pid)
   target.progress = target.progress + (1 / speed)
 
   if target.progress >= 1 then
-    server_hunger.add(pid, food_data.food, food_data.saturation)
+    hunger_mgr.add(pid, food_data.food, food_data.saturation)
 
     local invid, slot = player.get_inventory(pid)
 

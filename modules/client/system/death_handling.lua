@@ -3,8 +3,8 @@ local packets = require "shared/utils/declarations/packets";
 local data = require "shared/player/data_manager";
 local compression = require "shared/compression/player_data";
 local resource = require "shared/utils/resource_func";
-local death = require "client/lib/death";
-local experience = require "client/lib/experience";
+local death = require "shared/survival/death";
+local experience = require "shared/survival/experience";
 local constants = require "constants";
 local pack_id = constants.pack_id;
 

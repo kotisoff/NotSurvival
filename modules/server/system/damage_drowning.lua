@@ -1,6 +1,6 @@
-local health          = require "server/lib/health"
-local death           = require "server/lib/death"
-local oxygen          = require "server/lib/oxygen"
+local health          = require "shared/survival/health"
+local death           = require "shared/survival/death"
+local oxygen          = require "shared/survival/oxygen"
 local system_handlers = require "server/lib/util/system_handlers"
 
 local function is_under_block(pid)

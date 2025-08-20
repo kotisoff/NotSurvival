@@ -3,7 +3,7 @@ local pack_id = constants.pack_id;
 
 local mp = require "shared/utils/not_utils".multiplayer.api.server
 local packets = require "shared/utils/declarations/packets"
-local health = require "server/lib/health"
+local health = require "shared/survival/health"
 
 mp.events.on(pack_id, packets.player_attacked, function(client, bytes)
   local args = mp.bson.deserialize(bytes)

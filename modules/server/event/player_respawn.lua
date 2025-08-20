@@ -1,6 +1,6 @@
 local mp        = require "shared/utils/not_utils".multiplayer.api.server
 local packets   = require "shared/utils/declarations/packets"
-local death     = require "server/lib/death"
+local death     = require "shared/survival/death"
 local constants = require "constants";
 local pack_id   = constants.pack_id;
 

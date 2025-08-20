@@ -1,6 +1,6 @@
 local mp = require "shared/utils/not_utils".multiplayer.api.server
 local packets = require "shared/utils/declarations/packets"
-local hunger = require "server/lib/hunger"
+local hunger = require "shared/survival/hunger"
 local system_handlers = require "server/lib/util/system_handlers"
 
 local constants = require "constants";

@@ -1,6 +1,6 @@
 local server_utils = require "server/lib/util/server_utils"
-local health       = require "server/lib/health"
-local death        = require "server/lib/death"
+local health       = require "shared/survival/health"
+local death        = require "shared/survival/death"
 local data         = require "shared/player/data_manager"
 
 local _nu          = require "shared/utils/not_utils"
