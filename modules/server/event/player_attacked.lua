@@ -25,11 +25,9 @@ mp.events.on(pack_id, packets.player_attacked, function(client, bytes)
 
   local client_pos = { player.get_pos(client.player.pid) };
   local attacked_pos = { player.get_pos(attacked_pid) };
-
   local distance = dist_fun(client_pos, attacked_pos);
-  print(distance);
 
-  if distance > 5 then
+  if distance > 4 then
     return;
   end
 
