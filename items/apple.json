@@ -9,5 +9,5 @@
     "consume-item": true,
     "type": "food"
   },
-  "not_utils:tags@append": ["food"]
+  "tags@append": ["not_survival:food"]
 }

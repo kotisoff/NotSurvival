@@ -6,5 +6,5 @@
     "eat-anyway": true,
     "replace-item": "not_survival:bottle"
   },
-  "not_utils:tags@append": ["potion"]
+  "tags@append": ["not_survival:potion"]
 }
