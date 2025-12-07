@@ -1,13 +1,7 @@
-local mp = require "shared/utils/not_utils".multiplayer;
-
-mp.handle_event(
-  "server:client_connected", "not_survival:first_tick",
+if pack.is_installed("server") then
   ---@param client neutron.class.client
-  function(client)
+  events.on("server:client_connected", function(client)
     player.set_instant_destruction(client.player.pid, false)
     print(string.format("Игрок %s(%d) присоединился", client.player.username, client.player.pid))
-  end,
-  {
-    "client"
-  }
-)
+  end)
+end
