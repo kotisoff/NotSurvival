@@ -24,4 +24,4 @@ local require_folder = require "shared/utils/require_folder"
 require_folder "server/event"
 require_folder "server/system"
 
-logger.println("I", "Сервер-сайд подтянулся.")
+logger:println("I", "Сервер-сайд подтянулся.")

@@ -13,5 +13,5 @@ if mp.api.client then
 end
 
 events.on(resource("first_tick"), function()
-  logger.println("I", "NotSurvival is running in " .. mp.mode .. " mode.")
+  logger:println("I", "NotSurvival is running in " .. mp.mode .. " mode.")
 end)
