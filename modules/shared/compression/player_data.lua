@@ -3,9 +3,10 @@ local playerdata = require "shared/player/data_types";
 local Buffer     = require "shared/compression/Buffer"
 
 ---@type neutron.shared.bson
-local bson       = mp.get_shared_field("bson");
 
-local module     = {};
+local bson       = mp.as_any(function(side) return side.bson end)
+
+local module     = Buffer.create_compressor();
 
 ---@param category ns.categories
 ---@param field ns.statusfield | ns.attributefield | nil

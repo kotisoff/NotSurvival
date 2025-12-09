@@ -1,21 +1,19 @@
+local ns_events = require "shared/utils/ns_events"
 local nu = require "shared/utils/not_utils";
-local _mp = nu.multiplayer
+local mp = nu.multiplayer
 local logger = nu.Logger.new("not_survival");
-local mode = _mp.mode
-local mp = _mp.api.server
+local server = mp.api.server;
 
 require "shared/player/data_manager"
 require "server/lib/util/server_utils"
 require "server/commands"
 
-local resource = require "shared/utils/resource_func"
+if mp.mode ~= "standalone" then
+  ns_events.on("world_tick", function()
+    local players = server.sandbox.players.get_all();
 
-if mode ~= "standalone" then
-  events.on(resource("world_tick"), function(tps)
-    local players = mp.sandbox.players.get_all()
-
-    for name, _player in pairs(players) do
-      events.emit(resource("player_tick"), _player.pid, tps)
+    for _, _player in pairs(players) do
+      ns_events.emit("player_tick", _player.pid, server.constants.tps.tps);
     end
   end)
 end

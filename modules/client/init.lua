@@ -1,5 +1,5 @@
 local nu = require "shared/utils/not_utils";
-local mp = nu.multiplayer
+local ns_events = require "shared/utils/ns_events";
 local logger = nu.Logger.new("not_survival");
 
 logger:println("I", "Клиент-сайд тута.")
@@ -16,7 +16,10 @@ require_folder "client/system"
 
 -- =========================================================
 
-events.on(resource("hud_open"), function()
+print("Ждём худ")
+ns_events.on("hud_open", function()
+  print(resource("survival_hud"), hud.get_player());
+  print("Поймали ивент худа")
   hud.open_permanent(resource("survival_hud"))
 
   console.log("[#00ff00]NotSurvival - 0.3.0-mp-preview[#ffffff]")

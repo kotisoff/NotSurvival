@@ -5,31 +5,38 @@ local module = {};
 ---@field read_next fun(buffer: ns.network.Buffer): any
 ---@field next int
 ---@field value any[]
+local Buffer = {};
 
----@param buffer ns.network.Buffer
-local function append(buffer, data)
-  table.insert(buffer.value, data);
+function Buffer:append(data)
+  table.insert(self.value, data);
 end
 
----@param buffer ns.network.Buffer
-local function read_next(buffer)
-  local index = buffer.next;
-  buffer.next = buffer.next + 1;
+function Buffer:read_next()
+  local index = self.next;
+  self.next = self.next + 1;
 
-  return buffer.value[index];
+  return self.value[index];
 end
 
 ---@param data? any[]
 function module.new(data)
-  ---@type ns.network.Buffer
-  local buffer = {
-    value = data or {},
-    next = 1,
-    read_next = read_next,
-    append = append
-  }
+  return setmetatable({ value = data or {}, next = 1 }, {
+    __index = Buffer
+  });
+end
 
-  return buffer;
+function module.create_compressor()
+  local compressor = {};
+
+  function compressor.to_bytes(...)
+    return { ... };
+  end
+
+  function compressor.from_bytes(bytes)
+    return unpack(bytes);
+  end
+
+  return compressor;
 end
 
 return module;
