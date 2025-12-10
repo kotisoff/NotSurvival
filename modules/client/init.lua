@@ -22,7 +22,7 @@ ns_events.on("hud_open", function()
   print("Поймали ивент худа")
   hud.open_permanent(resource("survival_hud"))
 
-  console.log("[#00ff00]NotSurvival - 0.3.0-mp-preview[#ffffff]")
+  console.log("[#00ff00]NotSurvival - 0.3.0[#ffffff]")
   console.log(
     "[#ffff00]Используйте мод с осторожностью, поскольку из-за постоянных обновлений многие механики могут менятся от версии к версии[#ffffff]")
   console.log("[#aeaeae]Ой как я надеюсь что ничё не ёбнет за время эксплуатации мода[#ffffff]")
