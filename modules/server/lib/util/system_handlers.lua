@@ -23,22 +23,22 @@ function Ticker:set(value)
   ticking[self.field][self.pid] = value
 end
 
-local tickers_cache = {}
+local tickers = {}
 function Ticker.new(pid, field)
   ticking[field] = ticking[field] or {}
   local ticker = setmetatable({ pid = pid, field = field }, Ticker)
 
-  if not tickers_cache[field] then
-    tickers_cache[field] = {}
+  if not tickers[field] then
+    tickers[field] = {}
   end
 
-  tickers_cache[field][pid] = ticker
+  tickers[field][pid] = ticker
 
   return ticker
 end
 
 function Ticker.get_or_create(pid, field)
-  return (tickers_cache[field] or {})[pid] or Ticker.new(pid, field)
+  return (tickers[field] or {})[pid] or Ticker.new(pid, field)
 end
 
 local ticking_events = {}

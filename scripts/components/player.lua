@@ -44,30 +44,3 @@ function on_render(delta)
     speed_limiter.__update(entity);
   end
 end
-
--- local function first_tick()
---   gamemode.set_player_mode(ARGS.pid, gamemode.get_player_mode(ARGS.pid));
--- end
-
--- local first_player_tick = true;
--- events.on(resource("player_tick"), function(pid)
---   if pid ~= ARGS.pid then return end;
-
---   if first_player_tick then
---     first_player_tick = false;
---     first_tick();
---   end
-
---   -- Check if player variable out of bounds.
---   for key, value in pairs(ARGS.data) do
---     if type(value) ~= "number" then goto continue end;
-
---     if ARGS.attributes[key] and value > ARGS.attributes[key] then
---       ARGS.data[key] = ARGS.attributes[key];
---     elseif value < 0 then
---       ARGS.data[key] = 0;
---     end
-
---     ::continue::
---   end
--- end)

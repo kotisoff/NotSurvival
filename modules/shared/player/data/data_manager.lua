@@ -35,9 +35,7 @@ local PlayerAttributes = {
 
 -- =============================================
 
----@alias effect { identifier: string, level: number, time_left: number }
-
----@type [ number, number, boolean, effect[] ]
+---@type [ number, number, boolean, ns.player.Status.effect[] ]
 local PlayerStatus = {
   xp = 0,
   gamemode = 0,
@@ -125,8 +123,8 @@ end
 
 -- ================Network====================
 
----@param category ns.categories
----@param field ns.attributefield | ns.statusfield | str | nil
+---@param category ns.player.data_categories
+---@param field ns.player.data_field.base | ns.player.data_field.status | str | nil
 ---@param client neutron.class.client | nil Only on server
 function module.update(category, field, client)
   if mp_server and client then

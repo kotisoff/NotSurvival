@@ -1,3 +1,4 @@
+local ns_events = require "shared/core/ns_events"
 local mp        = require "shared/utils/not_utils".multiplayer.api.client
 local packets   = require "shared/utils/declarations/packets"
 local resource  = require "shared/utils/resource_func"
@@ -16,7 +17,7 @@ local function stop_sprint()
   mp.events.send(packid, packets.player_sprinting, mp.bson.serialize({ false }))
 end
 
-events.on(resource("player_tick"), function(pid, tps)
+ns_events.on(("player_tick"), function(pid, tps)
   if pid ~= hud.get_player() then return end
 
   if input.is_active("movement.sprint") and not hud.is_inventory_open() and not hud.is_paused() then

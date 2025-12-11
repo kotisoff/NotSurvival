@@ -1,4 +1,5 @@
 local not_utils       = require "shared/utils/not_utils"
+local ns_events       = require "shared/core/ns_events"
 local mode            = not_utils.multiplayer.mode
 local mp              = not_utils.multiplayer.api.client
 
@@ -207,7 +208,7 @@ local function animate_all_wraps(tps)
   end
 end
 
-events.on(resource("player_tick"), function(pid, tps)
+ns_events.on(("player_tick"), function(pid, tps)
   local playerid = hud.get_player()
   if pid ~= playerid then return end
 

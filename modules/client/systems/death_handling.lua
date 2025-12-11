@@ -1,3 +1,4 @@
+local ns_events = require "shared/core/ns_events"
 local mp = require "shared/utils/not_utils".multiplayer.api.client;
 local packets = require "shared/utils/declarations/packets";
 local data = require "shared/player/data_manager";
@@ -43,7 +44,7 @@ mp.events.on(pack_id, packets.update_player_data, function(bytes)
   end
 end)
 
-events.on(resource("player_tick"), function()
+ns_events.on(("player_tick"), function()
   if death.get() then
     if not hud.is_inventory_open() then
       death.show_overlay(experience.get_exp())

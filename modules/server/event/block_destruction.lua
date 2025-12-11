@@ -1,3 +1,4 @@
+local ns_events       = require "shared/core/ns_events"
 local not_utils       = require "shared/utils/not_utils"
 local mode            = not_utils.multiplayer.mode
 local mp              = not_utils.multiplayer.api.server
@@ -95,7 +96,7 @@ end)
 local drop_utils = require "shared/utils/drop_utils"
 local base_utils = require "base:util"
 
-events.on(resource("l:block_broken"), function(blockid, x, y, z, pid)
+ns_events.on(("l:block_broken"), function(blockid, x, y, z, pid)
   local ns_drop = drop_utils.block_loot(blockid)
 
   ---@type { items: {item: int,count:int,vel:vec3}[] }

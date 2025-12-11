@@ -2,6 +2,7 @@
 local resource = require "shared/utils/resource_func";
 local player_data = require "shared/player/data_manager";
 local experience = require "shared/lib/experience"
+local ns_events = require "shared/core/ns_events"
 
 local bars_size = {};
 
@@ -49,13 +50,13 @@ end
 
 
 -- Set hud values.
-events.on(resource("hud_open"), function()
+ns_events.on(("hud_open"), function()
   local old_data = {};
   local xp = 0;
   local attributes = {};
 
   local pid = hud.get_player();
-  events.on(resource("player_tick"), function()
+  ns_events.on(("player_tick"), function()
     local data = player_data.get_data(pid);
 
     xp = player_data.get_status(pid).xp;
