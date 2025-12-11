@@ -1,5 +1,4 @@
 ---@diagnostic disable: inject-field
-local resource = require "shared/utils/resource_func";
 local player_data = require "shared/player/data_manager";
 local experience = require "shared/lib/experience"
 local ns_events = require "shared/core/ns_events"

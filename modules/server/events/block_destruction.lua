@@ -1,18 +1,17 @@
-local ns_events       = require "shared/core/ns_events"
-local not_utils       = require "shared/utils/not_utils"
-local mode            = not_utils.multiplayer.mode
-local mp              = not_utils.multiplayer.api.server
+local ns_events         = require "shared/core/ns_events"
+local net_events        = require "shared/network/utils/net_events";
+local mp                = require "shared/utils/not_utils".multiplayer;
+local destruction_utils = require "shared/utils/destruction_utils"
 
-local block_dest      = require "shared/lib/block_destruction"
-local packets         = require "shared/utils/declarations/packets"
-local resource        = require "shared/utils/resource_func"
+local api               = mp.api.server;
+local bson              = api.bson;
+local packets           = net_events.packets;
+local breaking_states   = destruction_utils.breaking_states
+local pack_id           = require "constants".pack_id;
 
-local pack_id         = "not_survival"
-
-local breaking_states = block_dest.breaking_states
 
 ---@type {pos: vec3, id: int, pid: int, start: number}[][]
-local breaking        = {}
+local breaking = {}
 
 -- =========================funcs===========================
 
@@ -31,16 +30,28 @@ end
 ---@param ignore_client neutron.class.client | nil
 local function echo_state(state, target, ignore_client)
   local pos = target.pos
-  local players = mp.sandbox.players.get_in_radius({ x = pos[1], y = pos[2], z = pos[3] }, mp.constants.render_distance)
-  for name, _player in pairs(players) do
-    if ignore_client and name == ignore_client.player.username then goto continue end
-    local _client = mp.accounts.get_client_by_name(name)
 
-    mp.events.tell(pack_id, packets.block_breaking, _client, mp.bson.serialize({ state, pos, target.id, target.pid }))
+  local players = api.sandbox.players.get_in_radius(
+    mp.convert_vector(pos), api.constants.render_distance
+  )
+
+  for name, _ in pairs(players) do
+    if ignore_client and name == ignore_client.player.username then goto continue end
+
+    local client = mp.accounts.get_client_by_name(name)
+    net_events.server.tell(packets.block_breaking, client, bson.serialize({ state, pos, target.id, target.pid }));
 
     ::continue::
   end
 end
+
+net_events.server.on(packets.block_breaking, function(client, bytes)
+  local pid = client.player.pid;
+  local state, pos, t_id, t_pid = unpack(bson.deserialize(bytes));
+
+  if state == breaking_states.start then
+  end
+end)
 
 mp.events.on(pack_id, packets.block_breaking, function(client, bytes)
   local pid        = client.player.pid
@@ -96,7 +107,7 @@ end)
 local drop_utils = require "shared/utils/drop_utils"
 local base_utils = require "base:util"
 
-ns_events.on(("l:block_broken"), function(blockid, x, y, z, pid)
+ns_events.on("l:block_broken", function(blockid, x, y, z, pid)
   local ns_drop = drop_utils.block_loot(blockid)
 
   ---@type { items: {item: int,count:int,vel:vec3}[] }

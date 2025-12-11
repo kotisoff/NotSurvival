@@ -1,4 +1,4 @@
-local properties       = require "shared/utils/declarations/properties"
+local properties       = require "shared/core/config".properties;
 local module           = {}
 
 ---@enum ns.breaking.states

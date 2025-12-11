@@ -26,6 +26,15 @@ local config = {
 
   debug = {
     log_events = true
+  },
+
+  properties = {
+    tool = {
+      speed = "not_survival:tool_speed"
+    },
+    food = {
+      types = { "not_survival:potion", "not_survival:food" }
+    }
   }
 };
 

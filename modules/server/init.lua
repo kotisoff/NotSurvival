@@ -19,7 +19,7 @@ if mp.mode ~= "standalone" then
 end
 
 local require_folder = require "shared/utils/require_folder"
-require_folder "server/event"
-require_folder "server/system"
+require_folder "server/events"
+require_folder "server/systems"
 
 logger:println("I", "Сервер-сайд подтянулся.")
