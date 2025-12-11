@@ -10,7 +10,7 @@ local oxygen       = require "shared/survival/oxygen";
 
 local base_util    = require "base:util";
 
----@type ns.categories, ns.statusfield
+---@type ns.player.data_categories, ns.player.data_field.status
 local cat, field   = "status", "dead";
 
 local module       = {}

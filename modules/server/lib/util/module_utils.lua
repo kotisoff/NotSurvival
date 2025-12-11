@@ -9,8 +9,8 @@ local pack_id = constants.pack_id;
 local module = {}
 
 ---@param pid int
----@param cat ns.categories
----@param field ns.statusfield | ns.attributefield | str
+---@param cat ns.player.data_categories
+---@param field ns.player.data_field.status | ns.player.data_field.base | str
 ---@param value any
 function module.update(pid, cat, field, value)
   local status, client = pcall(mp.accounts.get_client_by_name, player.get_name(pid))

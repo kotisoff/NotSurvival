@@ -3,7 +3,7 @@ local module_utils = require "server/lib/util/module_utils"
 local data = require "shared/player/data_manager"
 local exp_shared = require "shared/lib/experience"
 
----@type ns.categories, ns.statusfield
+---@type ns.player.data_categories, ns.player.data_field.status
 local cat, field = "status", "xp";
 
 local module = {}

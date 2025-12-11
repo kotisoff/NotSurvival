@@ -2,7 +2,7 @@ local mp = require "shared/utils/not_utils".multiplayer;
 local data = require "shared/player/data_manager"
 local module_utils = require "server/lib/util/module_utils"
 
----@type ns.categories, ns.statusfield | ns.attributefield
+---@type ns.player.data_categories, ns.player.data_field.status | ns.player.data_field.base
 local cat, field = "data", "oxygen"
 
 local module = {}
