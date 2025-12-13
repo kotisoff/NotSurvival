@@ -1,53 +1,15 @@
 local server_utils = require "server/lib/util/server_utils"
 local mp = require "shared/utils/not_utils".multiplayer.api.server;
+local Counter = require "shared/utils/Counter"
 local module = {}
-
-local ticking = {}
-
----@class ns.system.Ticker
----@field pid int
----@field field str
-local Ticker = {}
-Ticker.__index = Ticker
-
----@param default? number
-function Ticker:get(default)
-  return ticking[self.field][self.pid] or default
-end
-
-function Ticker:add(value)
-  ticking[self.field][self.pid] = self:get(0) + value
-end
-
-function Ticker:set(value)
-  ticking[self.field][self.pid] = value
-end
-
-local tickers = {}
-function Ticker.new(pid, field)
-  ticking[field] = ticking[field] or {}
-  local ticker = setmetatable({ pid = pid, field = field }, Ticker)
-
-  if not tickers[field] then
-    tickers[field] = {}
-  end
-
-  tickers[field][pid] = ticker
-
-  return ticker
-end
-
-function Ticker.get_or_create(pid, field)
-  return (tickers[field] or {})[pid] or Ticker.new(pid, field)
-end
 
 local ticking_events = {}
 
 ---@param name str
----@param func fun(pid: int, tps: number, event_ticker: ns.system.Ticker, get_ticker: fun(pid: int, field: str): ns.system.Ticker)
+---@param func fun(pid: int, tps: number, event_ticker: ns.utils.Counter, get_ticker: fun(pid: int, field: str): ns.utils.Counter)
 function module.add_ticking_event(name, func)
   local function handler(pid, tps)
-    func(pid, tps, Ticker.get_or_create(pid, name), Ticker.get_or_create)
+    func(pid, tps, Counter.get_or_create(pid, name), Counter.get_or_create)
   end
 
   ticking_events[name] = ticking_events[name] or {}

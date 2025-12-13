@@ -2,112 +2,201 @@ local ns_events         = require "shared/core/ns_events"
 local net_events        = require "shared/network/utils/net_events";
 local mp                = require "shared/utils/not_utils".multiplayer;
 local destruction_utils = require "shared/utils/destruction_utils"
+local Counter           = require "shared/utils/Counter"
+local logger            = require "shared/utils/logger"
+local config            = require "shared/core/config"
 
 local api               = mp.api.server;
 local bson              = api.bson;
 local packets           = net_events.packets;
 local breaking_states   = destruction_utils.breaking_states
-local pack_id           = require "constants".pack_id;
 
-
----@type {pos: vec3, id: int, pid: int, start: number}[][]
-local breaking = {}
+---@type {pos: vec3, id: int, pid: int, start: number}[]
+local players_breaking  = {}
 
 -- =========================funcs===========================
 
-local function get_target(pid, pos)
-  for index, value in ipairs(breaking[pid]) do
-    if vec3.equals(pos, value.pos) then
-      return value, index
-    end
-  end
+local function calculate_breaking_deviation(expected_time)
+  return math.max(0.15, expected_time * 0.1)
 end
-
--- ========================network==========================
 
 ---@param state ns.breaking.states
 ---@param target {pos: vec3, id: int, pid: int, start: number}
----@param ignore_client neutron.class.client | nil
-local function echo_state(state, target, ignore_client)
+---@param additional_data any[] | nil
+local function tell_breaking_state(client, state, target, additional_data)
+  local data = {
+    state, target.pos, target.id, target.pid
+  };
+
+  if additional_data then
+    for _, value in ipairs(additional_data) do
+      table.insert(data, value)
+    end
+  end
+
+  net_events.server.tell(packets.block_breaking, client, bson.serialize(data));
+end
+
+---@param state ns.breaking.states
+---@param target {pos: vec3, id: int, pid: int, start: number}
+---@param ignored_client neutron.class.client | nil
+local function echo_breaking_state(state, target, ignored_client)
   local pos = target.pos
 
   local players = api.sandbox.players.get_in_radius(
     mp.convert_vector(pos), api.constants.render_distance
   )
 
+  local data = {
+    state, pos, target.id, target.pid
+  };
+
+  -- if additional_data then
+  --   for _, value in ipairs(additional_data) do
+  --     table.insert(data, value)
+  --   end
+  -- end
+
   for name, _ in pairs(players) do
-    if ignore_client and name == ignore_client.player.username then goto continue end
+    if ignored_client and name == ignored_client.player.username then goto continue end
 
     local client = mp.accounts.get_client_by_name(name)
-    net_events.server.tell(packets.block_breaking, client, bson.serialize({ state, pos, target.id, target.pid }));
+
+    net_events.server.tell(packets.block_breaking, client, bson.serialize(data));
 
     ::continue::
   end
 end
 
-net_events.server.on(packets.block_breaking, function(client, bytes)
-  local pid = client.player.pid;
-  local state, pos, t_id, t_pid = unpack(bson.deserialize(bytes));
+---@param bytes bytearray
+local function deserialize_breaking_state(bytes)
+  ---@type [ns.breaking.states, vec3, int ]
+  local args = bson.deserialize(bytes);
 
-  if state == breaking_states.start then
+  local state, pos, pid = unpack(args);
+
+  return state, pos, pid;
+end
+
+-- ========================handler==========================
+
+---@type table<ns.breaking.states, fun(state: ns.breaking.states, pos: vec3, blockid: int, client: neutron.class.client)>
+local handlers = {};
+
+handlers[breaking_states.start] = function(state, pos, blockid, client)
+  if blockid == 0 then return end;
+
+  local pid = client.player.pid;
+
+  if destruction_utils.get_durability(blockid) == 0 then
+    ns_events.emit("l:block_broken", blockid, pos, pid);
+
+    local instant_target = { pos = pos, id = blockid, pid = pid };
+    echo_breaking_state(breaking_states.broken, instant_target);
+
+    return;
   end
+
+  if players_breaking[pid] then
+    echo_breaking_state(breaking_states.interrupted, players_breaking[pid]);
+    players_breaking[pid] = nil;
+  end
+
+  local target = {
+    pos = pos, id = blockid, pid = pid, start = time.uptime()
+  }
+
+  players_breaking[pid] = target;
+
+  echo_breaking_state(state, players_breaking[pid]);
+end
+
+handlers[breaking_states.interrupted] = function(state, pos, _, client)
+  local pid = client.player.pid;
+
+  local target = players_breaking[pid];
+
+  if not target then
+    return
+  end
+
+  if vec3.equals(target.pos, pos) then
+    echo_breaking_state(state, target);
+  end
+
+  players_breaking[pid] = nil;
+end
+
+handlers[breaking_states.broken] = function(state, pos, blockid, client)
+  local pid = client.player.pid;
+
+  local target = players_breaking[pid];
+
+  if not target then
+    return
+  end
+
+  local durability = destruction_utils.get_durability(blockid);
+  if durability > 0 then
+    local timestamp = time.uptime();
+    local total = timestamp - target.start;
+    local expected_time = durability / destruction_utils.get_speed_multiplier(pid)
+    local deviation = calculate_breaking_deviation(expected_time);
+
+    if (expected_time - deviation) >= total then
+      tell_breaking_state(client, breaking_states.interrupted, target, { block.get_states(unpack(pos)) });
+      echo_breaking_state(state, target, client);
+      -- Конкретно здесь пакеты ломающему игроку и другим отличаются 5 параметром, а точнее его присутствием.
+
+      if config.debug.log_anticheat then
+        logger:println("W",
+          string.format("anticheat: player %s(%s) tried to break block too fast", client.player.username, pid)
+        )
+      end
+
+      return
+    end
+
+    echo_breaking_state(state, target);
+    ns_events.emit("l:block_broken", target.id, target.pos, pid)
+
+    players_breaking[pid] = nil;
+  end
+end
+
+net_events.server.on(packets.block_breaking, function(client, bytes)
+  local state, pos = deserialize_breaking_state(bytes) -- пакет от клиента хранит в себе только state и pos
+  local block_id = block.get(unpack(pos));
+
+  handlers[state](state, pos, block_id, client);
 end)
 
-mp.events.on(pack_id, packets.block_breaking, function(client, bytes)
-  local pid        = client.player.pid
-  ---@type [ ns.breaking.states, vec3 ]
-  local args       = mp.bson.deserialize(bytes)
-  local state, pos = unpack(args)
+-- ====================cleanup=players======================
 
-  if state == breaking_states.start then
-    breaking[pid] = breaking[pid] or {}
-    local target = { pos = pos, id = block.get(unpack(pos)), pid = pid, start = time.uptime() }
-    table.insert(breaking[pid], target)
+local tick_count = 0;                 -- [0, 20]
 
-    echo_state(breaking_states.start, target, client)
-  elseif state == breaking_states.interrupted then
-    local target, index = get_target(pid, pos)
-
-    if target then
-      echo_state(breaking_states.interrupted, target, client)
-      table.remove(breaking[pid], index)
-    end
-  elseif state == breaking_states.broken then
-    local target, index = get_target(pid, pos)
-    local id = block.get(unpack(pos))
-
-    if not target or id ~= target.id then return end
-
-    local durability = block_dest.get_durability(target.id)
-    if durability > 0 then
-      local _end = time.uptime()
-      local total = _end - target.start
-      local expected_time = durability / block_dest.get_speed_multiplier(pid)
-      local deviation = 0.5
-
-      if (expected_time - deviation) >= total then
-        return mp.events.tell(pack_id, packets.block_breaking, client,
-          mp.bson.serialize(
-            { breaking_states.interrupted, pos, target.id, target.pid, block.get_states(unpack(target.pos)) }
-          )
-        )
+ns_events.on("world_tick", function() -- чистим таргеты от игроков которые не в сети раз в секунду
+  if tick_count >= 20 then
+    for pid, target in pairs(players_breaking) do
+      if not (api.sandbox.players.get_by_pid(pid) or {}).active then
+        echo_breaking_state(breaking_states.interrupted, target);
+        players_breaking[pid] = nil;
       end
     end
 
-    echo_state(breaking_states.broken, target, nil)
-
-    local x, y, z = unpack(target.pos)
-    events.emit(resource("l:block_broken"), target.id, x, y, z, pid)
-
-    table.remove(breaking[pid], index)
+    tick_count = 0;
+  else
+    tick_count = tick_count + 1;
   end
 end)
 
 -- ======================block=drop=========================
+
 local drop_utils = require "shared/utils/drop_utils"
 local base_utils = require "base:util"
 
-ns_events.on("l:block_broken", function(blockid, x, y, z, pid)
+ns_events.on("l:block_broken", function(blockid, pos, pid)
+  local x, y, z = unpack(pos);
   local ns_drop = drop_utils.block_loot(blockid)
 
   ---@type { items: {item: int,count:int,vel:vec3}[] }
@@ -117,15 +206,15 @@ ns_events.on("l:block_broken", function(blockid, x, y, z, pid)
   }
 
   -- Prepare center pos for drop
-  local pos = vec3.add({ x, y, z }, 0.5)
+  local drop_pos = vec3.add(pos, 0.5)
 
   -- Validate drop
   for _, loot in ipairs(drop.items) do
     if loot.item then
       ---@type voxelcore.class.entity
-      local entity = base_utils.drop(pos, loot.item, loot.count)
+      local entity = base_utils.drop(drop_pos, loot.item, loot.count)
 
-      if mode == "standalone" then
+      if mp.mode == "standalone" then
         local vel = vec3.spherical_rand(3)
         entity.rigidbody:set_vel(vel)
       end

@@ -1,22 +1,23 @@
-local not_utils       = require "shared/utils/not_utils"
-local ns_events       = require "shared/core/ns_events"
-local mode            = not_utils.multiplayer.mode
-local mp              = not_utils.multiplayer.api.client
+local ns_events         = require "shared/core/ns_events";
+local net_events        = require "shared/network/utils/net_events";
+local mp                = require "shared/utils/not_utils".multiplayer
+local destruction_utils = require "shared/utils/destruction_utils";
 
-local packets         = require "shared/utils/declarations/packets"
-local resource        = require "shared/utils/resource_func"
-local block_dest      = require "shared/lib/block_destruction"
 
-local pack_id         = "not_survival"
+---@type neutron.shared.bson
+local bson    = mp.as_any(function(side) return side.bson end);
+local packets = net_events.packets;
+local pack_id = require "constants".pack_id;
 
----@class ns.breaking.target
+
+---@class ns.breaking.client_target
 ---@field breaking bool
 ---@field pos vec3
 ---@field id int
 ---@field tick int
 ---@field progress number [0,1]
 ---@field wrap int
-local target          = {
+local target = {
   breaking = false,
   pos = { 0, 0, 0 },
   id = 0,
@@ -26,13 +27,14 @@ local target          = {
   wrap = 0
 }
 
-local breaking_states = block_dest.breaking_states
 
--- ========================network==========================
--- ниже пиздец
+local breaking_states = destruction_utils.breaking_states
+
+-- =========================wraps===========================
+
 
 ---@type { pos: vec3, id: int, pid: int, tick: int, progress: number, wrap: int }[]
-local wraps           = {}
+wraps = {}
 
 local function get_wrap(pos)
   for index, value in ipairs(wraps) do
@@ -52,40 +54,57 @@ local function remove_wrap(pos)
   return false
 end
 
-mp.events.on(pack_id, packets.block_breaking, function(bytes)
-  ---@type [ ns.breaking.states, vec3, int, int, int | nil ]
-  local args = mp.bson.deserialize(bytes)
-  local state, pos, id, pid, states = unpack(args)
+-- ========================network==========================
 
-  if state == breaking_states.start then
-    local wrap = gfx.blockwraps.wrap(pos, block_dest.get_breaking_texture(0))
-    local element = {
-      progress = 0,
-      tick = 0,
-      pos = pos,
-      id = block.get(unpack(pos)),
-      pid = pid,
-      wrap = wrap
-    }
-    table.insert(wraps, element)
-  elseif state == breaking_states.interrupted then
-    if states and vec3.equals(target.pos, pos) then
-      -- Сервер блять не доволен тем что ты насрал!
-      -- Ну короче этот перец уже сломал свой блок, но слишком быстро, поэтому сервер сейчас отправит его нахуй.
-      local x, y, z = unpack(pos)
-      block.set(x, y, z, id, states)
-    else
-      remove_wrap(pos)
-    end
-  elseif state == breaking_states.broken then
-    if pid ~= hud.get_player() then
-      local x, y, z = unpack(pos)
-      block.set(x, y, z, 0)
-      local sound = block.materials[block.material(id)].breakSound
-      audio.play_sound(sound, x, y, z, 1, 1)
-      remove_wrap(pos)
-    end
+---@type table<ns.breaking.states, fun(pos: vec3, blockid: int, pid: int, t_pid: int, block_state?: int)>
+local handlers = {};
+
+handlers[breaking_states.start] = function(pos, _, pid, t_pid)
+  if pid == t_pid then
+    return -- возможно подкорректировать некоторые моменты
   end
+
+  local wrap_id = gfx.blockwraps.wrap(pos, destruction_utils.get_breaking_texture(0));
+  local wrap = {
+    progress = 0,
+    tick = 0,
+    pos = pos,
+    id = block.get(unpack(pos)),
+    pid = t_pid,
+    wrap = wrap_id
+  }
+
+  table.insert(wraps, wrap);
+end
+
+handlers[breaking_states.interrupted] = function(pos, blockid, pid, t_pid, block_state)
+  if block_state and vec3.equals(target.pos, pos) and pid == t_pid then
+    local x, y, z = unpack(pos);
+    block.set(x, y, z, blockid, block_state);
+  else
+    remove_wrap(pos);
+  end
+end
+
+handlers[breaking_states.broken] = function(pos, blockid, pid, t_pid, block_state)
+  if pid == t_pid then
+    return -- если честно хз чё сюда писать
+  end
+
+  local x, y, z = unpack(pos);
+  block.set(x, y, z, 0);
+  local sound = block.get_sound(blockid, "breakSound");
+  audio.play_sound(sound, x, y, z, 1, 1);
+  remove_wrap(pos);
+end
+
+net_events.client.on(packets.block_breaking, function(bytes)
+  ---@type [ ns.breaking.states, vec3, int, int, int | nil ]
+  local args = bson.deserialize(bytes)
+  local state, pos, blockid, t_pid, block_state = unpack(args)
+  local pid = hud.get_player();
+
+  handlers[state](pos, blockid, pid, t_pid, block_state);
 end)
 
 -- ================managing=all=that=shit===================
@@ -98,7 +117,7 @@ end
 local destruction = {}
 
 function destruction.start()
-  target.wrap = gfx.blockwraps.wrap(target.pos, block_dest.get_breaking_texture(target.progress))
+  target.wrap = gfx.blockwraps.wrap(target.pos, destruction_utils.get_breaking_texture(target.progress))
   mp.events.send(pack_id, packets.block_breaking, mp.bson.serialize({ breaking_states.start, target.pos }))
 end
 
@@ -128,23 +147,22 @@ local function manage_breaking(pid, tps)
 
     -- If is already breaking
     if target.breaking then
-      local tx, ty, tz = unpack(target.pos)
-
       -- Interrupt if block is different from player is looking at
-      if block.get(x, y, z) ~= target.id or
-          x ~= tx or y ~= ty or z ~= tz then
-        return destruction.interrupt()
+      if block.get(x, y, z) ~= target.id or not vec3.equals({ x, y, z }, target.pos) then
+        destruction.interrupt()
+        return
       end
 
       -- Breaking progress
-      local speed = block_dest.get_breaking_speed(pid, target.id)
+      local speed = destruction_utils.get_breaking_speed(pid, target.id)
       target.progress = target.progress + (1 / tps) * speed
       target.tick = target.tick + 1
 
       -- Perform breaking
-      if target.progress >= 1 or block_dest.get_durability(target.id) == 0 then
+      if target.progress >= 1 then
         destruction.broken()
-        return block.destruct(x, y, z, pid)
+        block.destruct(x, y, z, pid)
+        return
       end
     elseif x ~= nil then
       target.breaking = true
@@ -155,6 +173,11 @@ local function manage_breaking(pid, tps)
       target.progress = 0
 
       destruction.start()
+
+      if destruction_utils.get_durability(target.id) == 0 then
+        destruction.broken();
+        block.destruct(x, y, z, pid);
+      end
     end
   elseif target.breaking then
     destruction.interrupt()
@@ -162,7 +185,7 @@ local function manage_breaking(pid, tps)
 end
 
 local function animate_breaking()
-  gfx.blockwraps.set_texture(target.wrap, block_dest.get_breaking_texture(target.progress))
+  gfx.blockwraps.set_texture(target.wrap, destruction_utils.get_breaking_texture(target.progress))
 
   if target.tick % 4 == 0 then
     local x, y, z = unpack(target.pos)
@@ -190,11 +213,11 @@ end
 
 local function animate_all_wraps(tps)
   for _, wrap in pairs(wraps) do
-    local speed = block_dest.get_breaking_speed(wrap.pid, wrap.id)
+    local speed = destruction_utils.get_breaking_speed(wrap.pid, wrap.id)
     wrap.progress = wrap.progress + (1 / tps) * speed
     wrap.tick = wrap.tick + 1
 
-    gfx.blockwraps.set_texture(wrap.wrap, block_dest.get_breaking_texture(wrap.progress))
+    gfx.blockwraps.set_texture(wrap.wrap, destruction_utils.get_breaking_texture(wrap.progress))
 
     if wrap.progress >= 1 then
       remove_wrap(wrap.pos)
