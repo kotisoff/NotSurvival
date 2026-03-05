@@ -1,9 +1,22 @@
-local health          = require "shared/survival/health"
-local hunger          = require "shared/survival/hunger"
-local death           = require "shared/survival/death"
-local system_handlers = require "server/lib/util/system_handlers"
+local health              = require "shared/survival/health"
+local hunger              = require "shared/survival/hunger"
+local death               = require "shared/survival/death"
+local system_instance     = require "shared/lib/system_instance"
+local Counter             = require "shared/lib/Counter"
 
-system_handlers.add_ticking_event("ns.regeneration", function(pid, tps, regen)
+local Regeneration_system = system_instance.new("ns.system.regeneration");
+
+function Regeneration_system:on_entity_remove(id)
+  Counter.get_or_create(id, self.name):destroy();
+end
+
+function Regeneration_system:should_update(id)
+  return not death.is_invulnerable(id)
+end
+
+function Regeneration_system:update(pid, tps)
+  local regen = Counter.get_or_create(pid, self.name);
+
   local hp = health.get(pid)
   local max_hp = health.get_max(pid)
 
@@ -27,4 +40,6 @@ system_handlers.add_ticking_event("ns.regeneration", function(pid, tps, regen)
   elseif regen:get() then
     regen:set(nil)
   end
-end)
+end
+
+return Regeneration_system;

@@ -30,6 +30,10 @@
     "Document",
     "gui"
   ],
-  "Lua.diagnostics.disable": ["lowercase-global", "duplicate-set-field"],
+  "Lua.diagnostics.disable": [
+    "lowercase-global",
+    "duplicate-set-field",
+    "inject-field"
+  ],
   "Lua.runtime.unicodeName": true
 }

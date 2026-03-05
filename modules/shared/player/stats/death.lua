@@ -1,6 +1,6 @@
 local mp           = require "shared/utils/not_utils".multiplayer;
 
-local data         = require "shared/player/data_manager";
+local data         = require "shared/player/data/manager";
 local module_utils = require "server/lib/util/module_utils"
 
 local health       = require "shared/survival/health";
@@ -21,6 +21,12 @@ local module       = {}
 function module.get(pid)
   if not pid then pid = hud.get_player() end
   return data.get_status(pid).dead
+end
+
+---@return bool
+function module.is_invulnerable(pid)
+  if not pid then pid = hud.get_player() end;
+  return data.get_status(pid).gamemode == 1;
 end
 
 -- ========================server===========================
@@ -68,7 +74,8 @@ mp.as_server(function(server, mode)
     if not module.get(pid) then return end
 
     --TODO: add ns rules.
-    local client = server.accounts.get_client_by_name(player.get_name(pid))
+    local identity = server.sandbox.players.get_by_pid(pid).identity;
+    local client = server.accounts.by_identity.get_client(identity);
 
     if not true then
       local pos = { player.get_pos(pid) }

@@ -1,6 +1,7 @@
 local server_utils = require "server/lib/util/server_utils"
 local mp = require "shared/utils/not_utils".multiplayer.api.server;
 local Counter = require "shared/utils/Counter"
+local prefix  = require "shared/utils/prefix"
 local module = {}
 
 local ticking_events = {}
@@ -27,7 +28,7 @@ function module.clear_ticking_event(name)
   ticking_events[name] = nil
 end
 
-events.on(server_utils.get_player_event(), function(pid)
+events.on(prefix("player_tick"), function(pid)
   local tps = (mp.constants.tps or { tps = 20 }).tps;
 
   for _, event in pairs(ticking_events) do

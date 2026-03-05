@@ -1,14 +1,17 @@
-local server_utils = require "server/lib/util/server_utils"
-local health       = require "shared/survival/health"
-local death        = require "shared/survival/death"
-local data         = require "shared/player/data_manager"
+local health          = require "shared/player/stats/health"
+local death           = require "shared/player/stats/death"
+local system_instance = require "shared/lib/system_instance"
 
-local _nu          = require "shared/utils/not_utils"
-local mp           = _nu.multiplayer.api.server
+local _nu             = require "shared/utils/not_utils"
+local mp              = _nu.multiplayer.api.server
 
-events.on(server_utils.get_player_event(), function(pid)
-  if data.get_status(pid).gamemode ~= 0 then return end
+local Death_handler   = system_instance.new("ns.system.death_handler")
 
+function Death_handler:should_update(id)
+  return not death.is_invulnerable(id)
+end
+
+function Death_handler:update(pid, tps)
   if health.get(pid) <= 0 and not death.get(pid) then
     death.set(pid, true)
 
@@ -16,4 +19,6 @@ events.on(server_utils.get_player_event(), function(pid)
     local message = string.format("%s died.", name)
     mp.console.echo(message)
   end
-end)
+end
+
+return Death_handler;

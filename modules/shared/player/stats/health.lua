@@ -84,8 +84,10 @@ mp.as_server(function(server, mode)
       server.audio.play_sound(damage.random_sound(options.damage_type), x, y, z, volume, pitch, channel)
     end
 
-    local status, client = pcall(server.accounts.get_client_by_name, player.get_name(pid))
-    if not status or not client then return end
+    local status, _player = pcall(server.sandbox.players.get_by_pid, pid);
+    if not status or not _player then return end
+
+    local client = server.accounts.by_identity.get_client(_player.identity);
 
     if options.do_knockback then
       local vel = damage.calculate_knockback(pid, source, 7)

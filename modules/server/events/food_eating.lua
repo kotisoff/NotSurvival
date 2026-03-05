@@ -2,6 +2,7 @@ local not_utils    = require "shared/utils/not_utils"
 local server_utils = require "server/lib/util/server_utils"
 local hunger       = require "shared/lib/hunger"
 local hunger_mgr   = require "shared/survival/hunger"
+local prefix       = require "shared/utils/prefix"
 local mp           = not_utils.multiplayer.api.server
 
 local packets      = require "shared/utils/declarations/packets"
@@ -51,7 +52,7 @@ end)
 
 -- =================server=eating=handler===================
 
-events.on(server_utils.get_player_event(), function(pid)
+events.on(prefix("player_tick"), function(pid)
   if not is_eating(pid) then return end
   local target = get_eating(pid)
 

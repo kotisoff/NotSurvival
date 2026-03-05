@@ -12,7 +12,7 @@ local DamageSource = {
 
 local default_sound_type = "ns.damage.hit"
 
----@alias damage_types "ns.damage.hit" | "ns.damage.fall" | "ns.damage.drown"
+---@alias damage_types "ns.damage.hit" | "ns.damage.fall" | "ns.damage.drowning"
 
 ---@param type damage_types
 function module.random_sound(type)
