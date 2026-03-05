@@ -26,3 +26,4 @@ function module.update(pid, cat, field, value)
 end
 
 return module
+--TODO: перенести всё это недоразумение подальше отсюда

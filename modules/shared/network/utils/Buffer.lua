@@ -12,6 +12,10 @@ function Buffer:append(data)
 end
 
 function Buffer:read_next()
+  if self.next > #self.value then
+    return nil -- Конец буфера
+  end
+
   local index = self.next;
   self.next = self.next + 1;
 

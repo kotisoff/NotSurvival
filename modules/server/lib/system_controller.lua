@@ -1,6 +1,6 @@
 local controller = {
   ---@type ns.ecs.system[]
-  systems = {};
+  systems = {},
 };
 
 
@@ -18,3 +18,4 @@ function controller:update(id, tps)
   end
 end
 
+--TODO: дописать, привязать к world.lua сервера.
