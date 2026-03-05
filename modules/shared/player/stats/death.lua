@@ -1,19 +1,19 @@
-local mp           = require "shared/utils/not_utils".multiplayer;
+local mp         = require "shared/utils/not_utils".multiplayer;
 
-local data         = require "shared/player/data/manager";
-local module_utils = require "server/lib/util/module_utils"
+local data       = require "shared/player/data/manager";
+local sync_data  = require "shared/network/sync_tools/player_data"
 
-local health       = require "shared/survival/health";
-local experience   = require "shared/survival/experience";
-local hunger       = require "shared/survival/hunger";
-local oxygen       = require "shared/survival/oxygen";
+local health     = require "shared/player/stats/health";
+local experience = require "shared/player/stats/experience";
+local hunger     = require "shared/player/stats/hunger";
+local oxygen     = require "shared/player/stats/oxygen";
 
-local base_util    = require "base:util";
+local base_util  = require "base:util";
 
 ---@type ns.player.data_categories, ns.player.data_field.status
-local cat, field   = "status", "dead";
+local cat, field = "status", "dead";
 
-local module       = {}
+local module     = {}
 
 -- ========================shared===========================
 
@@ -37,7 +37,7 @@ mp.as_server(function(server, mode)
   ---@param flag bool
   function module.set(pid, flag)
     data.set_field(pid, cat, field, flag)
-    module_utils.update(pid, cat, field, flag)
+    sync_data.update(cat, field)
   end
 
   ---Server side only

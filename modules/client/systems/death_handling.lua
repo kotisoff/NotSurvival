@@ -1,13 +1,9 @@
-local ns_events = require "shared/core/ns_events"
-local mp = require "shared/utils/not_utils".multiplayer.api.client;
-local packets = require "shared/utils/declarations/packets";
-local data = require "shared/player/data_manager";
-local compression = require "shared/compression/player_data";
-local resource = require "shared/utils/resource_func";
-local death = require "shared/survival/death";
-local experience = require "shared/survival/experience";
-local constants = require "constants";
-local pack_id = constants.pack_id;
+local ns_events       = require "shared/core/ns_events"
+local net_events      = require "shared/network/utils/net_events"
+local data            = require "shared/player/data/manager";
+local compression     = require "shared/network/compression/player_data"
+local death           = require "shared/player/stats/death";
+local experience      = require "shared/player/stats/experience";
 
 local movement_inputs = {
   "movement.forward",
@@ -23,7 +19,7 @@ local function block_inputs(flag)
   end
 end
 
-mp.events.on(pack_id, packets.update_player_data, function(bytes)
+net_events.client.on(net_events.packets.update_player_data, function(bytes)
   local category, field, value = compression.from_bytes(bytes);
 
   if category ~= "status"

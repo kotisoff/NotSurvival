@@ -1,9 +1,6 @@
-local constants = require "constants";
-local pack_id = constants.pack_id;
-
 local mp = require "shared/utils/not_utils".multiplayer.api.server
-local packets = require "shared/utils/declarations/packets"
-local health = require "shared/survival/health"
+local net_events = require "shared/network/utils/net_events"
+local health = require "shared/player/stats/health"
 
 local function dist_fun(veca, vecb)
   if vec3.distance then
@@ -19,7 +16,7 @@ local function dist_fun(veca, vecb)
   end
 end
 
-mp.events.on(pack_id, packets.player_attacked, function(client, bytes)
+net_events.server.on(net_events.packets.player_attacked, function(client, bytes)
   local args = mp.bson.deserialize(bytes)
   local attacked_pid = unpack(args)
 

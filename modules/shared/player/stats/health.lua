@@ -1,12 +1,10 @@
 local mp = require "shared/utils/not_utils".multiplayer
 local data = require "shared/player/data/manager";
-local data_types = require "shared/player/data_types";
-local packets = require "shared/utils/declarations/packets";
-local damage = require "shared/lib/damage";
-local module_utils = require "server/lib/util/module_utils";
+local playerdata_utils = require "shared/player/data/utils";
+local net_events = require "shared/network/utils/net_events"
+local damage = require "shared/player/utils/damage";
+local module_utils = require "shared/player/data/utils";
 
-local constants = require "constants";
-local pack_id = constants.pack_id;
 local cat, field = "data", "health";
 
 local module = {}
@@ -91,13 +89,13 @@ mp.as_server(function(server, mode)
 
     if options.do_knockback then
       local vel = damage.calculate_knockback(pid, source, 7)
-      server.events.tell(pack_id, packets.deal_knockback, client, server.bson.serialize(vel))
+      net_events.server.tell(net_events.packets.deal_knockback, client, server.bson.serialize(vel))
     end
 
-    server.events.tell(pack_id, packets.update_player_data, client,
+    net_events.server.tell(net_events.packets.update_player_data, client,
       server.bson.serialize({
-        data_types.get_category_index(cat),
-        data_types.get_field_index(cat, field),
+        playerdata_utils.get_category_index(cat),
+        playerdata_utils.get_field_index(cat, field),
         module.get(pid)
       })
     )

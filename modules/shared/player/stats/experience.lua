@@ -1,7 +1,7 @@
 local mp = require "shared/utils/not_utils".multiplayer;
-local module_utils = require "server/lib/util/module_utils"
+local module_utils = require "shared/player/data/utils"
 local data = require "shared/player/data/manager"
-local exp_shared = require "shared/lib/experience"
+local exp_shared = require "shared/utils/experience"
 
 ---@type ns.player.data_categories, ns.player.data_field.status
 local cat, field = "status", "xp";

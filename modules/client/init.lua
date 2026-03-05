@@ -1,16 +1,16 @@
-local ns_events = require "shared/utils/ns_events";
-local logger = require "shared/utils/logger";
+local ns_events = require "shared/core/ns_events";
+local logger = require "shared/lib/logger";
 local prefix = require "shared/utils/prefix"
 
 logger:println("I", "Клиент-сайд тута.")
 
 -- ========================systems==========================
-local data = require "shared/player/data/data_manager"
+local data = require "shared/player/data/manager"
 
 local require_folder = require "shared/utils/require_folder"
 
 require_folder "client/event"
-require_folder "client/system"
+require_folder "client/systems"
 
 -- =========================================================
 

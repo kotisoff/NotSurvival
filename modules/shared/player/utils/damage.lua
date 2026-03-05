@@ -1,5 +1,5 @@
 local module = {}
-local sounds = require "shared/lib/sounds_registry"
+local sounds = require "shared/utils/sounds_registry"
 
 ---@class ns.shared.health.DamageSource
 local DamageSource = {

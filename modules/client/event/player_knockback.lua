@@ -1,10 +1,8 @@
-local mp = require "shared/utils/not_utils".multiplayer.api.client
-local packets = require "shared/utils/declarations/packets"
+local net_events = require "shared/network/utils/net_events"
+local bson       = require "shared/utils/bson"
 
-local packid = "not_survival"
-
-mp.events.on(packid, packets.deal_knockback, function(bytes)
-  local vel = mp.bson.deserialize(bytes)
+net_events.client.on(net_events.packets.deal_knockback, function(bytes)
+  local vel = bson.deserialize(bytes)
   local pid = hud.get_player()
 
   local player_vel = { player.get_vel(pid) }
