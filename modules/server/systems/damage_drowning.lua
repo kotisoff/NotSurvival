@@ -37,12 +37,14 @@ function Drowning_system:update(id, tps)
     drown:set(0)
   end
 
-  if under_water and not death.get(id) and drown:get(0) > tps then
-    drown:set(0)
+  if under_water and not death.get(id) then
+    if drown:get(0) > tps then
+      drown:set(0)
 
-    oxygen.add(id, -1)
-    if oxygen.get(id) <= 0 then
-      health.damage(id, 2, { damage_type = "ns.damage.drowning", do_knockback = false })
+      oxygen.add(id, -1)
+      if oxygen.get(id) <= 0 then
+        health.damage(id, 2, { damage_type = "ns.damage.drowning", do_knockback = false })
+      end
     end
   elseif not under_water and oxygen.get(id) < oxygen.get_max(id) then
     local regen = Counter.get_or_create(id, self.name .. ".regen");

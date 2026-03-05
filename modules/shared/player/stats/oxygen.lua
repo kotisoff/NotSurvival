@@ -1,6 +1,7 @@
 local mp = require "shared/utils/not_utils".multiplayer;
 local data = require "shared/player/data/manager"
-local module_utils = require "shared/player/data/utils"
+local sync_data = require "shared/network/sync_tools/player_data"
+local net_utils = require "shared/network/utils/net_utils"
 
 ---@type ns.player.data_categories, ns.player.data_field.status | ns.player.data_field.base
 local cat, field = "data", "oxygen"
@@ -30,8 +31,8 @@ mp.as_server(function(server, mode)
     local max = module.get_max(pid)
     local new_val = math.clamp(value, 0, max)
 
-    data.set_field(pid, cat, field, new_val)
-    module_utils.update(pid, cat, field, new_val)
+    data.set(pid, cat, field, new_val)
+    sync_data.update(cat, field, net_utils.server.get_client_by_pid(pid))
   end
 
   ---Server side only

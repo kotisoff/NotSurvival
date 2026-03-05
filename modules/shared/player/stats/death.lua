@@ -1,4 +1,5 @@
 local mp         = require "shared/utils/not_utils".multiplayer;
+local net_utils  = require "shared/network/utils/net_utils"
 
 local data       = require "shared/player/data/manager";
 local sync_data  = require "shared/network/sync_tools/player_data"
@@ -36,8 +37,8 @@ mp.as_server(function(server, mode)
   ---@param pid int
   ---@param flag bool
   function module.set(pid, flag)
-    data.set_field(pid, cat, field, flag)
-    sync_data.update(cat, field)
+    data.set(pid, cat, field, flag)
+    sync_data.update(cat, field, net_utils.server.get_client_by_pid(pid))
   end
 
   ---Server side only

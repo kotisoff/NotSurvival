@@ -1,13 +1,9 @@
 local ns_events         = require "shared/core/ns_events";
 local net_events        = require "shared/network/utils/net_events";
-local mp                = require "shared/utils/not_utils".multiplayer
 local destruction_utils = require "shared/utils/destruction_utils";
+local bson              = require "shared/utils/bson"
 
-
----@type neutron.shared.bson
-local bson    = mp.as_any(function(side) return side.bson end);
-local packets = net_events.packets;
-local pack_id = require "constants".pack_id;
+local packets           = net_events.packets;
 
 
 ---@class ns.breaking.client_target
@@ -118,13 +114,13 @@ local destruction = {}
 
 function destruction.start()
   target.wrap = gfx.blockwraps.wrap(target.pos, destruction_utils.get_breaking_texture(target.progress))
-  mp.events.send(pack_id, packets.block_breaking, mp.bson.serialize({ breaking_states.start, target.pos }))
+  net_events.client.send(net_events.packets.block_breaking, bson.serialize({ breaking_states.start, target.pos }))
 end
 
 function destruction.stop(state)
   gfx.blockwraps.unwrap(target.wrap)
   target.breaking = false
-  mp.events.send(pack_id, packets.block_breaking, mp.bson.serialize({ state, target.pos }))
+  net_events.client.send(net_events.packets.block_breaking, bson.serialize({ state, target.pos }))
 end
 
 function destruction.interrupt()

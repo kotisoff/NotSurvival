@@ -3,7 +3,8 @@ local data = require "shared/player/data/manager";
 local playerdata_utils = require "shared/player/data/utils";
 local net_events = require "shared/network/utils/net_events"
 local damage = require "shared/player/utils/damage";
-local module_utils = require "shared/player/data/utils";
+local sync_data = require "shared/network/sync_tools/player_data";
+local net_utils = require "shared/network/utils/net_utils"
 
 local cat, field = "data", "health";
 
@@ -32,8 +33,8 @@ mp.as_server(function(server, mode)
     local max = module.get_max(pid)
     local new_val = math.clamp(value, 0, max)
 
-    data.set_field(pid, cat, field, new_val)
-    module_utils.update(pid, cat, field, new_val)
+    data.set(pid, cat, field, new_val)
+    sync_data.update(cat, field, net_utils.server.get_client_by_pid(pid))
   end
 
   ---Server side only
