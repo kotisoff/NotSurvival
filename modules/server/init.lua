@@ -1,12 +1,11 @@
-local ns_events = require "shared/utils/ns_events"
+local ns_events = require "shared/core/ns_events"
 local nu = require "shared/utils/not_utils";
+local system_controller = require "server/lib/system_controller"
 local mp = nu.multiplayer
 local logger = nu.Logger.new("not_survival");
 local server = mp.api.server;
 
-require "shared/player/data_manager"
-require "server/lib/util/server_utils"
-require "server/commands"
+require "shared/player/data/manager"
 
 if mp.mode ~= "standalone" then
   ns_events.on("world_tick", function()
@@ -20,6 +19,14 @@ end
 
 local require_folder = require "shared/utils/require_folder"
 require_folder "server/events"
-require_folder "server/systems"
+local systems = require_folder "server/systems"
+
+for _, system in pairs(systems) do
+  system_controller:register(system)
+end
+
+ns_events.on("player_tick", function(pid, tps)
+  system_controller:update(pid, tps);
+end)
 
 logger:println("I", "Сервер-сайд подтянулся.")

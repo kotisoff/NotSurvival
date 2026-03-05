@@ -1,5 +1,5 @@
-local ns_events = require "shared/utils/ns_events";
-local resource = require "shared/utils/resource_func"
+local ns_events = require "shared/core/ns_events";
+local prefix    = require "shared/utils/prefix"
 
 function on_hud_open(playerid)
   print("Загрузили худ")
@@ -7,5 +7,5 @@ function on_hud_open(playerid)
   ns_events.emit("hud_open", playerid);
   print("И смотрим есть ли отклик. Судя по всему его нет и хуй знает почему.")
 
-  hud.open_permanent("not_survival:survival_hud")
+  hud.open_permanent(prefix("survival_hud"))
 end

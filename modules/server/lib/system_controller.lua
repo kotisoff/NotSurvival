@@ -1,3 +1,4 @@
+local logger     = require "shared/lib/logger"
 local controller = {
   ---@type ns.ecs.system[]
   systems = {},
@@ -8,6 +9,7 @@ local controller = {
 function controller:register(system)
   system:init();
   table.insert(self.systems, system);
+  logger:println("I", string.format("Register system: %s", system.name));
 end
 
 function controller:update(id, tps)
@@ -29,8 +31,5 @@ function controller:register_entity(id)
     system:on_entity_register(id);
   end
 end
-
---TODO: дописать, привязать к world.lua сервера.
---TODO: UPD: привязать к world.lua сервера.
 
 return controller;

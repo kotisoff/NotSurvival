@@ -1,5 +1,5 @@
 local mp           = require "shared/utils/not_utils".multiplayer;
-local data         = require "shared/player/data_manager"
+local data         = require "shared/player/data/manager"
 local module_utils = require "server/lib/util/module_utils"
 
 local module       = {} -- эту хуету через генератор оптимизировать также вообще не вариант.

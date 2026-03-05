@@ -1,5 +1,5 @@
 local mp = require "shared/utils/not_utils".multiplayer
-local data = require "shared/player/data_manager";
+local data = require "shared/player/data/manager";
 local data_types = require "shared/player/data_types";
 local packets = require "shared/utils/declarations/packets";
 local damage = require "shared/lib/damage";

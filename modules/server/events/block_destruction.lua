@@ -2,8 +2,7 @@ local ns_events         = require "shared/core/ns_events"
 local net_events        = require "shared/network/utils/net_events";
 local mp                = require "shared/utils/not_utils".multiplayer;
 local destruction_utils = require "shared/utils/destruction_utils"
-local Counter           = require "shared/utils/Counter"
-local logger            = require "shared/utils/logger"
+local logger            = require "shared/lib/logger"
 local config            = require "shared/core/config"
 
 local api               = mp.api.server;
@@ -44,7 +43,7 @@ local function echo_breaking_state(state, target, ignored_client)
   local pos = target.pos
 
   local players = api.sandbox.players.get_in_radius(
-    mp.convert_vector(pos), api.constants.render_distance
+    pos, api.constants.render_distance
   )
 
   local data = {

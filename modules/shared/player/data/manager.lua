@@ -47,12 +47,6 @@ local module = {
   session = {}
 };
 
-module.session = {
-  data = module.new_base(),
-  attributes = module.new_attributes(),
-  status = module.new_status()
-};
-
 -- Shared
 
 ---@param pid int
@@ -65,7 +59,7 @@ function module.get_store(pid)
     local entity = entities.get(entid);
     local component_name = string.format("%s:player", constants.pack_id);
 
-    return entity:require_component(component_name);
+    return entity:require_component(component_name).ARGS;
   end
 end
 
@@ -103,5 +97,11 @@ function module.set(pid, category, field, value)
   local store = module.get_store(pid);
   store[category][field] = value;
 end
+
+module.session = {
+  data = module.new_base(),
+  attributes = module.new_attributes(),
+  status = module.new_status()
+};
 
 return module;

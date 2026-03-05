@@ -1,5 +1,3 @@
-local resource = require "shared/utils/resource_func";
-
 local not_crafting = "not_crafting";
 local event = "use_on_block";
 
