@@ -18,4 +18,19 @@ function controller:update(id, tps)
   end
 end
 
+function controller:remove_entity(id)
+  for _, system in ipairs(self.systems) do
+    system:on_entity_remove(id);
+  end
+end
+
+function controller:register_entity(id)
+  for _, system in ipairs(self.systems) do
+    system:on_entity_register(id);
+  end
+end
+
 --TODO: дописать, привязать к world.lua сервера.
+--TODO: UPD: привязать к world.lua сервера.
+
+return controller;
