@@ -2,7 +2,7 @@ local mp         = require "shared/utils/not_utils".multiplayer;
 local net_utils  = require "shared/network/utils/net_utils"
 
 local data       = require "shared/player/data/manager";
-local sync_data  = require "shared/network/sync_tools/player_data"
+local sync_data  = require "shared/network/sync_tools/sync_player_data"
 
 local health     = require "shared/player/stats/health";
 local experience = require "shared/player/stats/experience";

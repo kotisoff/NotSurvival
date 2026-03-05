@@ -5,6 +5,7 @@ local compression     = require "shared/network/compression/player_data"
 local death           = require "shared/player/stats/death";
 local experience      = require "shared/player/stats/experience";
 
+---@type voxelcore.libinput.bindings[]
 local movement_inputs = {
   "movement.forward",
   "movement.back",

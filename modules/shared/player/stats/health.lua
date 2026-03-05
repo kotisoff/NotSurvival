@@ -3,7 +3,7 @@ local data = require "shared/player/data/manager";
 local playerdata_utils = require "shared/player/data/utils";
 local net_events = require "shared/network/utils/net_events"
 local damage = require "shared/player/utils/damage";
-local sync_data = require "shared/network/sync_tools/player_data";
+local sync_data = require "shared/network/sync_tools/sync_player_data";
 local net_utils = require "shared/network/utils/net_utils"
 
 local cat, field = "data", "health";

@@ -1,7 +1,7 @@
 local ns_events = require "shared/core/ns_events";
 local logger = require "shared/lib/logger";
 local prefix = require "shared/utils/prefix"
-local sync_data = require "shared/network/sync_tools/player_data"
+local sync_data = require "shared/network/sync_tools/sync_player_data"
 
 logger:println("I", "Клиент-сайд тута.")
 

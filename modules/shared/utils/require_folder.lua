@@ -1,4 +1,4 @@
-local packid = "not_survival"
+local packid = require "constants".pack_id;
 
 ---@param folder string
 return function(folder)

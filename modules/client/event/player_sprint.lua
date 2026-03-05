@@ -23,7 +23,7 @@ ns_events.on(("player_tick"), function(pid, tps)
     local vel = vec2.length({ x, z })
 
     if sprinting then
-      if vel >= 3.6 then
+      if vel < 3.6 then
         return stop_sprint()
       end
     elseif vel >= 3.6 then
