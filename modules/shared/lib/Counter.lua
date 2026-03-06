@@ -9,7 +9,9 @@ module.__index = module
 
 ---@param default? number
 function module:get(default)
-  return counter_store[self.field][self.id] or default
+  local store = counter_store[self.field];
+  if not store then return default end
+  return store[self.id] or default
 end
 
 function module:add(value)
@@ -18,6 +20,10 @@ end
 
 function module:set(value)
   counter_store[self.field][self.id] = value
+end
+
+function module:destroy()
+  counter_store[self.field][self.id] = nil;
 end
 
 function module.new(id, field)
@@ -31,6 +37,15 @@ function module.new(id, field)
   counters[field][id] = counter
 
   return counter
+end
+
+function module.cleanup_id(id)
+  for _, map in pairs(counters) do
+    if map[id] then
+      map[id]:destroy();
+      map[id] = nil;
+    end
+  end
 end
 
 function module.get_or_create(pid, field)

@@ -1,12 +1,11 @@
 local mp = require "shared/utils/not_utils".multiplayer
-local data = require "shared/player/data_manager";
-local data_types = require "shared/player/data_types";
-local packets = require "shared/utils/declarations/packets";
-local damage = require "shared/lib/damage";
-local module_utils = require "server/lib/util/module_utils";
+local data = require "shared/player/data/manager";
+local playerdata_utils = require "shared/player/data/utils";
+local net_events = require "shared/network/utils/net_events"
+local damage = require "shared/player/utils/damage";
+local sync_data = require "shared/network/sync_tools/sync_player_data";
+local net_utils = require "shared/network/utils/net_utils"
 
-local constants = require "constants";
-local pack_id = constants.pack_id;
 local cat, field = "data", "health";
 
 local module = {}
@@ -34,8 +33,8 @@ mp.as_server(function(server, mode)
     local max = module.get_max(pid)
     local new_val = math.clamp(value, 0, max)
 
-    data.set_field(pid, cat, field, new_val)
-    module_utils.update(pid, cat, field, new_val)
+    data.set(pid, cat, field, new_val)
+    sync_data.update(cat, field, net_utils.server.get_client_by_pid(pid))
   end
 
   ---Server side only
@@ -84,18 +83,20 @@ mp.as_server(function(server, mode)
       server.audio.play_sound(damage.random_sound(options.damage_type), x, y, z, volume, pitch, channel)
     end
 
-    local status, client = pcall(server.accounts.get_client_by_name, player.get_name(pid))
-    if not status or not client then return end
+    local status, _player = pcall(server.sandbox.players.get_by_pid, pid);
+    if not status or not _player then return end
+
+    local client = server.accounts.by_identity.get_client(_player.identity);
 
     if options.do_knockback then
       local vel = damage.calculate_knockback(pid, source, 7)
-      server.events.tell(pack_id, packets.deal_knockback, client, server.bson.serialize(vel))
+      net_events.server.tell(net_events.packets.deal_knockback, client, server.bson.serialize(vel))
     end
 
-    server.events.tell(pack_id, packets.update_player_data, client,
+    net_events.server.tell(net_events.packets.update_player_data, client,
       server.bson.serialize({
-        data_types.get_category_index(cat),
-        data_types.get_field_index(cat, field),
+        playerdata_utils.get_category_index(cat),
+        playerdata_utils.get_field_index(cat, field),
         module.get(pid)
       })
     )

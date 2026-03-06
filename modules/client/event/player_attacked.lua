@@ -1,10 +1,7 @@
-local mp        = require "shared/utils/not_utils".multiplayer.api.client;
-local ns_events = require "shared/utils/ns_events"
-local constants = require "constants"
-local packets   = require "shared/utils/declarations/packets"
-
-local pack_id   = constants.pack_id;
+local ns_events  = require "shared/core/ns_events"
+local net_events = require "shared/network/utils/net_events"
+local bson       = require "shared/utils/bson"
 
 ns_events.on("player_attacked", function(attacked_pid)
-  mp.events.send(pack_id, packets.player_attacked, mp.bson.serialize({ attacked_pid }));
+  net_events.client.send(net_events.packets.player_attacked, bson.serialize({ attacked_pid }))
 end)

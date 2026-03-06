@@ -1,9 +1,21 @@
-local health          = require "shared/survival/health"
-local hunger          = require "shared/survival/hunger"
-local death           = require "shared/survival/death"
-local system_handlers = require "server/lib/util/system_handlers"
+local health          = require "shared/player/stats/health"
+local hunger          = require "shared/player/stats/hunger"
+local death           = require "shared/player/stats/death"
+local system_instance = require "shared/lib/system_instance"
+local Counter         = require "shared/lib/Counter"
 
-system_handlers.add_ticking_event("ns.damage.starving", function(pid, tps, starving)
+local Starving_system = system_instance.new("ns.damage.starving");
+
+function Starving_system:on_entity_remove(id)
+  Counter.get_or_create(id, self.name):destroy();
+end
+
+function Starving_system:should_update(id)
+  return not death.is_invulnerable(id)
+end
+
+function Starving_system:update(pid, tps)
+  local starving = Counter.get_or_create(pid, self.name);
   local hunger_lvl = hunger.get_hunger(pid)
 
   if hunger_lvl <= 0 and not death.get(pid) then
@@ -16,4 +28,6 @@ system_handlers.add_ticking_event("ns.damage.starving", function(pid, tps, starv
   elseif starving:get() then
     starving:set(nil)
   end
-end)
+end
+
+return Starving_system

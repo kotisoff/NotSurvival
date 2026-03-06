@@ -1,32 +1,30 @@
 local ns_events = require "shared/core/ns_events"
 local _nu = require "shared/utils/not_utils"
+local bson = require "shared/utils/bson"
 local cor = _nu.coroutines
 local utils = _nu.utils
-local mp = _nu.multiplayer.api.client
-local packets = require "shared/utils/declarations/packets"
-local resource = require "shared/utils/resource_func"
-local sounds = require "shared/lib/sounds_registry"
-local hunger = require "shared/lib/hunger"
-local hunger_mgr = require "shared/survival/hunger"
-local speed_limiter = require "client/system/movement_controller"
-
-local packid = "not_survival"
+local net_events = require "shared/network/utils/net_events"
+local packets = net_events.packets;
+local sounds = require "shared/utils/sounds_registry"
+local hunger = require "shared/player/utils/hunger"
+local hunger_mgr = require "shared/player/stats/hunger"
+local movement_controller = require "client/systems/movement_controller"
 
 local food = {
   eating = false
 }
 
 local function start_eating()
-  speed_limiter.set_limit("speed_in_air", 2.5);
-  speed_limiter.set_limit("speed_on_ground", 2.5);
-  mp.events.send(packid, packets.food_eating, mp.bson.serialize({ true }))
+  movement_controller.set_limit("speed_in_air", 2.5);
+  movement_controller.set_limit("speed_on_ground", 2.5);
+  net_events.client.send(packets.food_eating, bson.serialize({ true }))
 end
 
 local function stop_eating()
-  speed_limiter.set_limit("speed_in_air");
-  speed_limiter.set_limit("speed_on_ground");
+  movement_controller.set_limit("speed_in_air");
+  movement_controller.set_limit("speed_on_ground");
   food.eating = false
-  mp.events.send(packid, packets.food_eating, mp.bson.serialize({ false }))
+  net_events.client.send(packets.food_eating, bson.serialize({ false }))
 end
 
 ns_events.on(("player_tick"), function(pid, tps)
@@ -58,7 +56,7 @@ ns_events.on(("player_tick"), function(pid, tps)
   end
 end)
 
-mp.events.on(packid, packets.food_eating, function()
+net_events.client.on(packets.food_eating, function()
   utils.random_cb(0.6,
     function()
       audio.play_sound_2d(sounds.get("ns.hunger.burp"), 0.35, 1, "regular");
@@ -68,8 +66,8 @@ mp.events.on(packid, packets.food_eating, function()
   food.sound = false
   cor.create(function()
     cor.sleep(0.2)
-    speed_limiter.set_limit("speed_in_air")
-    speed_limiter.set_limit("speed_on_ground")
+    movement_controller.set_limit("speed_in_air")
+    movement_controller.set_limit("speed_on_ground")
     food.eating = false
   end)
 end)

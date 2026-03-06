@@ -1,10 +1,7 @@
-local _mp = require "shared/utils/not_utils".multiplayer
-local mode = _mp.mode
-local mp = _mp.api.client
-
-local packets = require "shared/utils/declarations/packets"
-local constants = require "constants";
-local pack_id = constants.pack_id;
+local mp = require "shared/utils/not_utils".multiplayer
+local mode = mp.mode
+local bson = require "shared/utils/bson"
+local net_events = require "shared/network/utils/net_events"
 
 function on_open(invid, x, y, z)
   document.score.pos = {
@@ -16,7 +13,7 @@ function on_open(invid, x, y, z)
 end
 
 function respawn()
-  mp.events.send(pack_id, packets.player_respawn, mp.bson.serialize({}))
+  net_events.client.send(net_events.packets.player_respawn, bson.serialize({}))
 end
 
 function pause()

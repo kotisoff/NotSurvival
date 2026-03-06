@@ -1,4 +1,4 @@
-local data = require "shared/player/data_manager"
+local data = require "shared/player/data/manager"
 local allow_cheats = require "client/hooks/allow_cheats"
 
 local module = {}

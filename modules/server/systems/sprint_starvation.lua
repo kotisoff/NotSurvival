@@ -1,22 +1,30 @@
-local mp = require "shared/utils/not_utils".multiplayer.api.server
-local packets = require "shared/utils/declarations/packets"
-local hunger = require "shared/survival/hunger"
-local system_handlers = require "server/lib/util/system_handlers"
+local mp               = require "shared/utils/not_utils".multiplayer.api.server
+local net_events       = require "shared/network/utils/net_events"
+local hunger           = require "shared/player/stats/hunger"
+local system_instance  = require "shared/lib/system_instance"
+local Counter          = require "shared/lib/Counter"
 
-local constants = require "constants";
-local pack_id = constants.pack_id;
+local Sprinting_system = system_instance.new("ns.system.sprint_starvation")
 
----@type bool[]
-local sprinting = {}
+function Sprinting_system:init()
+  ---@type bool[]
+  self.sprinting = {};
+end
 
-mp.events.on(pack_id, packets.player_sprinting, function(client, bytes)
+function Sprinting_system:on_entity_remove(id)
+  Counter.get_or_create(id, self.name):destroy();
+end
+
+net_events.server.on(net_events.packets.player_sprinting, function(client, bytes)
   local status = unpack(mp.bson.deserialize(bytes))
 
-  sprinting[client.player.pid] = status
+  Sprinting_system.sprinting[client.player.pid] = status
 end)
 
-system_handlers.add_ticking_event("ns.sprinting", function(pid, tps, sprint)
-  is_sprinting = sprinting[pid] or false
+function Sprinting_system:update(pid, tps)
+  local sprint = Counter.get_or_create(pid, self.name);
+
+  local is_sprinting = self.sprinting[pid] or false
 
   if is_sprinting then
     sprint:add(1)
@@ -26,4 +34,6 @@ system_handlers.add_ticking_event("ns.sprinting", function(pid, tps, sprint)
     hunger.consume(pid, 1)
     sprint:set(1)
   end
-end)
+end
+
+return Sprinting_system;

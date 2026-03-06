@@ -1,4 +1,3 @@
-local properties = require "shared/utils/declarations/properties"
 local utils = require "shared/utils/not_utils".utils
 
 local module = {}

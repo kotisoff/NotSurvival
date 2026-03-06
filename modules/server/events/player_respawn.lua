@@ -1,9 +1,6 @@
-local mp        = require "shared/utils/not_utils".multiplayer.api.server
-local packets   = require "shared/utils/declarations/packets"
-local death     = require "shared/survival/death"
-local constants = require "constants";
-local pack_id   = constants.pack_id;
+local death      = require "shared/player/stats/death"
+local net_events = require "shared/network/utils/net_events"
 
-mp.events.on(pack_id, packets.player_respawn, function(client)
+net_events.server.on(net_events.packets.player_respawn, function(client)
   death.revive(client.player.pid)
 end)

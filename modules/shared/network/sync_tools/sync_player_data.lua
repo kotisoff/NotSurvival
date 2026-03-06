@@ -4,11 +4,7 @@ local request_compression = require "shared/network/compression/player_data_requ
 local manager             = require "shared/player/data/manager"
 local mp                  = require "shared/utils/not_utils".multiplayer;
 
-
----@type neutron.shared.bson
-local bson   = mp.as_any(function(side, mode) return side.bson end);
-
-local module = {};
+local module              = {};
 
 ---@param category str
 ---@param field str | nil

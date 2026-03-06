@@ -1,6 +1,5 @@
 local ns_events = require "shared/core/ns_events"
-local data = require "shared/player/data_manager"
-local resource = require "shared/utils/resource_func"
+local data = require "shared/player/data/manager"
 local allow_cheats = require "client/hooks/allow_cheats"
 
 ns_events.on(("hud_open"), function()

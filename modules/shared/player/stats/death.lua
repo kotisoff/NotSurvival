@@ -1,19 +1,20 @@
-local mp           = require "shared/utils/not_utils".multiplayer;
+local mp         = require "shared/utils/not_utils".multiplayer;
+local net_utils  = require "shared/network/utils/net_utils"
 
-local data         = require "shared/player/data_manager";
-local module_utils = require "server/lib/util/module_utils"
+local data       = require "shared/player/data/manager";
+local sync_data  = require "shared/network/sync_tools/sync_player_data"
 
-local health       = require "shared/survival/health";
-local experience   = require "shared/survival/experience";
-local hunger       = require "shared/survival/hunger";
-local oxygen       = require "shared/survival/oxygen";
+local health     = require "shared/player/stats/health";
+local experience = require "shared/player/stats/experience";
+local hunger     = require "shared/player/stats/hunger";
+local oxygen     = require "shared/player/stats/oxygen";
 
-local base_util    = require "base:util";
+local base_util  = require "base:util";
 
 ---@type ns.player.data_categories, ns.player.data_field.status
-local cat, field   = "status", "dead";
+local cat, field = "status", "dead";
 
-local module       = {}
+local module     = {}
 
 -- ========================shared===========================
 
@@ -23,6 +24,12 @@ function module.get(pid)
   return data.get_status(pid).dead
 end
 
+---@return bool
+function module.is_invulnerable(pid)
+  if not pid then pid = hud.get_player() end;
+  return data.get_status(pid).gamemode == 1;
+end
+
 -- ========================server===========================
 
 mp.as_server(function(server, mode)
@@ -30,8 +37,8 @@ mp.as_server(function(server, mode)
   ---@param pid int
   ---@param flag bool
   function module.set(pid, flag)
-    data.set_field(pid, cat, field, flag)
-    module_utils.update(pid, cat, field, flag)
+    data.set(pid, cat, field, flag)
+    sync_data.update(cat, field, net_utils.server.get_client_by_pid(pid))
   end
 
   ---Server side only
@@ -68,7 +75,8 @@ mp.as_server(function(server, mode)
     if not module.get(pid) then return end
 
     --TODO: add ns rules.
-    local client = server.accounts.get_client_by_name(player.get_name(pid))
+    local identity = server.sandbox.players.get_by_pid(pid).identity;
+    local client = server.accounts.by_identity.get_client(identity);
 
     if not true then
       local pos = { player.get_pos(pid) }

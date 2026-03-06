@@ -1,16 +1,17 @@
-local ns_events = require "shared/utils/ns_events";
-local logger = require "shared/utils/logger";
+local ns_events = require "shared/core/ns_events";
+local logger = require "shared/lib/logger";
 local prefix = require "shared/utils/prefix"
+local sync_data = require "shared/network/sync_tools/sync_player_data"
 
 logger:println("I", "Клиент-сайд тута.")
 
 -- ========================systems==========================
-local data = require "shared/player/data/data_manager"
+local data = require "shared/player/data/manager"
 
 local require_folder = require "shared/utils/require_folder"
 
 require_folder "client/event"
-require_folder "client/system"
+require_folder "client/systems"
 
 -- =========================================================
 
@@ -19,7 +20,7 @@ ns_events.on("hud_open", function()
 
   console.log("[#00ff00]NotSurvival - 0.3.0[#ffffff]")
 
-  data.update("data")
-  data.update("status")
-  data.update("attributes")
+  sync_data.update("data")
+  sync_data.update("status")
+  sync_data.update("attributes")
 end)

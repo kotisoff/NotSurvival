@@ -1,20 +1,18 @@
-local ns_events = require "shared/core/ns_events"
-local mp        = require "shared/utils/not_utils".multiplayer.api.client
-local packets   = require "shared/utils/declarations/packets"
-local resource  = require "shared/utils/resource_func"
+local ns_events  = require "shared/core/ns_events"
+local net_events = require "shared/network/utils/net_events"
+local packets    = net_events.packets;
+local bson       = require "shared/utils/bson"
 
-local packid    = "not_survival"
-
-local sprinting = false
+local sprinting  = false
 
 local function start_sprint()
   sprinting = true
-  mp.events.send(packid, packets.player_sprinting, mp.bson.serialize({ true }))
+  net_events.client.send(packets.player_sprinting, bson.serialize({ true }))
 end
 
 local function stop_sprint()
   sprinting = false
-  mp.events.send(packid, packets.player_sprinting, mp.bson.serialize({ false }))
+  net_events.client.send(packets.player_sprinting, bson.serialize({ false }))
 end
 
 ns_events.on(("player_tick"), function(pid, tps)
@@ -25,7 +23,7 @@ ns_events.on(("player_tick"), function(pid, tps)
     local vel = vec2.length({ x, z })
 
     if sprinting then
-      if vel >= 3.6 then
+      if vel < 3.6 then
         return stop_sprint()
       end
     elseif vel >= 3.6 then

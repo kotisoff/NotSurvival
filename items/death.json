@@ -7,7 +7,7 @@
     "eat-delay": 0.5,
     "consume-item": false,
     "type": "food",
-    "callback": "function(pid) require 'not_survival:shared/survival/death'.kill(pid) end"
+    "callback": "function(pid) require 'not_survival:shared/player/stats/death'.kill(pid) end"
   },
   "not_utils:tags@append": ["not_survival:food"]
 }

@@ -1,14 +1,12 @@
-local not_utils    = require "shared/utils/not_utils"
-local server_utils = require "server/lib/util/server_utils"
-local hunger       = require "shared/lib/hunger"
-local hunger_mgr   = require "shared/survival/hunger"
-local mp           = not_utils.multiplayer.api.server
+local hunger     = require "shared/player/utils/hunger"
+local hunger_mgr = require "shared/player/stats/hunger"
+local prefix     = require "shared/utils/prefix"
 
-local packets      = require "shared/utils/declarations/packets"
-local pack_id      = "not_survival"
+local net_events = require "shared/network/utils/net_events"
+local mp         = require "shared/utils/not_utils".multiplayer.api.server;
 
 ---@type table<str, { id: int, progress: number }>
-local eating       = {}
+local eating     = {}
 
 -- =========================funcs===========================
 
@@ -37,7 +35,7 @@ end
 
 -- ========================network==========================
 
-mp.events.on(pack_id, packets.food_eating, function(client, bytes)
+net_events.server.on(net_events.packets.food_eating, function(client, bytes)
   local pid = client.player.pid
   ---@type bool
   local status = unpack(mp.bson.deserialize(bytes))
@@ -51,7 +49,7 @@ end)
 
 -- =================server=eating=handler===================
 
-events.on(server_utils.get_player_event(), function(pid)
+events.on(prefix("player_tick"), function(pid)
   if not is_eating(pid) then return end
   local target = get_eating(pid)
 
@@ -78,8 +76,9 @@ events.on(server_utils.get_player_event(), function(pid)
 
     stop_eating(pid)
 
-    local client = mp.accounts.get_client(mp.accounts.get_account_by_name(player.get_name(pid)))
-    mp.events.tell(pack_id, packets.food_eating, client, mp.bson.serialize({}))
+    local identity = mp.sandbox.players.get_by_pid(pid).identity;
+    local client = mp.accounts.by_identity.get_client(identity);
+    net_events.server.tell(net_events.packets.food_eating, client, mp.bson.serialize({}))
 
     pcall(food_data.callback, pid)
   end
