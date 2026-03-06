@@ -8,6 +8,8 @@ local packets         = net_events.packets;
 local breaking_states = destruction_utils.breaking_states
 
 
+---TODO: подключить всю эту шляпу к системам правильно.
+
 ---@class ns.breaking.client_target
 ---@field breaking bool
 ---@field pos vec3
