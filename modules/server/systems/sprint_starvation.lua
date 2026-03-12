@@ -11,7 +11,7 @@ function Sprinting_system:init()
   self.sprinting = {};
 end
 
-function Sprinting_system:on_entity_remove(id)
+function Sprinting_system:on_player_remove(id)
   Counter.get_or_create(id, self.name):destroy();
 end
 

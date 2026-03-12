@@ -29,5 +29,6 @@ function on_block_broken(blockid, x, y, z, pid)
 end
 
 function on_world_quit()
+  ns_events.emit("world_quit");
   events.remove_by_prefix(PACK_ID);
 end

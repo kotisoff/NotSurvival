@@ -19,7 +19,7 @@ end
 
 local Drowning_system = system_instance.new("ns.damage.drowning");
 
-function Drowning_system:on_entity_remove(id)
+function Drowning_system:on_player_remove(id)
   Counter.get_or_create(id, self.name):destroy();
 end
 

@@ -6,7 +6,7 @@ local Counter         = require "shared/lib/Counter"
 
 local Starving_system = system_instance.new("ns.damage.starving");
 
-function Starving_system:on_entity_remove(id)
+function Starving_system:on_player_remove(id)
   Counter.get_or_create(id, self.name):destroy();
 end
 

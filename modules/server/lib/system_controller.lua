@@ -20,15 +20,15 @@ function controller:update(id, tps)
   end
 end
 
-function controller:remove_entity(id)
+function controller:remove_player(id)
   for _, system in ipairs(self.systems) do
-    system:on_entity_remove(id);
+    system:on_player_remove(id);
   end
 end
 
-function controller:register_entity(id)
+function controller:register_player(id)
   for _, system in ipairs(self.systems) do
-    system:on_entity_register(id);
+    system:on_player_register(id);
   end
 end
 

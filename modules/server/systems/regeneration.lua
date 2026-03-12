@@ -6,7 +6,7 @@ local Counter             = require "shared/lib/Counter"
 
 local Regeneration_system = system_instance.new("ns.system.regeneration");
 
-function Regeneration_system:on_entity_remove(id)
+function Regeneration_system:on_player_remove(id)
   Counter.get_or_create(id, self.name):destroy();
 end
 

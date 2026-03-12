@@ -1,9 +1,11 @@
-local ns_events       = require "shared/core/ns_events"
 local net_events      = require "shared/network/utils/net_events"
 local data            = require "shared/player/data/manager";
 local compression     = require "shared/network/compression/player_data"
 local death           = require "shared/player/stats/death";
 local experience      = require "shared/player/stats/experience";
+local system_instance = require "shared/lib/system_instance"
+
+local system          = system_instance.new("ns.system.death_handling")
 
 ---@type voxelcore.libinput.bindings[]
 local movement_inputs = {
@@ -14,9 +16,11 @@ local movement_inputs = {
   "movement.jump"
 }
 
-local function block_inputs(flag)
+local function enable_inputs(flag)
+  if type(flag) ~= "boolean" then flag = true end
+
   for _, bind in pairs(movement_inputs) do
-    input.set_enabled(bind, not flag)
+    input.set_enabled(bind, flag)
   end
 end
 
@@ -33,18 +37,22 @@ net_events.client.on(net_events.packets.update_player_data, function(bytes)
 
   if value == true then
     death.show_overlay(experience.get_exp())
-    block_inputs(true)
+    enable_inputs(false)
   else
     death.close_overlay()
     hud.close_inventory()
-    block_inputs(false)
+    enable_inputs(true)
   end
 end)
 
-ns_events.on(("player_tick"), function()
-  if death.get() then
-    if not hud.is_inventory_open() then
-      death.show_overlay(experience.get_exp())
-    end
+function system:update()
+  local dead = death.get()
+
+  if dead and not hud.is_inventory_open() then
+    death.show_overlay(experience.get_exp())
   end
-end)
+
+  enable_inputs(not dead);
+end
+
+return system

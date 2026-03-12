@@ -12,7 +12,9 @@ function controller:register(system)
   logger:println("I", string.format("Register system: %s", system.name));
 end
 
-function controller:update(id, tps)
+function controller:update(tps)
+  local id = hud.get_player();
+
   for _, system in ipairs(self.systems) do
     if system:should_update(id) then
       system:update(id, tps);
@@ -20,15 +22,19 @@ function controller:update(id, tps)
   end
 end
 
-function controller:remove_entity(id)
+function controller:remove_player()
+  local id = hud.get_player()
+
   for _, system in ipairs(self.systems) do
-    system:on_entity_remove(id);
+    system:on_player_remove(id);
   end
 end
 
-function controller:register_entity(id)
+function controller:register_player()
+  local id = hud.get_player()
+
   for _, system in ipairs(self.systems) do
-    system:on_entity_register(id);
+    system:on_player_register(id);
   end
 end
 
