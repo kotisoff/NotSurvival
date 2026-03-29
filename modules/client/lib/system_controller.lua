@@ -7,6 +7,10 @@ local controller = {
 
 ---@param system ns.ecs.system
 function controller:register(system)
+  if not system.init then
+    logger:println("W", "System init failed: not system.");
+    return;
+  end
   system:init();
   table.insert(self.systems, system);
   logger:println("I", string.format("Register system: %s", system.name));

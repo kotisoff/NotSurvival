@@ -7,7 +7,7 @@ local net_utils  = require "shared/network/utils/net_utils"
 ---@type ns.player.data_categories, ns.player.data_field.status
 local cat, field = "status", "xp";
 
-local module     = {}
+local module     = {};
 
 -- ========================shared===========================
 

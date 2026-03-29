@@ -53,7 +53,7 @@ local module = {
 ---@return { data: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
 function module.get_store(pid)
   if mp.mode == "client" then
-    return module.client.session;
+    return module.session;
   else
     local entid = player.get_entity(pid);
     local entity = entities.get(entid);
