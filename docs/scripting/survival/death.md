@@ -1,5 +1,11 @@
 # Модуль смерти - *api.survival.death*
 
+Возвращает статус и позицию смерти игрока.
+
+```lua
+death.get(player_id: number) -> dead: bool, death_location: vec3
+```
+
 Убить игрока.
 
 ```lua

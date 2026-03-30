@@ -8,6 +8,14 @@ local base_util = require "base:util";
 
 local death = {};
 
+---Get player death status
+---@param pid number
+---@return bool dead, vec3 death_location
+function death.get(pid)
+  local status = variables.get_player_status(pid)
+  return status.dead, status.death_location
+end
+
 ---Kill player.
 ---@param pid number
 ---@param reason string | nil I.g.: "by bee" or "in void"
