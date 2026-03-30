@@ -52,6 +52,8 @@ function health.damage(pid, damage, damage_type, source, do_knockback, playsound
   end
 
   local cancel = events.emit("not_survival:before_damage", pid, damage, damage_type, source);
+  print(string.format("ns: damage canceled = %s"), cancel);
+
   if cancel then return end;
 
   playsound = playsound --[[@as string]];
