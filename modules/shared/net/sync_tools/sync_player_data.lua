@@ -1,6 +1,6 @@
-local net_events          = require "shared/network/utils/net_events"
-local data_compression    = require "shared/network/compression/player_data"
-local request_compression = require "shared/network/compression/player_data_request";
+local net_events          = require "shared/net/utils/net_events"
+local data_compression    = require "shared/net/compression/player_data"
+local request_compression = require "shared/net/compression/player_data_request";
 local manager             = require "shared/player/data/manager"
 local mp                  = require "shared/utils/not_utils".multiplayer;
 

@@ -1,6 +1,6 @@
 local mp               = require "shared/utils/not_utils".multiplayer;
 local playerdata_utils = require "shared/player/data/utils";
-local Buffer           = require "shared/network/utils/Buffer"
+local Buffer           = require "shared/net/utils/Buffer"
 
 ---@type neutron.shared.bson
 

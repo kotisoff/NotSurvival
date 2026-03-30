@@ -6,8 +6,8 @@ local system_controller = require "client/lib/system_controller"
 
 local require_folder = require "shared/utils/require_folder"
 
-require_folder "client/event/local"
-require_folder "client/event/net"
+require_folder "client/events/local"
+require_folder "client/events/net"
 
 local systems = require_folder "client/systems"
 

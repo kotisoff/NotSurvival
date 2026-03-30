@@ -2,7 +2,7 @@ local packid = require "shared/core/constants".pack_id;
 
 ---@param folder string
 return function(folder)
-  local dir = file.join(pack.get_folder(packid), "" .. folder)
+  local dir = file.join(pack.get_folder(packid), "modules/" .. folder)
   local collection = {};
 
   for _, path in ipairs(file.list(dir)) do
