@@ -11,9 +11,18 @@ events.on(resource("player_tick"), function(pid)
   if variables.get_player_data(pid).gamemode ~= 0 then return end
 
   if health.get(pid) <= 0 and not status.dead then
-    document.reason.text = "Died " .. variables.get_player_damage(pid).type
+    local damage = variables.get_player_damage(pid);
+
+    local canceled = events.emit("not_survival:before_death", pid, damage.amount, damage.type);
+    if canceled then return end;
+
+    document.reason.text = "Died " .. damage.type;
     status.dead = true;
+    status.death_location = { player.get_pos(pid) }
+
     hud.show_overlay(resource("death"));
+
+    events.emit("not_survival:on_death", pid, damage.type);
   end
   if status.dead and not hud.is_inventory_open() then
     hud.show_overlay(resource("death"))

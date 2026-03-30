@@ -51,6 +51,11 @@ function health.damage(pid, damage, damage_type, source, do_knockback, playsound
     playsound = hit_sounds[math.random(#hit_sounds)]
   end
 
+  local cancel = events.emit("not_survival:before_damage", pid, damage, damage_type, source);
+  if cancel then return end;
+
+  playsound = playsound --[[@as string]];
+
   health.heal(pid, -damage);
 
   if playsound then
@@ -79,6 +84,8 @@ function health.damage(pid, damage, damage_type, source, do_knockback, playsound
 
     health.knockback(pid, source, 6);
   end
+
+  events.emit("not_survival:on_damage", pid, damage, damage_type, source);
 end
 
 function health.knockback(pid, source, knockback_multiplier)

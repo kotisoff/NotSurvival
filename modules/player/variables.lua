@@ -26,8 +26,10 @@ local PlayerAttributes = {
 
 ---@class PlayerStatus
 ---@field effects {identifier:string,level:number,time_left:number}[]
+---@field death_location vec3
 local PlayerStatus = {
     dead = false,
+    death_location = { 0, 0, 0 },
     effects = {}
 }
 

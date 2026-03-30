@@ -29,7 +29,7 @@ death.drop_items = function(pid)
       local itemid, count = inventory.get(invid, i)
       if itemid ~= 0 then
         base_util.drop(vec3.add(pos, 0.5), itemid, count).rigidbody:set_vel(vec3.spherical_rand(3))
-        inventory.set(invid, i, 0)
+        inventory.set(invid, i, 0, 0)
       end
     end
   end
@@ -37,6 +37,7 @@ end
 
 death.revive = function(pid)
   local status = variables.get_player_status(pid);
+  local death_location = variables.get_player_status(pid).death_location;
 
   if not status.dead then return end;
 
@@ -51,12 +52,12 @@ death.revive = function(pid)
     experience.set_xp(pid, 0);
 
     death.drop_items(pid);
-    console.log("You died at " .. table.concat(vec3.round({ player.get_pos(pid) }), " "));
+    console.log("You died at " .. table.concat(vec3.round(death_location), " "));
   end
 
   player.set_pos(pid, player.get_spawnpoint(pid))
-  player.set_vel(pid, { 0, 0, 0 })
-  player.set_rot(pid, { 0, 0, 0 });
+  player.set_vel(pid, 0, 0, 0)
+  player.set_rot(pid, 0, 0, 0);
 
   health.full(pid);
   hunger.full(pid);
@@ -65,6 +66,8 @@ death.revive = function(pid)
 
   status.dead = false;
   hud.close_inventory();
+
+  events.emit("not_survival:on_revive", pid, death_location);
 end
 
 return death;

@@ -14,6 +14,14 @@ function sleeping.sleep(block_pos, day_time, animate, animation_time)
   local pid = hud.get_player();
   if sleeping_players[pid] then return end;
 
+  local sleep_start_time = world.get_day_time();
+
+  local cancel = events.emit("not_survival:on_sleep_start", pid, sleep_start_time, day_time);
+  if cancel then
+    title.actionbar:show("You could not sleep right now.");
+    return;
+  end
+
   animate = animate or true;
   animation_time = animation_time or 4;
   local pos = { block.seek_origin(unpack(block_pos)) };
@@ -84,6 +92,8 @@ function sleeping.sleep(block_pos, day_time, animate, animation_time)
     if status then
       world.set_day_time(day_time);
     end
+
+    events.emit("not_survival:on_sleep_end", pid, sleep_start_time, day_time, status);
 
     sleeping_players[pid] = false;
   end)

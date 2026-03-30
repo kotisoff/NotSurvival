@@ -64,4 +64,18 @@ health.knockback(
 )
 ```
 
+## Ивенты
+
+Ивент вызывается перед тем как нанести урон, можно отменить урон если вернуть true.
+
+```lua
+events.on("not_survival:before_damage", function(pid, damage, damage_type, damage_source) -> bool)
+```
+
+Ивент вызывается после нанесения урона. Не отменяется.
+
+```lua
+events.on("not_survival:on_damage", function(pid, damage, damage_type, damage_source) -> void)
+```
+
 [Вернуться на главную](../index.md)
