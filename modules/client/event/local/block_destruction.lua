@@ -110,23 +110,28 @@ local function set_player_rules(pid)
   player.set_infinite_items(pid, false)
 end
 
+---uses network
 local destruction = {}
 
+---uses network
 function destruction.start()
   target.wrap = gfx.blockwraps.wrap(target.pos, destruction_utils.get_breaking_texture(target.progress))
   net_events.client.send(net_events.packets.block_breaking, bson.serialize({ breaking_states.start, target.pos }))
 end
 
+---uses network
 function destruction.stop(state)
   gfx.blockwraps.unwrap(target.wrap)
   target.breaking = false
   net_events.client.send(net_events.packets.block_breaking, bson.serialize({ state, target.pos }))
 end
 
+---uses network
 function destruction.interrupt()
   destruction.stop(breaking_states.interrupted)
 end
 
+---uses network
 function destruction.broken()
   destruction.stop(breaking_states.broken)
 end

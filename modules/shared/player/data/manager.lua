@@ -1,6 +1,6 @@
 -- ========================header===========================
 local config = require "shared/core/config";
-local constants = require "constants";
+local constants = require "shared/core/constants";
 local mp = require "shared/utils/not_utils".multiplayer;
 
 -- =========================types===========================

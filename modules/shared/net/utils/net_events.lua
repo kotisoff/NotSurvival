@@ -1,6 +1,6 @@
 local mp = require "shared/utils/not_utils".multiplayer;
 
-local pack_id = require "constants".pack_id;
+local pack_id = require "shared/core/constants".pack_id;
 
 local packets = {
   update_player_data = tohex(1),

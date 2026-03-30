@@ -11,26 +11,25 @@ local eating     = {}
 -- =========================funcs===========================
 
 local function start_eating(pid)
-  local key = tohex(pid)
   local inv, slot = player.get_inventory(pid)
   local itemid = inventory.get(inv, slot)
 
-  eating[key] = {
+  eating[pid] = {
     id = itemid,
     progress = 0
   }
 end
 
 local function get_eating(pid)
-  return eating[tohex(pid)]
+  return eating[pid]
 end
 
 local function is_eating(pid)
-  return not not get_eating(pid)
+  return get_eating(pid) ~= nil;
 end
 
 local function stop_eating(pid)
-  eating[tohex(pid)] = nil
+  eating[pid] = nil;
 end
 
 -- ========================network==========================

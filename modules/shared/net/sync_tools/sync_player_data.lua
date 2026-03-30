@@ -11,7 +11,7 @@ local module              = {};
 ---@param client neutron.class.client | nil Only on server
 function module.update(category, field, client)
   if mp.mode == "server" and client then
-    local data = manager.get_store(client.player.pid)
+    local data = manager.get_store(client.player.pid);
 
     net_events.server.tell(net_events.packets.update_player_data, client,
       data_compression.to_bytes(category, field, field and data[field] or data)

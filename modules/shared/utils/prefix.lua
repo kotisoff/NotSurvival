@@ -1,4 +1,4 @@
-local constants = require "constants";
+local constants = require "shared/core/constants";
 local pack_id = constants.pack_id;
 
 ---@return string

@@ -6,7 +6,9 @@ local system_controller = require "client/lib/system_controller"
 
 local require_folder = require "shared/utils/require_folder"
 
-require_folder "client/event"
+require_folder "client/event/local"
+require_folder "client/event/net"
+
 local systems = require_folder "client/systems"
 
 for _, system in pairs(systems) do
