@@ -1,5 +1,5 @@
 local ns_events         = require "shared/core/ns_events"
-local net_events        = require "shared/network/utils/net_events";
+local net_events        = require "shared/net/utils/net_events";
 local mp                = require "shared/utils/not_utils".multiplayer;
 local destruction_utils = require "shared/utils/destruction_utils"
 local logger            = require "shared/lib/logger"

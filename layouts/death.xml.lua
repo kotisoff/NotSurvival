@@ -1,7 +1,7 @@
 local mp = require "shared/utils/not_utils".multiplayer
 local mode = mp.mode
 local bson = require "shared/utils/bson"
-local net_events = require "shared/network/utils/net_events"
+local net_events = require "shared/net/utils/net_events"
 
 function on_open(invid, x, y, z)
   document.score.pos = {

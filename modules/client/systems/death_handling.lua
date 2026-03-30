@@ -1,6 +1,6 @@
-local net_events      = require "shared/network/utils/net_events"
+local net_events      = require "shared/net/utils/net_events"
 local data            = require "shared/player/data/manager";
-local compression     = require "shared/network/compression/player_data"
+local compression     = require "shared/net/compression/player_data"
 local death           = require "shared/player/stats/death";
 local experience      = require "shared/player/stats/experience";
 local system_instance = require "shared/lib/system_instance"

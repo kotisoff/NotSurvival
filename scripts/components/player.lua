@@ -1,7 +1,7 @@
 local ns_events = require "shared/core/ns_events"
 local mp = require "shared/utils/not_utils".multiplayer
 local player_data = require "shared/player/data/manager"
-local net_events = require "shared/network/utils/net_events"
+local net_events = require "shared/net/utils/net_events"
 local fall_distance = require "shared/utils/fall_distance"
 local movement_controller = require "client/systems/movement_controller"
 

@@ -1,5 +1,5 @@
 local mp               = require "shared/utils/not_utils".multiplayer.api.server
-local net_events       = require "shared/network/utils/net_events"
+local net_events       = require "shared/net/utils/net_events"
 local hunger           = require "shared/player/stats/hunger"
 local system_instance  = require "shared/lib/system_instance"
 local Counter          = require "shared/lib/Counter"

@@ -2,7 +2,7 @@ local hunger     = require "shared/player/utils/hunger"
 local hunger_mgr = require "shared/player/stats/hunger"
 local prefix     = require "shared/utils/prefix"
 
-local net_events = require "shared/network/utils/net_events"
+local net_events = require "shared/net/utils/net_events"
 local mp         = require "shared/utils/not_utils".multiplayer.api.server;
 
 ---@type table<str, { id: int, progress: number }>

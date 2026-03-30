@@ -1,7 +1,7 @@
 local mp = require "shared/utils/not_utils".multiplayer;
 local data = require "shared/player/data/manager"
-local sync_data = require "shared/network/sync_tools/sync_player_data"
-local net_utils = require "shared/network/utils/net_utils"
+local sync_data = require "shared/net/sync_tools/sync_player_data"
+local net_utils = require "shared/net/utils/net_utils"
 
 ---@type ns.player.data_categories, ns.player.data_field.status | ns.player.data_field.base
 local cat, field = "data", "oxygen"

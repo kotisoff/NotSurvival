@@ -1,5 +1,5 @@
-local net_events  = require "shared/network/utils/net_events"
-local compression = require "shared/network/compression/player_data"
+local net_events  = require "shared/net/utils/net_events"
+local compression = require "shared/net/compression/player_data"
 local manager     = require "shared/player/data/manager"
 
 net_events.client.on(net_events.packets.update_player_data, function(bytes)

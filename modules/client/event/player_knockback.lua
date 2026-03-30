@@ -1,4 +1,4 @@
-local net_events = require "shared/network/utils/net_events"
+local net_events = require "shared/net/utils/net_events"
 local bson       = require "shared/utils/bson"
 
 net_events.client.on(net_events.packets.deal_knockback, function(bytes)
