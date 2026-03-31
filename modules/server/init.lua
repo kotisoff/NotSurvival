@@ -16,14 +16,19 @@ if mp.mode ~= "standalone" then
     end
   end)
 
-  ns_events.on("hud_open", function()
-    local pid = hud.get_player()
-    ns_events.emit("player_connected", pid)
-  end)
-else
   ---@param client neutron.class.client
   events.on("server:client_connected", function(client)
-    ns_events.emit("player_connected", client.player.pid)
+    ns_events.emit("player_connected", client)
+  end)
+else
+  ns_events.on("first_tick", function()
+    local pid = hud.get_player()
+
+    local identity = server.sandbox.players.get_by_pid(pid).identity;
+    local client = server.accounts.by_identity.get_client(identity);
+    -- Вот эта ↑ залупень ↑ нужна чтобы ide не ругалась, по идее я могу ваще без identity клиента спиздить в standalone.
+
+    ns_events.emit("player_connected", client);
   end)
 end
 
@@ -46,5 +51,7 @@ end)
 ns_events.on("player_disconnected", function(pid)
   system_controller:remove_player(pid);
 end)
+
+require "server/commands";
 
 logger:println("I", "Сервер-сайд подтянулся.")

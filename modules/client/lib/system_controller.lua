@@ -1,7 +1,8 @@
-local logger     = require "shared/lib/logger"
+local logger     = require "shared/core/logger"
 local controller = {
   ---@type ns.ecs.system[]
   systems = {},
+  pid = 0,
 };
 
 
@@ -17,28 +18,24 @@ function controller:register(system)
 end
 
 function controller:update(tps)
-  local id = hud.get_player();
-
   for _, system in ipairs(self.systems) do
-    if system:should_update(id) then
-      system:update(id, tps);
+    if system:should_update(self.pid) then
+      system:update(self.pid, tps);
     end;
   end
 end
 
 function controller:remove_player()
-  local id = hud.get_player()
-
   for _, system in ipairs(self.systems) do
-    system:on_player_remove(id);
+    system:on_player_remove(self.pid);
   end
 end
 
 function controller:register_player()
-  local id = hud.get_player()
+  self.pid = hud.get_player()
 
   for _, system in ipairs(self.systems) do
-    system:on_player_register(id);
+    system:on_player_register(self.pid);
   end
 end
 

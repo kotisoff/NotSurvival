@@ -1,8 +1,7 @@
 local mp         = require "shared/utils/not_utils".multiplayer;
-local net_utils  = require "shared/net/utils/net_utils"
+local logger     = require "shared/core/logger"
 
 local data       = require "shared/player/data/manager";
-local sync_data  = require "shared/net/sync_tools/sync_player_data"
 
 local health     = require "shared/player/stats/health";
 local experience = require "shared/player/stats/experience";
@@ -24,6 +23,12 @@ function module.get(pid)
   return data.get_status(pid).dead
 end
 
+---@return vec3
+function module.get_location(pid)
+  if not pid then pid = hud.get_player() end
+  return data.get_status(pid).death_location
+end
+
 ---@return bool
 function module.is_invulnerable(pid)
   if not pid then pid = hud.get_player() end;
@@ -38,7 +43,13 @@ mp.as_server(function(server, mode)
   ---@param flag bool
   function module.set(pid, flag)
     data.set(pid, cat, field, flag)
-    sync_data.update(cat, field, net_utils.server.get_client_by_pid(pid))
+  end
+
+  ---Server side only
+  ---@param pid int
+  ---@param pos vec3
+  function module.set_location(pid, pos)
+    data.set(pid, "status", "death_location", pos);
   end
 
   ---Server side only
@@ -94,19 +105,29 @@ mp.as_server(function(server, mode)
 
       module.drop_items(pid)
     end
-    server.console.tell("You died at " .. table.concat(vec3.round({ player.get_pos(pid) }), " "), client)
+
+    server.console.tell("You died at " .. table.concat(vec3.round(module.get_location(pid)), " "), client)
+
+    logger:println(
+      "I",
+      string.format(
+        "%s died at %s",
+        client.player.username,
+        table.concat(vec3.round(module.get_location(pid)), " ")
+      )
+    )
 
     -- Телепорт на спавн
     local x, y, z = player.get_spawnpoint(pid)
-    local status = pcall(function()
-      server.sandbox.players.sync_states(client.player,
-        { pos = { x = x, y = y, z = z }, rot = { yaw = 0, pitch = 0 } })
-    end)
-    if not status then
+
+    pcall(function()
       player.set_pos(pid, x, y, z)
       player.set_rot(pid, 0, 0, 0)
       player.set_vel(pid, 0, 0, 0)
-    end
+
+      server.sandbox.players.sync_states(client.player,
+        { pos = { x, y, z }, rot = { 0, 0, 0 } })
+    end)
 
     -- Восстановление игрока
     health.full(pid)

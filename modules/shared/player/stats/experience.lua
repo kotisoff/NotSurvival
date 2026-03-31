@@ -1,8 +1,6 @@
 local mp         = require "shared/utils/not_utils".multiplayer;
-local sync_data  = require "shared/net/sync_tools/sync_player_data"
 local data       = require "shared/player/data/manager"
 local exp_shared = require "shared/utils/experience"
-local net_utils  = require "shared/net/utils/net_utils"
 
 ---@type ns.player.data_categories, ns.player.data_field.status
 local cat, field = "status", "xp";
@@ -37,7 +35,6 @@ mp.as_server(function(server, mode)
   ---@param pid int
   function module.set_xp(pid, value)
     data.set(pid, cat, field, value)
-    sync_data.update(cat, field, net_utils.server.get_client_by_pid(pid))
   end
 
   ---Server side only

@@ -1,4 +1,4 @@
-local logger     = require "shared/lib/logger"
+local logger     = require "shared/core/logger"
 local controller = {
   ---@type ns.ecs.system[]
   systems = {},

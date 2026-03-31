@@ -1,9 +1,7 @@
-local mp        = require "shared/utils/not_utils".multiplayer;
-local data      = require "shared/player/data/manager"
-local sync_data = require "shared/net/sync_tools/sync_player_data"
-local net_utils = require "shared/net/utils/net_utils"
+local mp     = require "shared/utils/not_utils".multiplayer;
+local data   = require "shared/player/data/manager"
 
-local module    = {} -- эту хуету через генератор оптимизировать также вообще не вариант.
+local module = {} -- эту хуету через генератор оптимизировать также вообще не вариант.
 
 -- ========================shared===========================
 
@@ -36,8 +34,7 @@ mp.as_server(function(server, mode)
     local max = module.get_max_hunger(pid)
     local value = math.clamp(amount, 0, max)
 
-    data.get_data(pid).hunger = value;
-    sync_data.update("data", "hunger", net_utils.server.get_client_by_pid(pid))
+    data.set(pid, "data", "hunger", value);
   end
 
   ---Server side only
@@ -46,8 +43,7 @@ mp.as_server(function(server, mode)
     local max = module.get_max_saturation(pid)
     local value = math.clamp(amount, 0, max)
 
-    data.get_data(pid).saturation = value
-    sync_data.update("data", "saturation", net_utils.server.get_client_by_pid(pid))
+    data.set(pid, "data", "saturation", value);
   end
 
   ---Server side only

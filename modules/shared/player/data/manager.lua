@@ -1,7 +1,13 @@
 -- ========================header===========================
-local config = require "shared/core/config";
-local constants = require "shared/core/constants";
-local mp = require "shared/utils/not_utils".multiplayer;
+local config                   = require "shared/core/config";
+local constants                = require "shared/core/constants";
+local mp                       = require "shared/utils/not_utils".multiplayer;
+local ns_events                = require "shared/core/ns_events"
+local logger                   = require "shared/core/logger"
+local net_events               = require "shared/net/utils/net_events"
+
+local data_compression         = require "shared/net/compression/player_data";
+local data_request_compression = require "shared/net/compression/player_data_request";
 
 -- =========================types===========================
 
@@ -16,13 +22,15 @@ local mp = require "shared/utils/not_utils".multiplayer;
 ---@field xp number
 ---@field gamemode number
 ---@field dead boolean
+---@field death_location vec3
 ---@field effects ns.player.Status.effect[]
+---@field init bool
 
 ---@alias ns.player.Status.effect { identifier: string, level: number, time_left: number }
 
 ---@alias ns.player.data_categories "data" | "attributes" | "status"
 ---@alias ns.player.data_field.base "health" | "hunger" | "saturation" | "oxygen" | "armor"
----@alias ns.player.data_field.status "xp" | "gamemode" | "dead" | "effects"
+---@alias ns.player.data_field.status "xp" | "gamemode" | "dead" | "death_location" | "effects" | "init"
 
 -- =========================================================
 
@@ -37,7 +45,7 @@ local PlayerAttributes = table.map(table.copy(config.player.base), function(i, v
 
 ---@type ns.player.Status
 local PlayerStatus = {
-  xp = 0, gamemode = 0, dead = false, effects = {}
+  xp = 0, gamemode = 0, dead = false, death_location = { 0, 0, 0 }, effects = {}, init = false
 }
 
 -- =========================================================
@@ -52,9 +60,14 @@ local module = {
 ---@param pid int
 ---@return { data: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
 function module.get_store(pid)
+  -- TODO: investigate где сука у нас всё ломается и обнуляется.
+
   if mp.mode == "client" then
     return module.session;
   else
+    -- local info = debug.getinfo(3, "S");
+    -- debug.print(info);
+
     local entid = player.get_entity(pid);
     local entity = entities.get(entid);
     local component_name = string.format("%s:player", constants.pack_id);
@@ -94,8 +107,47 @@ end
 ---@param category ns.player.data_categories
 ---@param field str | ns.player.data_field.base | ns.player.data_field.status
 function module.set(pid, category, field, value)
+  if value == "nil" then
+    local info = debug.getinfo(2, "S");
+    logger:println("W", string.format("setting explicit nil value to player field! %s:%s in %s:%s"), category, field,
+      info.source, info.lastlinedefined);
+  end
+
   local store = module.get_store(pid);
   store[category][field] = value;
+
+  ns_events.emit("__set_player_data", pid, category, field, value);
+
+  mp.as_server(function(server, mode)
+    local identity = server.sandbox.players.get_by_pid(pid).identity;
+    local client = server.accounts.by_identity.get_client(identity);
+
+    module.sync(category, field, client);
+  end)
+end
+
+---@param category str
+---@param field str | nil
+---@param client neutron.class.client | nil Only on server
+function module.sync(category, field, client)
+  if mp.mode == "server" and client then
+    local store = module.get_store(client.player.pid);
+    local data = store[category];
+
+    net_events.server.tell(net_events.packets.update_player_data, client,
+      data_compression.to_bytes(category, field, field and data[field] or data)
+    );
+    print("sent data");
+  elseif mp.mode == "client" then
+    net_events.client.send(net_events.packets.update_player_data, data_request_compression.to_bytes(category, field));
+    print("sent update request");
+  elseif mp.mode == "server" then
+    error("Client не указан!");
+  elseif mp.mode == "standalone" then
+    local pid = hud.get_player();
+    local store = module.get_store(pid);
+    ns_events.emit("__set_player_data", pid, category, field, field and store[category][field] or store[category]);
+  end
 end
 
 module.session = {

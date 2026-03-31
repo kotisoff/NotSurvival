@@ -13,7 +13,9 @@ end
 
 function Death_handler:update(pid, tps)
   if health.get(pid) <= 0 and not death.get(pid) then
-    death.set(pid, true)
+    local pos = { player.get_pos(pid) };
+    death.set_location(pid, pos);
+    death.set(pid, true);
 
     local name = player.get_name(pid)
     local message = string.format("%s died.", name)

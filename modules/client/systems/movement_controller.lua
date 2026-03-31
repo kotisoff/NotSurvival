@@ -31,6 +31,9 @@ end
 
 ---@param entity voxelcore.class.entity
 function module.__update(entity)
+  -- TODO: unlock function.
+  if true then return end;
+
   local pid = entity:get_player();
   if not pid or hud.get_player() ~= pid then return end
 
