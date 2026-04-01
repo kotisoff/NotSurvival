@@ -1,9 +1,9 @@
 {
   "icon-type": "sprite",
-  "icon": "items:wooden_pickaxe",
+  "icon": "items:wooden_axe",
   "stack-size": 1,
   "not_survival:tool": {
-    "type": ["pickaxe"],
+    "type": ["axe"],
     "speed": 2
   },
   "not_crafting:fuel_burn_time": 200,

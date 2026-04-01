@@ -1,4 +1,23 @@
 {
+  "entities": [
+    "base:player",
+    "exp_orb",
+    "base:drop"
+  ],
+  "items": [
+    "coal",
+    "apple",
+    "flint",
+    "stick",
+    "wooden_pickaxe",
+    "potion",
+    "bottle",
+    "death",
+    "exp_test",
+    "wooden_axe",
+    "wooden_shovel",
+    "wooden_hoe"
+  ],
   "blocks": [
     "sapling",
     "dead_bush",
@@ -11,21 +30,5 @@
     "base:sand",
     "base:stone",
     "base:ice"
-  ],
-  "items": [
-    "coal",
-    "apple",
-    "flint",
-    "stick",
-    "wooden_pickaxe",
-    "potion",
-    "bottle",
-    "death",
-    "exp_test"
-  ],
-  "entities": [
-    "base:player",
-    "exp_orb",
-    "base:drop"
   ]
 }

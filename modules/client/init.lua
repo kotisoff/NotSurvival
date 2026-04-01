@@ -11,9 +11,11 @@ require_folder "client/events/net"
 
 local systems = require_folder "client/systems"
 
-for _, system in pairs(systems) do
-  system_controller:register(system);
-end
+ns_events.on("hud_open", function(...)
+  for _, system in pairs(systems) do
+    system_controller:register(system);
+  end
+end)
 
 ns_events.on("first_tick", function()
   hud.open_permanent(prefix "survival_hud")
