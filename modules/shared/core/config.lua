@@ -30,9 +30,7 @@ local config = {
   },
 
   properties = {
-    tool = {
-      speed = "not_survival:tool_speed"
-    },
+    tool = "not_survival:tool",
     food = {
       types = { "not_survival:potion", "not_survival:food" }
     }

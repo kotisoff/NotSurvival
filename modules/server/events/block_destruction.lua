@@ -1,7 +1,7 @@
 local ns_events         = require "shared/core/ns_events"
 local net_events        = require "shared/net/utils/net_events";
 local mp                = require "shared/utils/not_utils".multiplayer;
-local destruction_utils = require "shared/utils/destruction_utils"
+local destruction_utils = require "shared/lib/destruction"
 local logger            = require "shared/core/logger"
 local config            = require "shared/core/config"
 

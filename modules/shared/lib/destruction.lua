@@ -1,4 +1,6 @@
-local properties       = require "shared/core/config".properties;
+local tags             = require "shared/utils/not_utils".tags;
+local tools            = require "shared/lib/tools"
+
 local module           = {}
 
 ---@enum ns.breaking.states
@@ -8,21 +10,20 @@ module.breaking_states = {
   interrupted = 2
 }
 
----@return number
-function module.get_tool_speed(pid)
-  local inv, slot = player.get_inventory(pid)
-  local itemid = inventory.get(inv, slot)
-
-  local props = item.properties[itemid]
-  if not props then return 1 end
-  return props[properties.tool.speed] or 1 --[[@as number]]
-end
-
 function module.get_speed_multiplier(pid)
-  local speed = module.get_tool_speed(pid)
-  if not player.is_on_ground(pid) then
-    speed = speed / 5
+  local speed = tools.get_tool_speed(pid)
+
+  local blockid = block.get(player.get_pos(pid));
+  local blocktags = tags.get_tags_by_blockid(blockid);
+
+  if table.has(blocktags, "core:liquid") then
+    speed = speed / 5;
   end
+
+  if not player.is_on_ground(pid) then
+    speed = speed / 5;
+  end
+
   return speed
 end
 
