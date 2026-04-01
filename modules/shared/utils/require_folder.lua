@@ -1,10 +1,14 @@
-local packid = "not_survival"
+local packid = require "shared/core/constants".pack_id;
 
 ---@param folder string
 return function(folder)
-  local files = file.join(pack.get_folder(packid), "modules/" .. folder)
-  for _, path in ipairs(file.list(files)) do
+  local dir = file.join(pack.get_folder(packid), "modules/" .. folder)
+  local collection = {};
+
+  for _, path in ipairs(file.list(dir)) do
     local basename = file.stem(path)
-    require(file.join(folder, basename))
+    collection[basename] = require(file.join(folder, basename))
   end
+
+  return collection
 end

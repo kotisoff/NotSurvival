@@ -1,4 +1,4 @@
-local resource = require "shared/utils/resource_func"
+local ns_events = require "shared/core/ns_events";
 
 require "init";
 
@@ -9,25 +9,26 @@ end
 
 function on_world_tick(tps)
   if first_tick then
-    events.emit(resource("first_tick"))
+    ns_events.emit("first_tick")
     first_tick = false;
   end
 
-  events.emit(resource("world_tick"), tps)
+  ns_events.emit("world_tick", tps)
 end
 
 function on_player_tick(pid, tps)
-  events.emit(resource("player_tick"), pid, tps)
+  ns_events.emit("player_tick", pid, tps)
 end
 
 function on_block_placed(blockid, x, y, z, pid)
-  events.emit(resource("block_placed"), blockid, x, y, z, pid);
+  ns_events.emit("block_placed", blockid, x, y, z, pid);
 end
 
 function on_block_broken(blockid, x, y, z, pid)
-  events.emit(resource("block_broken"), blockid, x, y, z, pid);
+  ns_events.emit("block_broken", blockid, x, y, z, pid);
 end
 
 function on_world_quit()
+  ns_events.emit("world_quit");
   events.remove_by_prefix(PACK_ID);
 end
