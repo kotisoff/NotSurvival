@@ -6,5 +6,5 @@
   "rotation": "pane",
   "material": "base:wood",
   "base:durability": 4,
-  "tags@append": ["not_survival:bed"]
+  "tags": ["not_survival:bed"]
 }

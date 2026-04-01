@@ -1,0 +1,13 @@
+{
+  "values": [
+    "#base:stone",
+    "#base:ore",
+    "base:stone",
+    "base:coal_ore",
+    "base:brick",
+    "base:metal",
+    "base:rust",
+    "base:pipe",
+    "#not_survival:cobblestone"
+  ]
+}

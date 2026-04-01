@@ -1,6 +1,7 @@
 local ns_events = require "shared/core/ns_events"
 local nu = require "shared/utils/not_utils";
 local system_controller = require "server/lib/system_controller"
+local loaders = require "shared/lib/loaders/main";
 local mp = nu.multiplayer
 local logger = nu.Logger.new("not_survival");
 local server = mp.api.server;
@@ -53,5 +54,9 @@ ns_events.on("player_disconnected", function(pid)
 end)
 
 require "server/commands";
+
+ns_events.on("first_tick", function()
+  loaders.init();
+end)
 
 logger:println("I", "Сервер-сайд подтянулся.")

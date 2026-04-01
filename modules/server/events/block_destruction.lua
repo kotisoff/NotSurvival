@@ -139,7 +139,7 @@ handlers[breaking_states.broken] = function(state, pos, blockid, client)
   if durability > 0 then
     local timestamp = time.uptime();
     local total = timestamp - target.start;
-    local expected_time = durability / destruction_utils.get_speed_multiplier(pid)
+    local expected_time = durability / destruction_utils.get_speed_multiplier(pid, blockid)
     local deviation = calculate_breaking_deviation(expected_time);
 
     if (expected_time - deviation) >= total then

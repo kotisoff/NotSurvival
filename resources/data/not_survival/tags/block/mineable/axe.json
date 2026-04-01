@@ -1,0 +1,8 @@
+{
+  "values": [
+    "base:wood",
+    "base:planks",
+    "base:wooden_door",
+    "#not_survival:bed"
+  ]
+}
