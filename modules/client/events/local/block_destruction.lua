@@ -2,6 +2,7 @@ local ns_events         = require "shared/core/ns_events";
 local net_events        = require "shared/net/utils/net_events";
 local destruction_utils = require "shared/lib/destruction";
 local bson              = require "shared/utils/bson"
+local mp                = require "shared/utils/not_utils".multiplayer
 
 local packets           = net_events.packets;
 
@@ -10,6 +11,7 @@ local packets           = net_events.packets;
 ---@field breaking bool
 ---@field pos vec3
 ---@field id int
+---@field item int
 ---@field tick int
 ---@field progress number [0,1]
 ---@field wrap int
@@ -17,6 +19,7 @@ local target = {
   breaking = false,
   pos = { 0, 0, 0 },
   id = 0,
+  item = 0,
   states = 0,
   tick = 0,
   progress = 0,
@@ -66,6 +69,7 @@ handlers[breaking_states.start] = function(pos, _, pid, t_pid)
     tick = 0,
     pos = pos,
     id = block.get(unpack(pos)),
+    item = inventory.get(player.get_inventory(pid)),
     pid = t_pid,
     wrap = wrap_id
   }
@@ -87,10 +91,12 @@ handlers[breaking_states.broken] = function(pos, blockid, pid, t_pid, block_stat
     return -- если честно хз чё сюда писать
   end
 
-  local x, y, z = unpack(pos);
-  block.set(x, y, z, 0);
-  local sound = block.get_sound(blockid, "breakSound");
-  audio.play_sound(sound, x, y, z, 1, 1);
+  if mp.mode == "client" then
+    local x, y, z = unpack(pos);
+    block.set(x, y, z, 0);
+    local sound = block.get_sound(blockid, "breakSound");
+    audio.play_sound(sound, x, y, z, 1, 1);
+  end
   remove_wrap(pos);
 end
 
@@ -161,14 +167,15 @@ local function manage_breaking(pid, tps)
 
       -- Perform breaking
       if target.progress >= 1 then
-        destruction.broken()
         block.destruct(x, y, z, pid)
+        destruction.broken()
         return
       end
     elseif x ~= nil then
       target.breaking = true
       target.pos = { x, y, z }
       target.id = block.get(x, y, z)
+      target.item = inventory.get(player.get_inventory(pid))
       target.states = block.get_states(x, y, z)
       target.tick = 0
       target.progress = 0
@@ -186,6 +193,11 @@ local function manage_breaking(pid, tps)
 end
 
 local function animate_breaking()
+  local pid = hud.get_player();
+  local itemid = inventory.get(player.get_inventory(pid));
+
+  if target.item ~= itemid then return destruction.interrupt() end;
+
   gfx.blockwraps.set_texture(target.wrap, destruction_utils.get_breaking_texture(target.progress))
 
   if target.tick % 4 == 0 then

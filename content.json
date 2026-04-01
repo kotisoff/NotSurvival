@@ -22,13 +22,14 @@
     "sapling",
     "dead_bush",
     "cobblestone",
-    "bed",
     "base:coal_ore",
     "base:grass",
     "base:grass_block",
     "base:leaves",
     "base:sand",
     "base:stone",
-    "base:ice"
+    "base:ice",
+    "white_wool",
+    "white_bed"
   ]
 }

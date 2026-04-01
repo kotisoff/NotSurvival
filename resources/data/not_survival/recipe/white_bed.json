@@ -1,0 +1,18 @@
+{
+  "type": "not_crafting:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "base:planks"
+    },
+    "X": {
+      "item": "not_survival:white_wool"
+    }
+  },
+  "pattern": ["   ", "XXX", "###"],
+  "result": {
+    "count": 1,
+    "id": "not_survival:white_bed"
+  },
+  "show_notification": false
+}
