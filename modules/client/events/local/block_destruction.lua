@@ -3,6 +3,7 @@ local net_events        = require "shared/net/utils/net_events";
 local destruction_utils = require "shared/lib/destruction";
 local bson              = require "shared/utils/bson"
 local mp                = require "shared/utils/not_utils".multiplayer
+local hand_animator     = require "client/systems/hand_animator"
 
 local packets           = net_events.packets;
 
@@ -198,6 +199,10 @@ local function animate_breaking()
 
   if target.item ~= itemid then return destruction.interrupt() end;
 
+  if hand_animator.hit_timer <= 0.0 then
+    hand_animator.hit_timer = 1.0
+  end
+
   gfx.blockwraps.set_texture(target.wrap, destruction_utils.get_breaking_texture(target.progress))
 
   if target.tick % 4 == 0 then
@@ -255,3 +260,8 @@ ns_events.on(("player_tick"), function(pid, tps)
 
   animate_all_wraps(tps)
 end)
+
+--[[
+  Credits to: MihailRis
+    for original script of hand animation and block destruction
+]]

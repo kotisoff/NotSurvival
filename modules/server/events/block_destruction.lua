@@ -227,3 +227,8 @@ ns_events.on("l:block_broken", function(blockid, pos, pid)
 
   ns_drop.callback(blockid, x, y, z, pid)
 end)
+
+--[[
+  Credits to: MihailRis
+    for original script of hand animation and block destruction
+]]
