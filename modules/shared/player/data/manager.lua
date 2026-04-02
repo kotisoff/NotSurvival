@@ -116,7 +116,9 @@ function module.set(pid, category, field, value)
   local store = module.get_store(pid);
   store[category][field] = value;
 
-  ns_events.emit("__set_player_data", pid, category, field, value);
+  if mp.mode ~= "standalone" then
+    ns_events.emit("__set_player_data", pid, category, field, value);
+  end
 
   mp.as_server(function(server, mode)
     local identity = server.sandbox.players.get_by_pid(pid).identity;
@@ -144,16 +146,22 @@ function module.sync(category, field, client)
     net_events.server.tell(net_events.packets.update_player_data, client,
       data_compression.to_bytes(category, field, value)
     );
-    print("sent data");
   elseif mp.mode == "client" then
     net_events.client.send(net_events.packets.update_player_data, data_request_compression.to_bytes(category, field));
-    print("sent update request");
   elseif mp.mode == "server" then
     error("Client не указан!");
   elseif mp.mode == "standalone" then
     local pid = hud.get_player();
     local store = module.get_store(pid);
-    ns_events.emit("__set_player_data", pid, category, field, field and store[category][field] or store[category]);
+
+    local value
+    if field then
+      value = store[category][field]
+    else
+      value = store[category]
+    end
+
+    ns_events.emit("__set_player_data", pid, category, field, value);
   end
 end
 

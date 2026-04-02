@@ -10,7 +10,8 @@ local packets = {
   player_attacked = tohex(5),
   player_grounded = tohex(6),
   player_sprinting = tohex(7),
-  player_respawn = tohex(8)
+  player_respawn = tohex(8),
+  resources_data = tohex(9)
 }
 
 local client = {};

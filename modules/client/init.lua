@@ -3,7 +3,6 @@ local logger            = require "shared/core/logger";
 local prefix            = require "shared/utils/prefix"
 local system_controller = require "client/lib/system_controller"
 local manager           = require "shared/player/data/manager"
-local loaders           = require "shared/lib/loaders/main";
 
 local require_folder    = require "shared/utils/require_folder"
 
@@ -16,8 +15,6 @@ ns_events.on("hud_open", function(...)
   for _, system in pairs(systems) do
     system_controller:register(system);
   end
-
-  loaders:init();
 end)
 
 ns_events.on("first_tick", function()

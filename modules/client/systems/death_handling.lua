@@ -35,6 +35,7 @@ ns_events.on("__set_player_data", function(pid, category, field, value)
     end
 
     enable_inputs(not value)
+    return;
   end
 end)
 

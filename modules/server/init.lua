@@ -8,6 +8,10 @@ local server = mp.api.server;
 
 require "shared/player/data/manager"
 
+ns_events.on("first_tick", function()
+  loaders.reload();
+end)
+
 if mp.mode ~= "standalone" then
   ns_events.on("world_tick", function()
     local players = server.sandbox.players.get_all();
@@ -54,9 +58,5 @@ ns_events.on("player_disconnected", function(pid)
 end)
 
 require "server/commands";
-
-ns_events.on("first_tick", function()
-  loaders.init();
-end)
 
 logger:println("I", "Сервер-сайд подтянулся.")

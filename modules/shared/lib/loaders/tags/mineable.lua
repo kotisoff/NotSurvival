@@ -66,6 +66,34 @@ function module.reload()
       :clear();
 end
 
+function module:compress()
+  local compressed = {};
+
+  for blockid, tools in pairs(self.data) do
+    for _, tool in ipairs(tools) do
+      compressed[tool] = compressed[tool] or {};
+
+      table.insert(compressed[tool], blockid);
+    end
+  end
+
+  return compressed;
+end
+
+function module:decompress(compressed)
+  local decompressed = {};
+
+  for tool, blocks in pairs(compressed) do
+    for _, blockid in ipairs(blocks) do
+      decompressed[blockid] = decompressed[blockid] or {};
+
+      table.insert(decompressed[blockid], tool);
+    end
+  end
+
+  return decompressed;
+end
+
 ---@param blockid int
 ---@return ns.breaking.tool_type[]
 function block.get_tools(blockid)

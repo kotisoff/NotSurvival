@@ -1,23 +1,40 @@
 local module = {
   loaders = {},
+  compressed_data = {}
 };
 
-local resources = {
-  "tags/mineable"
+module.loaders = {
+  ["tags/mineable"] = require "shared/lib/loaders/tags/mineable",
 }
 
 function module.reload()
-  for _, loader in ipairs(module.loaders) do
+  for _, loader in pairs(module.loaders) do
     loader.reload();
   end
+
+  module.compress();
 end
 
-function module.init()
-  for _, path in ipairs(resources) do
-    table.insert(module.loaders, require("shared/lib/loaders/" .. path));
+function module.compress()
+  local compressed = {};
+
+  for key, loader in pairs(module.loaders) do
+    compressed[key] = loader:compress();
   end
 
-  module.reload();
+  local bytes = bjson.tobytes(compressed, true);
+
+  module.compressed_data = bytes;
+  return bytes;
+end
+
+function module.decompress(bytes)
+  local compressed = bjson.frombytes(bytes);
+
+  for key, data in pairs(compressed) do
+    local loader = module.loaders[key];
+    loader.data = loader:decompress(data);
+  end
 end
 
 return module;
