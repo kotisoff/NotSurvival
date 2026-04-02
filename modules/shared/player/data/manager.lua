@@ -134,8 +134,15 @@ function module.sync(category, field, client)
     local store = module.get_store(client.player.pid);
     local data = store[category];
 
+    local value;
+    if field then
+      value = data[field];
+    else
+      value = data;
+    end
+
     net_events.server.tell(net_events.packets.update_player_data, client,
-      data_compression.to_bytes(category, field, field and data[field] or data)
+      data_compression.to_bytes(category, field, value)
     );
     print("sent data");
   elseif mp.mode == "client" then

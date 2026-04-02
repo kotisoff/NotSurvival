@@ -56,10 +56,10 @@ local function echo_breaking_state(state, target, ignored_client)
   --   end
   -- end
 
-  for name, _ in pairs(players) do
-    if ignored_client and name == ignored_client.player.username then goto continue end
+  for _, mplayer in pairs(players) do
+    if ignored_client and mplayer.username == ignored_client.player.username then goto continue end
 
-    local client = mp.accounts.get_client_by_name(name)
+    local client = api.accounts.by_identity.get_client(mplayer.identity);
 
     net_events.server.tell(packets.block_breaking, client, bson.serialize(data));
 
