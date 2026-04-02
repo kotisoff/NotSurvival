@@ -2,6 +2,7 @@
   "icon-type": "sprite",
   "icon": "items:wooden_shovel",
   "stack-size": 1,
+  "uses": 60,
   "not_survival:tool": {
     "type": ["shovel"],
     "speed": 2

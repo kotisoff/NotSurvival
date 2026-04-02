@@ -199,6 +199,8 @@ ns_events.on("l:block_broken", function(blockid, pos, pid)
   local x, y, z = unpack(pos);
   block.set(x, y, z, 0);
 
+  inventory.use(player.get_inventory(pid));
+
   local ns_drop = drop_utils.block_loot(blockid)
 
   ---@type { items: {item: int,count:int,vel:vec3}[] }
