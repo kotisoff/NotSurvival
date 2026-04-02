@@ -1,0 +1,17 @@
+{
+  "icon-type": "sprite",
+  "icon": "items:wooden_sword",
+  "stack-size": 1,
+  "uses": 60,
+  "not_survival:tool": {
+    "type": ["sword"],
+    "speed": 2
+  },
+  "not_survival:weapon": {
+    "type": ["melee"],
+    "damage": 4,
+    "speed": 1.6
+  },
+  "not_crafting:fuel_burn_time": 200,
+  "tags": ["not_survival:tool", "not_survival:sword", "not_survival:weapon", "not_survival:weapon_melee"]
+}

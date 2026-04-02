@@ -8,5 +8,5 @@
     "speed": 2
   },
   "not_crafting:fuel_burn_time": 200,
-  "tags@append": ["not_survival:tool"]
+  "tags": ["not_survival:tool"]
 }

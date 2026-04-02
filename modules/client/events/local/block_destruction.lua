@@ -199,9 +199,7 @@ local function animate_breaking()
 
   if target.item ~= itemid then return destruction.interrupt() end;
 
-  if hand_animator.hit_timer <= 0.0 then
-    hand_animator.hit_timer = 1.0
-  end
+  hand_animator:reset_hit();
 
   gfx.blockwraps.set_texture(target.wrap, destruction_utils.get_breaking_texture(target.progress))
 

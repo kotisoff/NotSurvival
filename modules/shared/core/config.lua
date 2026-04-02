@@ -31,6 +31,7 @@ local config = {
 
   properties = {
     tool = "not_survival:tool",
+    weapon = "not_survival:weapon",
     food = {
       types = { "not_survival:potion", "not_survival:food" }
     }
