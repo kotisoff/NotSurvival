@@ -1,6 +1,6 @@
 local module = {};
 
-local PlayerStatusKeys = { "xp", "gamemode", "dead", "effects" }
+local PlayerStatusKeys = { "xp", "gamemode", "dead", "death_location", "effects", "init" }
 local PlayerDataKeys = { "health", "hunger", "saturation", "oxygen", "armor" }
 
 module.Categories = { "data", "attributes", "status" }

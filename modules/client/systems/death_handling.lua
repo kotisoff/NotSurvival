@@ -4,6 +4,7 @@ local compression     = require "shared/net/compression/player_data"
 local death           = require "shared/player/stats/death";
 local experience      = require "shared/player/stats/experience";
 local system_instance = require "shared/lib/system_instance"
+local ns_events       = require "shared/core/ns_events"
 
 local system          = system_instance.new("ns.system.death_handling")
 
@@ -24,24 +25,17 @@ local function enable_inputs(flag)
   end
 end
 
-net_events.client.on(net_events.packets.update_player_data, function(bytes)
-  local category, field, value = compression.from_bytes(bytes);
+ns_events.on("__set_player_data", function(pid, category, field, value)
+  if category == "status" and field == "dead" then
+    if value then
+      death.show_overlay(experience.get_exp(pid));
+    else
+      death.close_overlay();
+      hud.close_inventory();
+    end
 
-  if category ~= "status"
-      or not field
-      or field ~= "dead"
-      or data.get_status(hud.get_player()).gamemode ~= 0
-  then
-    return
-  end
-
-  if value == true then
-    death.show_overlay(experience.get_exp())
-    enable_inputs(false)
-  else
-    death.close_overlay()
-    hud.close_inventory()
-    enable_inputs(true)
+    enable_inputs(not value)
+    return;
   end
 end)
 

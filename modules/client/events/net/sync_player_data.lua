@@ -6,8 +6,6 @@ net_events.client.on(net_events.packets.update_player_data, function(bytes)
   local category, field, data = compression.from_bytes(bytes);
   local pid = hud.get_player();
 
-  print('got data')
-  print(string.format("ae %s %s %s %s", pid, category, field, data))
 
   if field then
     manager.set(pid, category, field, data);

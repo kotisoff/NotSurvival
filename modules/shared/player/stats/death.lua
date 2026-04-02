@@ -10,9 +10,6 @@ local oxygen     = require "shared/player/stats/oxygen";
 
 local base_util  = require "base:util";
 
----@type ns.player.data_categories, ns.player.data_field.status
-local cat, field = "status", "dead";
-
 local module     = {}
 
 -- ========================shared===========================
@@ -42,7 +39,7 @@ mp.as_server(function(server, mode)
   ---@param pid int
   ---@param flag bool
   function module.set(pid, flag)
-    data.set(pid, cat, field, flag)
+    data.set(pid, "status", "dead", flag)
   end
 
   ---Server side only
@@ -107,7 +104,6 @@ mp.as_server(function(server, mode)
     end
 
     server.console.tell("You died at " .. table.concat(vec3.round(module.get_location(pid)), " "), client)
-
     logger:println(
       "I",
       string.format(

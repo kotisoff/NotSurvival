@@ -1,0 +1,17 @@
+{
+  "type": "not_crafting:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "not_survival:stick"
+    },
+    "X": {
+      "item": "base:planks"
+    }
+  },
+  "pattern": [" XX", " # ", " # "],
+  "result": {
+    "count": 1,
+    "id": "not_survival:wooden_hoe"
+  }
+}

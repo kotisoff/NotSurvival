@@ -1,7 +1,7 @@
 local ns_events         = require "shared/core/ns_events"
 local net_events        = require "shared/net/utils/net_events";
 local mp                = require "shared/utils/not_utils".multiplayer;
-local destruction_utils = require "shared/utils/destruction_utils"
+local destruction_utils = require "shared/lib/destruction"
 local logger            = require "shared/core/logger"
 local config            = require "shared/core/config"
 
@@ -56,10 +56,10 @@ local function echo_breaking_state(state, target, ignored_client)
   --   end
   -- end
 
-  for name, _ in pairs(players) do
-    if ignored_client and name == ignored_client.player.username then goto continue end
+  for _, mplayer in pairs(players) do
+    if ignored_client and mplayer.username == ignored_client.player.username then goto continue end
 
-    local client = mp.accounts.get_client_by_name(name)
+    local client = api.accounts.by_identity.get_client(mplayer.identity);
 
     net_events.server.tell(packets.block_breaking, client, bson.serialize(data));
 
@@ -139,10 +139,11 @@ handlers[breaking_states.broken] = function(state, pos, blockid, client)
   if durability > 0 then
     local timestamp = time.uptime();
     local total = timestamp - target.start;
-    local expected_time = durability / destruction_utils.get_speed_multiplier(pid)
+    local expected_time = durability / destruction_utils.get_speed_multiplier(pid, blockid)
     local deviation = calculate_breaking_deviation(expected_time);
 
-    if (expected_time - deviation) >= total then
+    -- mp.mode == "server" нужен для того чтобы не было ложных срабатываний в синглплеере.
+    if (expected_time - deviation) >= total and mp.mode == "server" then
       tell_breaking_state(client, breaking_states.interrupted, target, { block.get_states(unpack(pos)) });
       echo_breaking_state(state, target, client);
       -- Конкретно здесь пакеты ломающему игроку и другим отличаются 5 параметром, а точнее его присутствием.
@@ -196,6 +197,10 @@ local base_utils = require "base:util"
 
 ns_events.on("l:block_broken", function(blockid, pos, pid)
   local x, y, z = unpack(pos);
+  block.set(x, y, z, 0);
+
+  inventory.use(player.get_inventory(pid));
+
   local ns_drop = drop_utils.block_loot(blockid)
 
   ---@type { items: {item: int,count:int,vel:vec3}[] }
@@ -224,3 +229,8 @@ ns_events.on("l:block_broken", function(blockid, pos, pid)
 
   ns_drop.callback(blockid, x, y, z, pid)
 end)
+
+--[[
+  Credits to: MihailRis
+    for original script of hand animation and block destruction
+]]

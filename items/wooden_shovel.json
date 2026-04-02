@@ -1,10 +1,10 @@
 {
   "icon-type": "sprite",
-  "icon": "items:wooden_pickaxe",
+  "icon": "items:wooden_shovel",
   "stack-size": 1,
   "uses": 60,
   "not_survival:tool": {
-    "type": ["pickaxe"],
+    "type": ["shovel"],
     "speed": 2
   },
   "not_crafting:fuel_burn_time": 200,

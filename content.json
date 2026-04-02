@@ -1,16 +1,8 @@
 {
-  "blocks": [
-    "sapling",
-    "dead_bush",
-    "cobblestone",
-    "bed",
-    "base:coal_ore",
-    "base:grass",
-    "base:grass_block",
-    "base:leaves",
-    "base:sand",
-    "base:stone",
-    "base:ice"
+  "entities": [
+    "base:player",
+    "exp_orb",
+    "base:drop"
   ],
   "items": [
     "coal",
@@ -21,11 +13,23 @@
     "potion",
     "bottle",
     "death",
-    "exp_test"
+    "exp_test",
+    "wooden_axe",
+    "wooden_shovel",
+    "wooden_hoe"
   ],
-  "entities": [
-    "base:player",
-    "exp_orb",
-    "base:drop"
+  "blocks": [
+    "sapling",
+    "dead_bush",
+    "cobblestone",
+    "base:coal_ore",
+    "base:grass",
+    "base:grass_block",
+    "base:leaves",
+    "base:sand",
+    "base:stone",
+    "base:ice",
+    "white_wool",
+    "white_bed"
   ]
 }

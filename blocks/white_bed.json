@@ -4,7 +4,7 @@
   "model": "custom",
   "model-name": "bed",
   "rotation": "pane",
-  "material": "base:wood",
-  "base:durability": 4,
-  "tags@append": ["not_survival:bed"]
+  "material": "not_survival:wool",
+  "base:durability": 2,
+  "tags": ["not_survival:bed"]
 }

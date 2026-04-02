@@ -90,14 +90,6 @@ mp.as_server(function(server, mode)
       net_events.server.tell(net_events.packets.deal_knockback, client, server.bson.serialize(vel))
     end
 
-    net_events.server.tell(net_events.packets.update_player_data, client,
-      server.bson.serialize({
-        playerdata_utils.get_category_index(cat),
-        playerdata_utils.get_field_index(cat, field),
-        module.get(pid)
-      })
-    )
-
     print(string.format("Игроку %s нанесено %d урона", client.player.username, amount))
   end
 end)

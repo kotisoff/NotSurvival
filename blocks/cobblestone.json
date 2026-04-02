@@ -3,5 +3,5 @@
   "rotation": "none",
   "material": "base:stone",
   "base:durability": 13,
-  "tags@append": ["not_survival:cobblestone"]
+  "tags": ["not_survival:cobblestone"]
 }
