@@ -86,6 +86,7 @@ handlers[breaking_states.start] = function(state, pos, blockid, client)
   if blockid == 0 then return end;
 
   local pid = client.player.pid;
+  destruction_utils.update_player_rules(pid);
 
   if destruction_utils.get_durability(blockid) == 0 then
     ns_events.emit("l:block_broken", blockid, pos, pid);

@@ -11,7 +11,7 @@ ns_events.on("hud_open", function()
     local damage_props = props[config.properties.weapon];
 
     if damage_props and table.has(damage_props.type, "melee") then
-      hand_animator:reset_hit();
+      hand_animator:reset_hit(true);
     end
   end)
 end)

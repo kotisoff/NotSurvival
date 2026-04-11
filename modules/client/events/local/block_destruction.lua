@@ -112,10 +112,6 @@ end)
 
 -- ================managing=all=that=shit===================
 
-local function set_player_rules(pid)
-  player.set_instant_destruction(pid, false)
-  player.set_infinite_items(pid, false)
-end
 
 ---uses network
 local destruction = {}
@@ -146,8 +142,6 @@ end
 ---@param pid int
 ---@param tps number
 local function manage_breaking(pid, tps)
-  set_player_rules(pid)
-
   -- Check button press
   if input.is_active("player.destroy") and not hud.is_inventory_open() and not hud.is_paused() then
     -- Get block player is looking at

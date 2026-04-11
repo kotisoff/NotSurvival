@@ -9,7 +9,7 @@
       "item": "base:planks"
     }
   },
-  "pattern": [" X ", " # ", " # "],
+  "pattern": ["X", "#", "#"],
   "result": {
     "count": 1,
     "id": "not_survival:wooden_shovel"

@@ -1,7 +1,7 @@
 local system_instance = require "shared/lib/system_instance"
 local death           = require "shared/player/stats/death"
 
----@type ns.ecs.system | { hit_timer: int, reset_hit: fun(self: ns.ecs.system) }
+---@type ns.ecs.system | { hit_timer: int, reset_hit: fun(self: ns.ecs.system, ignore_timer?: bool) }
 local system          = system_instance.new("ns.system.death_handling")
 system.hit_timer      = 0;
 
@@ -42,8 +42,9 @@ function system:update()
   end
 end
 
-function system:reset_hit()
-  if self.hit_timer <= 0 then
+---@param ignore_timer? bool default = false
+function system:reset_hit(ignore_timer)
+  if not ignore_timer and self.hit_timer <= 0 then
     self.hit_timer = 1;
   end
 end

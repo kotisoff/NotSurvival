@@ -116,14 +116,9 @@ mp.as_server(function(server, mode)
     -- Телепорт на спавн
     local x, y, z = player.get_spawnpoint(pid)
 
-    pcall(function()
-      player.set_pos(pid, x, y, z)
-      player.set_rot(pid, 0, 0, 0)
-      player.set_vel(pid, 0, 0, 0)
-
-      server.sandbox.players.sync_states(client.player,
-        { pos = { x, y, z }, rot = { 0, 0, 0 } })
-    end)
+    player.set_pos(pid, x, y, z)
+    player.set_rot(pid, 0, 0, 0)
+    player.set_vel(pid, 0, 0, 0)
 
     -- Восстановление игрока
     health.full(pid)

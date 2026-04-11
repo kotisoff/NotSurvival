@@ -1,5 +1,6 @@
 local tags             = require "shared/utils/not_utils".tags;
 local tools            = require "shared/lib/tools"
+local death            = require "shared/player/stats/death"
 
 local module           = {}
 
@@ -73,6 +74,14 @@ end
 function module.get_block_center(pos)
   ---@diagnostic disable-next-line: redundant-return-value
   return unpack(vec3.add(pos, 0.5))
+end
+
+---Устанавливает игроку set_instant_destruction и set_infinite_items в зависимости от его режима игры.
+function module.update_player_rules(pid)
+  local state = death.is_invulnerable(pid);
+
+  player.set_instant_destruction(pid, state)
+  player.set_infinite_items(pid, state)
 end
 
 return module
