@@ -1,10 +1,14 @@
-local mp = require "shared/utils/not_utils".multiplayer.api.server
-local net_events = require "shared/net/utils/net_events"
-local health = require "shared/player/stats/health"
+local mp            = require "shared/utils/not_utils".multiplayer.api.server
+local net_events    = require "shared/net/utils/net_events"
+local health        = require "shared/player/stats/health"
 local fall_distance = require "shared/utils/fall_distance"
+local config        = require "shared/core/config";
 
 net_events.server.on(net_events.packets.player_grounded, function(client, bytes)
-  print(string.format("Игрок %s(%d) упал", client.player.username, client.player.pid))
+  if config.debug.log_events then
+    print(string.format("Игрок %s(%d) упал", client.player.username, client.player.pid))
+  end
+
   local args = mp.bson.deserialize(bytes)
   local velocity = unpack(args)
 
