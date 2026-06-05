@@ -12,7 +12,10 @@ ns_events.on("first_tick", function()
 end)
 
 local require_folder = require "shared/utils/require_folder"
+
 require_folder "server/events"
+require_folder "server/events/internal"
+
 local systems = require_folder "server/systems"
 
 for _, system in pairs(systems) do
