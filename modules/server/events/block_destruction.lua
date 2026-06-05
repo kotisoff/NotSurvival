@@ -43,7 +43,8 @@ local function echo_breaking_state(state, target, ignored_client)
   local pos = target.pos
 
   local players = api.sandbox.players.get_in_radius(
-    pos, api.constants.render_distance
+  --TODO: broken render distance replace with new vc methods
+    pos, 8 --api.constants.render_distance
   )
 
   local data = {

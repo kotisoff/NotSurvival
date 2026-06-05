@@ -34,7 +34,7 @@ local breaking_states = destruction_utils.breaking_states
 
 
 ---@type { pos: vec3, id: int, pid: int, tick: int, progress: number, wrap: int }[]
-wraps = {}
+local wraps = {}
 
 local function get_wrap(pos)
   for index, value in ipairs(wraps) do
