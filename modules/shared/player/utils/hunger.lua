@@ -32,7 +32,9 @@ local food_data_defaults = {
   saturation = 0,
   food_type = "food",
   eat_delay = 1.5,
-  consume_item = true
+  consume_item = true,
+  eat_anyway = false,
+  replace_item = nil
 }
 
 ---@param data food_data
