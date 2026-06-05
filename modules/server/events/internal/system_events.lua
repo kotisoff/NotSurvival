@@ -12,4 +12,6 @@ end)
 
 ns_events.on("client_disconnected", function(pid)
   system_controller:remove_player(pid);
+
+  data_storage.save("players");
 end)

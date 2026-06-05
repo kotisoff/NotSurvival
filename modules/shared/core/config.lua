@@ -26,7 +26,8 @@ local config = {
 
   debug = {
     log_events = false,
-    log_anticheat = true
+    log_anticheat = true,
+    log_misc = true
   },
 
   properties = {
