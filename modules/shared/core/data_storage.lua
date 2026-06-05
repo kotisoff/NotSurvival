@@ -21,7 +21,6 @@ function module.load()
     local data = bjson.frombytes(bytes);
 
     module.data[key] = data;
-    debug.print(data);
   end
 end
 
@@ -34,15 +33,8 @@ end
 
 ---@param save_key string | nil
 function module.save(save_key)
-  if save_key then
-    if module.data[save_key] then
-      save_data(save_key, module.data[save_key]);
-      return
-    else
-      logger:println("E", string.format("storage[%s] not found", save_key));
-    end
-  end
-
+  print("saving data");
+  debug.print(module.data);
   for key, value in pairs(module.data) do
     save_data(key, value);
   end

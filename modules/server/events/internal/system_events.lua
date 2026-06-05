@@ -6,12 +6,14 @@ ns_events.on("player_tick", function(pid, tps)
   system_controller:update(pid, tps);
 end)
 
-ns_events.on("player_ready", function(pid)
-  system_controller:register_player(pid);
+---@param client neutron.class.client
+ns_events.on("player_ready", function(client)
+  system_controller:register_player(client.player.pid);
 end)
 
-ns_events.on("client_disconnected", function(pid)
-  system_controller:remove_player(pid);
+---@param client neutron.class.client
+ns_events.on("client_disconnected", function(client)
+  system_controller:remove_player(client.player.pid);
 
   data_storage.save("players");
 end)

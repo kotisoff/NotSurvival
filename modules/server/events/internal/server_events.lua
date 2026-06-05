@@ -14,11 +14,16 @@ if mp.mode == "server" then
 
   ---@param client neutron.class.client
   events.on("server:client_connected", function(client)
-    ns_events.emit("client_connected", client)
+    ns_events.emit("client_connected", client);
   end)
 
+  ---@param client neutron.class.client
   events.on("server:on_player_ready", function(client)
     ns_events.emit("player_ready", client);
+  end)
+
+  events.on("server:client_disconnected", function(client)
+    ns_events.emit("client_disconnected", client)
   end)
 elseif mp.mode == "standalone" then
   local emit = function(event)
@@ -37,4 +42,7 @@ elseif mp.mode == "standalone" then
   ns_events.on("first_tick", function()
     emit("player_ready");
   end);
+  ns_events.on("world_quit", function()
+    emit("client_disconnected");
+  end)
 end
