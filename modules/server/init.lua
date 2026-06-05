@@ -1,12 +1,14 @@
 local ns_events = require "shared/core/ns_events";
 local system_controller = require "server/lib/system_controller"
 local loaders = require "shared/lib/loaders/main";
+local storage = require "server/data_storage";
 local logger = require "shared/core/logger";
 
 require "shared/player/data/manager"
 
 ns_events.on("first_tick", function()
   loaders.reload();
+  storage.load();
 end)
 
 local require_folder = require "shared/utils/require_folder"
@@ -19,4 +21,4 @@ end
 
 require "server/commands";
 
-logger:println("I", "Сервер-сайд подтянулся.")
+logger:println("I", "Server side initialized.")
