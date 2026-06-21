@@ -8,8 +8,6 @@ local destruction = require "shared/lib/destruction"
 
 ---@param client neutron.class.client
 ns_events.on("player_ready", function(client)
-  print("Вызываем плауер реди");
-
   time.post_runnable(function()
     local success, status = pcall(manager.get_status, client.player.pid);
 
@@ -30,7 +28,6 @@ ns_events.on("player_ready", function(client)
     local bytes = loaders.compressed_data;
 
     net_events.server.tell(net_events.packets.resources_data, client, bytes);
-    print("кидаем залупу на клиент");
 
     logger:println("I",
       string.format("Sent %s bytes of resources to %s(%s)", #bytes, client.player.username, client.player.pid)

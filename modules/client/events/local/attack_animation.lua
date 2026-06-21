@@ -7,7 +7,7 @@ ns_events.on("hud_open", function()
     local pid = hud.get_player();
     local itemid = inventory.get(player.get_inventory(pid))
 
-    local props = item.properties[itemid];
+    local props = item.properties[itemid] or {};
     local damage_props = props[config.properties.weapon];
 
     if damage_props and table.has(damage_props.type, "melee") then

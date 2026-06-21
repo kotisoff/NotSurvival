@@ -13,15 +13,13 @@ function module.load()
   end
 
   for _, value in ipairs(file.list(data_path)) do
-    if file.ext(value) ~= "bjson" then
-      return
+    if file.ext(value) == "bjson" then
+      local key = file.stem(value);
+      local bytes = file.read_bytes(value);
+      local data = bjson.frombytes(bytes);
+
+      module.data[key] = data;
     end
-
-    local key = file.stem(value);
-    local bytes = file.read_bytes(value);
-    local data = bjson.frombytes(bytes);
-
-    module.data[key] = data;
   end
 end
 

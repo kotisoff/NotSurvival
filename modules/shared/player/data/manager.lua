@@ -62,6 +62,7 @@ local module = {
 ---@return { data: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
 function module.get_store(pid)
   -- TODO: investigate где сука у нас всё ломается и обнуляется.
+  -- TODO: вспомнить чё где обнуляется, ибо доёб не понят.
 
   if mp.mode == "client" then
     return module.session;
