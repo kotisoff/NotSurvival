@@ -1,31 +1,26 @@
-local mp = require "shared/utils/not_utils".multiplayer.api.server
-local net_events = require "shared/net/utils/net_events"
-local health = require "shared/player/stats/health"
+local health    = require "shared/player/stats/health"
 local ns_events = require "shared/core/ns_events"
+local config    = require "shared/core/config"
 
-local function dist_fun(veca, vecb)
-  if vec3.distance then
-    return vec3.distance(veca, vecb);
+ns_events.on("player_attacked", function(victim_pid, attacker_pid, attacker_eid)
+  ---@type vec3
+  local attacker_pos;
+
+  if attacker_pid then
+    attacker_pos = { player.get_pos(attacker_pid) };               -- По идее быстрее
   else
-    local t = vec3.pow(vec3.sub(vecb, veca), 2);
-    local n = 0;
-    for _, value in ipairs(t) do
-      n = n + value;
-    end
-
-    return math.sqrt(n);
+    attacker_pos = entities.get(attacker_eid).transform:get_pos(); -- По идее медленнее
   end
-end
 
-ns_events.on("player_attacked", function(victim_pid, attacker_pid)
-  local client_pos = { player.get_pos(attacker_pid) };
-  local attacked_pos = { player.get_pos(victim_pid) };
-  local distance = dist_fun(client_pos, attacked_pos);
+  if not attacker_pos then return end; -- Ну по идее оно никогда сюда не дойдёт, но чёрт его знает.
 
-  if distance > 4 then
+  local victim_pos = { player.get_pos(victim_pid) };
+  local distance = vec3.distance(attacker_pos, victim_pos);
+
+  if distance > config.player.reach.entity then
     return;
   end
 
   health.damage(victim_pid, 1,
-    { damage_type = "ns.damage.hit", source = vec3.sub(client_pos, { 0, 1, 0 }) })
+    { damage_type = "ns.damage.hit", source = vec3.sub(attacker_pos, { 0, 1, 0 }), attacker = attacker_eid })
 end)

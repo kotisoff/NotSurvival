@@ -34,6 +34,11 @@ end
 
 ---@param save_key string | nil
 function module.save(save_key)
+  if save_key and module.data[save_key] then
+    save_data(save_key, module.data[save_key]);
+    return;
+  end
+
   for key, value in pairs(module.data) do
     save_data(key, value);
   end

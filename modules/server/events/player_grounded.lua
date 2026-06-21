@@ -13,11 +13,12 @@ local function process_ground_block(pos)
   end
 end
 
--- TODO: дождаться стабильный тикрейт энтити на сервере и перейти на внутренние ивенты
+-- TODO: дождаться стабильный тикрейт энтити на сервере и перейти на внутренний ивент on_grounded
 -- ns_events.on("player_grounded", function(pid, velocity)
 --   print(pid, velocity)
 --   local identity = mp.sandbox.players.get_by_pid(pid).identity;
 --   local client = mp.accounts.by_identity.get_client(identity);
+-- end)
 
 net_events.server.on(net_events.packets.player_grounded, function(client, bytes)
   if config.debug.log_events then

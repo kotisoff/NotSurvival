@@ -13,7 +13,7 @@ local config = {
     },
     reach = {
       block = 4.5,
-      entity = 3
+      entity = 4
     },
     movement = {
       sneak_speed = 3,

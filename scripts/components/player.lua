@@ -37,8 +37,10 @@ function on_grounded(velocity)
 end
 
 function on_attacked(attacker_eid, attacker_pid)
-  local victim_pid = entity:get_player();
-  ns_events.emit("player_attacked", victim_pid, attacker_pid);
+  mp.as_server(function(server, mode)
+    local victim_pid = entity:get_player();
+    ns_events.emit("player_attacked", victim_pid, attacker_pid, attacker_eid);
+  end)
 end
 
 function on_render(delta)

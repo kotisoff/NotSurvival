@@ -50,6 +50,7 @@ mp.as_server(function(server, mode)
   ---@class ns.api.health.damage_options
   ---@field damage_type? damage_types
   ---@field source? vec3 Position of damage source.
+  ---@field attacker? int Entity id of attacker.
   ---@field do_knockback? boolean Knockback player.
   ---@field play_sound? boolean Allows to play sound
   ---@field sound_settings? { volume?: number, pitch?: number, channel?: "regular"|str }
