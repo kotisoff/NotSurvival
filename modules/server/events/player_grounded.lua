@@ -13,6 +13,12 @@ local function process_ground_block(pos)
   end
 end
 
+-- TODO: дождаться стабильный тикрейт энтити на сервере и перейти на внутренние ивенты
+-- ns_events.on("player_grounded", function(pid, velocity)
+--   print(pid, velocity)
+--   local identity = mp.sandbox.players.get_by_pid(pid).identity;
+--   local client = mp.accounts.by_identity.get_client(identity);
+
 net_events.server.on(net_events.packets.player_grounded, function(client, bytes)
   if config.debug.log_events then
     print(string.format("Игрок %s(%d) упал", client.player.username, client.player.pid))

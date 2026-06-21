@@ -1,6 +1,7 @@
 local mp = require "shared/utils/not_utils".multiplayer.api.server
 local net_events = require "shared/net/utils/net_events"
 local health = require "shared/player/stats/health"
+local ns_events = require "shared/core/ns_events"
 
 local function dist_fun(veca, vecb)
   if vec3.distance then
@@ -16,18 +17,15 @@ local function dist_fun(veca, vecb)
   end
 end
 
-net_events.server.on(net_events.packets.player_attacked, function(client, bytes)
-  local args = mp.bson.deserialize(bytes)
-  local attacked_pid = unpack(args)
-
-  local client_pos = { player.get_pos(client.player.pid) };
-  local attacked_pos = { player.get_pos(attacked_pid) };
+ns_events.on("player_attacked", function(victim_pid, attacker_pid)
+  local client_pos = { player.get_pos(attacker_pid) };
+  local attacked_pos = { player.get_pos(victim_pid) };
   local distance = dist_fun(client_pos, attacked_pos);
 
   if distance > 4 then
     return;
   end
 
-  health.damage(attacked_pid, 1,
+  health.damage(victim_pid, 1,
     { damage_type = "ns.damage.hit", source = vec3.sub(client_pos, { 0, 1, 0 }) })
 end)

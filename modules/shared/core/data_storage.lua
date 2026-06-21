@@ -1,5 +1,6 @@
 local constants = require "shared/core/constants"
 local logger    = require "shared/core/logger"
+
 local module    = {
   data = {}
 };
@@ -33,8 +34,6 @@ end
 
 ---@param save_key string | nil
 function module.save(save_key)
-  print("saving data");
-  debug.print(module.data);
   for key, value in pairs(module.data) do
     save_data(key, value);
   end
