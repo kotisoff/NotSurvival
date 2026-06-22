@@ -16,7 +16,6 @@ local data_request_compression = require "shared/net/compression/player_data_req
 ---@field hunger number
 ---@field saturation number
 ---@field oxygen number
----@field armor number
 
 ---@class ns.player.Status
 ---@field xp number
@@ -29,7 +28,7 @@ local data_request_compression = require "shared/net/compression/player_data_req
 ---@alias ns.player.Status.effect { identifier: string, level: number, time_left: number }
 
 ---@alias ns.player.data_categories "data" | "attributes" | "status"
----@alias ns.player.data_field.base "health" | "hunger" | "saturation" | "oxygen" | "armor"
+---@alias ns.player.data_field.base "health" | "hunger" | "saturation" | "oxygen"
 ---@alias ns.player.data_field.status "xp" | "gamemode" | "dead" | "death_location" | "effects" | "init"
 
 -- =========================================================
