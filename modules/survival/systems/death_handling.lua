@@ -14,8 +14,11 @@ events.on(resource("player_tick"), function(pid)
     local damage = variables.get_player_damage(pid);
 
     local canceled = events.emit("not_survival:before_death", pid, damage.amount, damage.type);
+    if type(canceled) == "nil" then
+      canceled = false;
+    end
 
-    print(string.format("ns: death canceled = %s"), canceled);
+    -- print(string.format("ns: death canceled = %s", canceled));
     if canceled then return end;
 
     document.reason.text = "Died " .. damage.type;
