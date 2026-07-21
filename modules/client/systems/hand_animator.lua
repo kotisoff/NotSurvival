@@ -31,7 +31,7 @@ function system:init()
 end
 
 function system:should_update(pid)
-  return not death:get()
+  return not death.get(pid)
 end
 
 function system:update()
