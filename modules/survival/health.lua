@@ -1,4 +1,5 @@
 local variables = require "player/variables";
+local death_manager = require "survival/death_manager"
 
 local health = {};
 
@@ -44,6 +45,8 @@ end
 ---@param do_knockback boolean | nil Knockback player or not.
 ---@param playsound string | boolean | nil Damage sound name or boolean.
 function health.damage(pid, damage, damage_type, source, do_knockback, playsound)
+  if death_manager.is_invulnerable(pid) then return "харам" end;
+
   source = source or { player.get_pos(pid) };
   playsound = playsound or true;
 
