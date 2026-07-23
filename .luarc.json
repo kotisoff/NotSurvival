@@ -1,0 +1,8 @@
+{
+  "runtime": {
+    "path": ["modules/?.lua"]
+  },
+  "workspace": {
+    "library": ["../NotUtils/modules"]
+  }
+}

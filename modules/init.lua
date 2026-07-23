@@ -4,12 +4,12 @@ local logger = require "shared/core/logger";
 local ns_events = require "shared/core/ns_events"
 
 if mp.api.server then
-  logger:println("I", "Включаем серверную часть мода");
+  logger:println("I", "Initializing server side...");
   require "server/init"
 end
 
 if mp.api.client then
-  logger:println("I", "Включаем клиентскую часть мода");
+  logger:println("I", "Initializing server side...");
   require "client/init"
 end
 

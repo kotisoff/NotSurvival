@@ -34,7 +34,7 @@ local breaking_states = destruction_utils.breaking_states
 
 
 ---@type { pos: vec3, id: int, pid: int, tick: int, progress: number, wrap: int }[]
-wraps = {}
+local wraps = {}
 
 local function get_wrap(pos)
   for index, value in ipairs(wraps) do
@@ -112,10 +112,6 @@ end)
 
 -- ================managing=all=that=shit===================
 
-local function set_player_rules(pid)
-  player.set_instant_destruction(pid, false)
-  player.set_infinite_items(pid, false)
-end
 
 ---uses network
 local destruction = {}
@@ -146,8 +142,6 @@ end
 ---@param pid int
 ---@param tps number
 local function manage_breaking(pid, tps)
-  set_player_rules(pid)
-
   -- Check button press
   if input.is_active("player.destroy") and not hud.is_inventory_open() and not hud.is_paused() then
     -- Get block player is looking at
@@ -199,9 +193,7 @@ local function animate_breaking()
 
   if target.item ~= itemid then return destruction.interrupt() end;
 
-  if hand_animator.hit_timer <= 0.0 then
-    hand_animator.hit_timer = 1.0
-  end
+  hand_animator:reset_hit();
 
   gfx.blockwraps.set_texture(target.wrap, destruction_utils.get_breaking_texture(target.progress))
 

@@ -6,8 +6,10 @@ return function(folder)
   local collection = {};
 
   for _, path in ipairs(file.list(dir)) do
-    local basename = file.stem(path)
-    collection[basename] = require(file.join(folder, basename))
+    if file.isfile(path) then
+      local basename = file.stem(path)
+      collection[basename] = require(file.join(folder, basename))
+    end;
   end
 
   return collection

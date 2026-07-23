@@ -7,11 +7,10 @@ local packets = {
   block_breaking = tohex(2),
   deal_knockback = tohex(3),
   food_eating = tohex(4),
-  player_attacked = tohex(5),
-  player_grounded = tohex(6),
-  player_sprinting = tohex(7),
-  player_respawn = tohex(8),
-  resources_data = tohex(9)
+  player_grounded = tohex(5),
+  player_sprinting = tohex(6),
+  player_respawn = tohex(7),
+  resources_data = tohex(8)
 }
 
 local client = {};
