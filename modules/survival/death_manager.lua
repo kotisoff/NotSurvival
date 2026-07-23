@@ -4,6 +4,7 @@ local hunger = require "survival/hunger";
 local oxygen = require "survival/oxygen";
 local experience = require "survival/experience";
 local effects = require "survival/effects";
+local gamemode = require "game/gamemode";
 local base_util = require "base:util";
 
 local death = {};
@@ -14,6 +15,10 @@ local death = {};
 function death.get(pid)
   local status = variables.get_player_status(pid)
   return status.dead, status.death_location
+end
+
+function death.is_invulnerable(pid)
+  return gamemode.get_player_mode(pid) ~= 0;
 end
 
 ---Kill player.

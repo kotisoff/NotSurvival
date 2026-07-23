@@ -1,5 +1,6 @@
 local resource = require "utility/resource_func"
 local api = require "api";
+local death = api.survival.death;
 local hunger = api.survival.hunger;
 local staving_ticks = {};
 
@@ -8,6 +9,8 @@ local function add_starv(pid, val)
 end
 
 events.on(resource("player_tick"), function(pid, tps)
+  if death.is_invulnerable(pid) then return end;
+
   local x, y, z = player.get_vel(pid);
   local vel = math.floor(math.sqrt(x ^ 2 + z ^ 2));
 

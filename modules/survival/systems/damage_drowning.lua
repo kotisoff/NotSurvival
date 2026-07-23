@@ -2,6 +2,7 @@ local resource = require "utility/resource_func"
 local api = require "api";
 local oxygen = api.survival.oxygen;
 local health = api.survival.health;
+local death = api.survival.death;
 
 local drowning_sounds = {
   "not_survival/entity/player/hurt/drown1",
@@ -27,6 +28,8 @@ local function add_regen(pid, val)
 end
 
 events.on(resource("player_tick"), function(pid, tps)
+  if death.is_invulnerable(pid) then return end;
+
   local state_under_block, blockid = is_under_block(pid);
   local water = block.index("base:water");
 
