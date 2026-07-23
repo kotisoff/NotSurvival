@@ -9,7 +9,7 @@
       "item": "not_survival:white_wool"
     }
   },
-  "pattern": ["   ", "XXX", "###"],
+  "pattern": ["XXX", "###"],
   "result": {
     "count": 1,
     "id": "not_survival:white_bed"

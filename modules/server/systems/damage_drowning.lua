@@ -17,7 +17,7 @@ local is_under_water = function(pid)
   return under_block and blockid == water
 end
 
-local Drowning_system = system_instance.new("ns.damage.drowning");
+local Drowning_system = system_instance.new("ns.system.damage.drowning");
 
 function Drowning_system:on_player_remove(id)
   Counter.get_or_create(id, self.name):destroy();

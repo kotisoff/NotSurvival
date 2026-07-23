@@ -5,6 +5,7 @@ local mp                       = require "shared/utils/not_utils".multiplayer;
 local ns_events                = require "shared/core/ns_events"
 local logger                   = require "shared/core/logger"
 local net_events               = require "shared/net/utils/net_events"
+local storage                  = require "shared/core/data_storage".data
 
 local data_compression         = require "shared/net/compression/player_data";
 local data_request_compression = require "shared/net/compression/player_data_request";
@@ -61,6 +62,7 @@ local module = {
 ---@return { data: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
 function module.get_store(pid)
   -- TODO: investigate где сука у нас всё ломается и обнуляется.
+  -- TODO: вспомнить чё где обнуляется, ибо доёб не понят.
 
   if mp.mode == "client" then
     return module.session;
@@ -68,11 +70,25 @@ function module.get_store(pid)
     -- local info = debug.getinfo(3, "S");
     -- debug.print(info);
 
-    local entid = player.get_entity(pid);
-    local entity = entities.get(entid);
-    local component_name = string.format("%s:player", constants.pack_id);
+    local identity = mp.api.server.sandbox.players.get_by_pid(pid).identity;
 
-    return entity:require_component(component_name).ARGS;
+    if not storage.players then
+      storage.players = {};
+    end
+
+    if not storage.players[identity] then
+      if config.debug.log_misc then
+        logger:println("I", string.format("Created new survival data for %s(%s)", identity, pid));
+      end
+
+      storage.players[identity] = {
+        data = module.new_base(),
+        attributes = module.new_attributes(),
+        status = module.new_status()
+      }
+    end
+
+    return storage.players[identity];
   end
 end
 

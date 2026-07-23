@@ -9,11 +9,12 @@ local config = {
     },
     combat = {
       punch_damage = 1,
-      punch_cooldown = 0.5
+      punch_speed = 4,
+      min_cooldown = 0.2
     },
     reach = {
       block = 4.5,
-      entity = 3
+      entity = 4
     },
     movement = {
       sneak_speed = 3,
@@ -26,14 +27,15 @@ local config = {
 
   debug = {
     log_events = false,
-    log_anticheat = true
+    log_anticheat = true,
+    log_misc = true
   },
 
   properties = {
     tool = "not_survival:tool",
-    food = {
-      types = { "not_survival:potion", "not_survival:food" }
-    }
+    weapon = "not_survival:weapon",
+    food = "not_survival:food",
+    effect = "not_survival:effect"
   }
 };
 

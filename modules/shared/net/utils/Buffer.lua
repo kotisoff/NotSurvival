@@ -22,6 +22,10 @@ function Buffer:read_next()
   return self.value[index];
 end
 
+function Buffer:reset()
+  self.next = 1;
+end
+
 ---@param data? any[]
 function module.new(data)
   return setmetatable({ value = data or {}, next = 1 }, {

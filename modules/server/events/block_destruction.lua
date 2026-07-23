@@ -43,7 +43,8 @@ local function echo_breaking_state(state, target, ignored_client)
   local pos = target.pos
 
   local players = api.sandbox.players.get_in_radius(
-    pos, api.constants.render_distance
+  --TODO: broken render distance replace with new vc methods
+    pos, 8 --api.constants.render_distance
   )
 
   local data = {
@@ -86,6 +87,7 @@ handlers[breaking_states.start] = function(state, pos, blockid, client)
   if blockid == 0 then return end;
 
   local pid = client.player.pid;
+  destruction_utils.update_player_rules(pid);
 
   if destruction_utils.get_durability(blockid) == 0 then
     ns_events.emit("l:block_broken", blockid, pos, pid);

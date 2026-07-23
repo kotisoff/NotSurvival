@@ -9,7 +9,7 @@
       "item": "base:planks"
     }
   },
-  "pattern": [" XX", " # ", " # "],
+  "pattern": ["XX", "# ", "# "],
   "result": {
     "count": 1,
     "id": "not_survival:wooden_hoe"
