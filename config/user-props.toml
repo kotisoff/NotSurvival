@@ -11,5 +11,5 @@
 # Food 
 "not_survival:food" = {}
 
-# Potion
-"not_survival:potion" = {}
+# Effect
+"not_survival:effect" = {}

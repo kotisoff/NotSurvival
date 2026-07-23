@@ -31,12 +31,12 @@
 }
 ```
 
-## **Зелье (эффекты)** - *not_survival:potion*
+## **Эффекты (зелья и тп)** - *not_survival:effect*
 
 ```json
 {
-  "not_survival:potion": { // Комментарии излишни.
-    "effect": "айди_пака:эффект",
+  "not_survival:effect": { // Комментарии излишни.
+    "id": "айди_пака:эффект",
     "level": 1,
     "duration": 30
   }
