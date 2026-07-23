@@ -2,19 +2,6 @@ local utils = require "shared/utils/not_utils".utils
 
 local module = {}
 
----@alias food_type
----| '"food"' Bread or apple
----| '"drink"' Potions and other drinks
-
----@class food_data
----@field food number Number of hunger units will be replenished
----@field saturation number Number of saturation units will be replenished
----@field eat_anyway? boolean Eat even if not hungry. Default: false
----@field eat_delay? number Number of seconds of eating. Default: 1.5
----@field consume_item? boolean Consume food after eating. Default: true
----@field replace_item? number Index of item to replace food after eating. Only if consume_item is true.
----@field food_type? food_type Type of food. Default: "food"
----@field callback? fun(pid) Callback after eating.
 
 -- =================processing=food=data====================
 
@@ -37,7 +24,7 @@ local food_data_defaults = {
   replace_item = nil
 }
 
----@param data food_data
+---@param data ns.types.food
 local function process_food_data(data, prop)
   for data_key, prop_key in pairs(food_data_keys) do
     local d = data[data_key]
@@ -69,7 +56,7 @@ local function process_food_data(data, prop)
   end
 end
 
----@param data food_data
+---@param data ns.types.food
 local function process_potion_data(data, prop)
   data.food_type = data.food_type or "drink";
   data.eat_anyway = data.eat_anyway or true;
@@ -100,14 +87,14 @@ function module.flush_cache()
   food_cache = {}
 end
 
----@return food_data|nil
+---@return ns.types.food|nil
 function module.get_food_data(itemid)
   local key = tohex(itemid)
   if food_cache[key] then
     return table.deep_copy(food_cache[key])
   end
 
-  ---@type food_data
+  ---@type ns.types.food
   local data = { food = 0, saturation = 0 }
   local flag = false
 
