@@ -53,6 +53,7 @@ defaults.food = {
   replace_item = 0
 }
 
+---@return ns.types.food
 function processors.food(item_id)
   if cache.food[item_id] then
     return table.copy(cache.food[item_id]);
@@ -103,6 +104,7 @@ defaults.effect = {
   duration = 30
 };
 
+---@return ns.types.effect
 function processors.effect(item_id)
   if cache.effect[item_id] then
     return table.copy(cache.effect[item_id]);
@@ -141,6 +143,7 @@ defaults.tool = {
   speed = 1
 };
 
+---@return ns.types.tool
 function processors.tool(item_id)
   if cache.tool[item_id] then
     return table.deep_copy(cache.tool[item_id]);
@@ -179,6 +182,7 @@ defaults.weapon = {
   speed = config.player.combat.punch_cooldown
 };
 
+---@return ns.types.weapon
 function processors.weapon(item_id)
   if cache.weapon[item_id] then
     return table.deep_copy(cache.weapon[item_id]);

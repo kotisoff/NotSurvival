@@ -72,7 +72,7 @@ net_events.client.on(packets.food_eating, function()
   end)
 end)
 
----@param type food_type
+---@param type ns.types.food_type
 ---@return string
 local function get_eating_sound(type)
   if type == "food" then
