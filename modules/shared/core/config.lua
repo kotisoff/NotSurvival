@@ -9,7 +9,8 @@ local config = {
     },
     combat = {
       punch_damage = 1,
-      punch_cooldown = 0.5
+      punch_speed = 4,
+      min_cooldown = 0.2
     },
     reach = {
       block = 4.5,
