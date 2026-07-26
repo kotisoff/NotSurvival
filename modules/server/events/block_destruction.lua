@@ -5,6 +5,8 @@ local destruction_utils = require "shared/lib/destruction"
 local logger            = require "shared/core/logger"
 local config            = require "shared/core/config"
 
+local combat            = require "server/systems/combat"
+
 local api               = mp.api.server;
 local bson              = api.bson;
 local packets           = net_events.packets;
@@ -88,6 +90,7 @@ handlers[breaking_states.start] = function(state, pos, blockid, client)
 
   local pid = client.player.pid;
   destruction_utils.update_player_rules(pid);
+  combat:consume_cooldown(pid);
 
   if destruction_utils.get_durability(blockid) == 0 then
     ns_events.emit("l:block_broken", blockid, pos, pid);

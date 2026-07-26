@@ -179,7 +179,7 @@ cache.weapon = {};
 defaults.weapon = {
   type = {},
   damage = config.player.combat.punch_damage,
-  speed = config.player.combat.punch_cooldown
+  speed = config.player.combat.punch_speed
 };
 
 ---@return ns.types.weapon
