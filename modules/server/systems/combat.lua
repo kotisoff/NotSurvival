@@ -34,7 +34,7 @@ function CombatSystem:update(id, tps)
     local item_id = inventory.get(invid, slot);
     local weapon = item_props.get_weapon(item_id);
 
-    cooldown = math.clamp(cooldown + weapon.speed * (1 / tps), 0.0, 1.0);
+    self.cooldown[id] = math.clamp(cooldown + weapon.speed * (1 / tps), 0.0, 1.0);
   end
 end
 
