@@ -15,7 +15,6 @@ ns_events.on("player_ready", function(client)
       local x, y, z = player.get_pos(client.player.pid);
 
       player.set_spawnpoint(client.player.pid, x, y, z);
-      player.set_pos(client.player.pid, x, y, z);
 
       status.init = true;
     end
