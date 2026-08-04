@@ -60,15 +60,9 @@ local module = {
 ---@param pid int
 ---@return { data: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
 function module.get_store(pid)
-  -- TODO: investigate где сука у нас всё ломается и обнуляется.
-  -- TODO: вспомнить чё где обнуляется, ибо доёб не понят.
-
-  if mp.mode == "client" then
+  if vc.is_client() then
     return module.session;
   else
-    -- local info = debug.getinfo(3, "S");
-    -- debug.print(info);
-
     local identity = mp.api.server.sandbox.players.get_by_pid(pid).identity;
 
     if not storage.players then

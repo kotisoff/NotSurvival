@@ -3,7 +3,7 @@ local server = mp.api.server;
 
 local ns_events = require "shared/core/ns_events";
 
-if mp.mode == "server" then
+if vc.is_headless() then
   ns_events.on("world_tick", function()
     local players = server.sandbox.players.get_all();
 

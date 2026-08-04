@@ -92,7 +92,7 @@ handlers[breaking_states.broken] = function(pos, blockid, pid, t_pid, block_stat
     return -- если честно хз чё сюда писать
   end
 
-  if mp.mode == "client" then
+  if vc.is_client() then
     local x, y, z = unpack(pos);
     block.set(x, y, z, 0);
     local sound = block.get_sound(blockid, "breakSound");
