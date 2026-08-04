@@ -1,6 +1,5 @@
 local mp = require "shared/utils/not_utils".multiplayer
 local data = require "shared/player/data/manager";
-local playerdata_utils = require "shared/player/data/utils";
 local net_events = require "shared/net/utils/net_events"
 local damage = require "shared/player/utils/damage";
 
