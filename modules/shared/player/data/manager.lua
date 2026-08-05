@@ -141,24 +141,26 @@ end
 ---@param field str | nil
 ---@param client neutron.class.client | nil Only on server
 function module.sync(category, field, client)
-  if mp.mode == "server" and client then
-    local store = module.get_store(client.player.pid);
-    local data = store[category];
+  if mp.mode == "server" then
+    if client then
+      local store = module.get_store(client.player.pid);
+      local data = store[category];
 
-    local value;
-    if field then
-      value = data[field];
+      local value;
+      if field then
+        value = data[field];
+      else
+        value = data;
+      end
+
+      net_events.server.tell(net_events.packets.update_player_data, client,
+        data_compression.to_bytes(category, field, value)
+      );
     else
-      value = data;
+      error("Client не указан!");
     end
-
-    net_events.server.tell(net_events.packets.update_player_data, client,
-      data_compression.to_bytes(category, field, value)
-    );
   elseif mp.mode == "client" then
     net_events.client.send(net_events.packets.update_player_data, data_request_compression.to_bytes(category, field));
-  elseif mp.mode == "server" then
-    error("Client не указан!");
   elseif mp.mode == "standalone" then
     local pid = hud.get_player();
     local store = module.get_store(pid);
