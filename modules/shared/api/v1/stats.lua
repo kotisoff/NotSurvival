@@ -7,7 +7,7 @@ local experience = require "shared/player/stats/experience"
 local module = {};
 
 module.death = death;
-module.heath = health;
+module.health = health;
 module.hunger = hunger;
 module.oxygen = oxygen;
 module.experience = experience;

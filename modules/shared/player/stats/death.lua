@@ -83,10 +83,10 @@ mp.as_server(function(server, mode)
   function module.revive(pid)
     if not module.get(pid) then return end
 
-    --TODO: add ns rules.
     local identity = server.sandbox.players.get_by_pid(pid).identity;
     local client = server.accounts.by_identity.get_client(identity);
 
+    --TODO: add ns rules.
     if not true then
       local pos = { player.get_pos(pid) }
 
@@ -128,28 +128,6 @@ mp.as_server(function(server, mode)
     -- effects.remove(pid) ну типа потом добавлю лол
 
     module.set(pid, false)
-  end
-end)
-
--- ========================client===========================
-
-mp.as_client(function(client, mode)
-  local death_overlay = "not_survival:death"
-  local document = Document.new(death_overlay)
-
-  ---Client side only
-  ---@param score? int
-  function module.show_overlay(score)
-    if score then
-      document.score.text = string.format("Score: [#FFFF00]%d", score)
-    end
-
-    hud.show_overlay(death_overlay, false)
-  end
-
-  ---Client side only
-  function module.close_overlay()
-    hud.close(death_overlay)
   end
 end)
 

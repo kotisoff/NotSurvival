@@ -1,5 +1,4 @@
 local mp         = require "shared/utils/not_utils".multiplayer;
-local data       = require "shared/player/data/manager"
 local Stat       = require "shared/player/stats/Stat"
 
 local hunger     = Stat("hunger");
