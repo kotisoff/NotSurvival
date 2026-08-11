@@ -13,8 +13,9 @@ end)
 
 local require_folder = require "shared/utils/require_folder"
 
-require_folder "server/events"
 require_folder "server/events/internal"
+require_folder "server/events/local"
+require_folder "server/events/net"
 
 local systems = require_folder "server/systems"
 

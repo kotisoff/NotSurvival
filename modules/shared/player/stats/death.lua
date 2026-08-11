@@ -1,17 +1,14 @@
-local mp         = require "shared/utils/not_utils".multiplayer;
-local logger     = require "shared/core/logger"
+local mp        = require "shared/utils/not_utils".multiplayer;
+local logger    = require "shared/core/logger"
+local ns_events = require "shared/core/ns_events";
+local data      = require "shared/player/data/manager";
 
-local data       = require "shared/player/data/manager";
+local health    = require "shared/player/stats/health";
 
-local health     = require "shared/player/stats/health";
-local experience = require "shared/player/stats/experience";
-local hunger     = require "shared/player/stats/hunger";
-local oxygen     = require "shared/player/stats/oxygen";
-
-local base_util  = require "base:util";
+local base_util = require "base:util";
 
 ---@class ns.stat.death
-local module     = {}
+local module    = {}
 
 -- ========================shared===========================
 
@@ -86,31 +83,16 @@ mp.as_server(function(server, mode)
     local identity = server.sandbox.players.get_by_pid(pid).identity;
     local client = server.accounts.by_identity.get_client(identity);
 
-    --TODO: add ns rules.
-    if not true then
-      local pos = { player.get_pos(pid) }
+    local death_pos = module.get_location(pid);
+    local death_pos_str = table.concat(vec3.round(death_pos), " ");
 
-      local orbs = math.random(6)
-      for _ = 1, orbs do
-        ---@type voxelcore.class.entity
-        local entity = experience.summon(pos, experience.get(pid) / orbs)
-
-        if mode == "standalone" then
-          entity.rigidbody:set_vel(vec3.spherical_rand(4))
-        end
-      end
-      experience.set(pid, 0)
-
-      module.drop_items(pid)
-    end
-
-    server.console.tell("You died at " .. table.concat(vec3.round(module.get_location(pid)), " "), client)
+    server.console.tell("You died at " .. death_pos_str, client)
     logger:println(
       "I",
       string.format(
         "%s died at %s",
         client.player.username,
-        table.concat(vec3.round(module.get_location(pid)), " ")
+        death_pos_str
       )
     )
 
@@ -122,10 +104,7 @@ mp.as_server(function(server, mode)
     player.set_vel(pid, 0, 0, 0)
 
     -- Восстановление игрока
-    health.full(pid)
-    hunger.full(pid)
-    oxygen.full(pid)
-    -- effects.remove(pid) ну типа потом добавлю лол
+    ns_events.emit("player_revived", pid);
 
     module.set(pid, false)
   end
