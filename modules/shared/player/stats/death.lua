@@ -10,6 +10,7 @@ local oxygen     = require "shared/player/stats/oxygen";
 
 local base_util  = require "base:util";
 
+---@class ns.stat.death
 local module     = {}
 
 -- ========================shared===========================
@@ -92,13 +93,13 @@ mp.as_server(function(server, mode)
       local orbs = math.random(6)
       for _ = 1, orbs do
         ---@type voxelcore.class.entity
-        local entity = experience.summon(pos, experience.get_exp(pid) / orbs)
+        local entity = experience.summon(pos, experience.get(pid) / orbs)
 
         if mode == "standalone" then
           entity.rigidbody:set_vel(vec3.spherical_rand(4))
         end
       end
-      experience.set_xp(pid, 0)
+      experience.set(pid, 0)
 
       module.drop_items(pid)
     end

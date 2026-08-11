@@ -1,51 +1,14 @@
-local mp = require "shared/utils/not_utils".multiplayer
-local data = require "shared/player/data/manager";
+local mp         = require "shared/utils/not_utils".multiplayer;
 local net_events = require "shared/net/utils/net_events"
-local damage = require "shared/player/utils/damage";
+local damage     = require "shared/player/utils/damage";
+local Stat       = require "shared/player/stats/Stat";
 
-local cat, field = "data", "health";
-
-local module = {}
-
--- ========================shared===========================
-
----@return number
-function module.get(pid)
-  if not pid then pid = hud.get_player() end
-  return data.get_data(pid).health
-end
-
----@return number
-function module.get_max(pid)
-  if not pid then pid = hud.get_player() end
-  return data.get_attributes(pid).health
-end
+---@class ns.stat.health: ns.stat.base
+local module     = Stat("health");
 
 -- ========================server===========================
 
 mp.as_server(function(server, mode)
-  ---Server side only
-  ---@param pid int
-  function module.set(pid, value)
-    local max = module.get_max(pid)
-    local new_val = math.clamp(value, 0, max)
-
-    data.set(pid, cat, field, new_val)
-  end
-
-  ---Server side only
-  ---@param pid int
-  function module.full(pid)
-    module.set(pid, module.get_max(pid))
-  end
-
-  ---Server side only
-  ---@param pid int
-  function module.add(pid, amount)
-    local value = module.get(pid)
-    module.set(pid, value + (amount or 1))
-  end
-
   ---@class ns.api.health.damage_options
   ---@field damage_type? damage_types
   ---@field source? vec3 Position of damage source.
@@ -60,14 +23,15 @@ mp.as_server(function(server, mode)
   ---@param options? ns.api.health.damage_options
   function module.damage(pid, amount, options)
     module.add(pid, -amount)
-    options = options or {}
+    options = options or {};
 
-    if type(options.do_knockback) == "nil" then
-      options.do_knockback = true
+    if options.do_knockback == nil then
+      options.do_knockback = true;
+    end;
+    if options.play_sound == nil then
+      options.play_sound = true;
     end
-    if type(options.play_sound) == "nil" then
-      options.play_sound = true
-    end
+
     local source = options.source or { player.get_pos(pid) }
 
     if options.play_sound then
