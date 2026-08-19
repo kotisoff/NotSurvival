@@ -55,8 +55,13 @@ mp.as_server(function(api, mode)
   end
 end)
 
-return {
+local module = {
+  ---@deprecated
   client = client,
+  ---@deprecated
   server = server,
+  ---@deprecated
   packets = packets
-};
+}
+
+return module;
