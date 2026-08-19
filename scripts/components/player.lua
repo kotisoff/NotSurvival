@@ -28,12 +28,16 @@ local rig = entity.skeleton
 -- end
 
 function on_grounded(velocity)
-  mp.as_client(function(client, mode)
-    if fall_distance.calculate_damage(velocity) > 0 then
-      net_events.client.send(net_events.packets.player_grounded, client.bson.serialize({ velocity }))
-    end
-  end)
-  -- ns_events.emit("player_grounded", entity:get_player(), velocity);
+  -- mp.as_client(function(client, mode)
+
+  --   if fall_distance.calculate_damage(velocity, scale) > 0 then
+  --     net_events.client.send(net_events.packets.player_grounded, client.bson.serialize({ velocity }))
+  --   end
+  -- end)
+
+  local scale = body:get_gravity_scale()
+
+  ns_events.emit("player_grounded", entity:get_player(), velocity, scale);
 end
 
 function on_attacked(attacker_eid, attacker_pid)
