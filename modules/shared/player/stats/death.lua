@@ -1,4 +1,4 @@
-local mp        = require "shared/utils/not_utils".multiplayer;
+local mp        = require "shared/lib/not_utils".multiplayer;
 local logger    = require "shared/core/logger"
 local ns_events = require "shared/core/ns_events";
 local data      = require "shared/player/data/manager";

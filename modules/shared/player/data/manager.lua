@@ -1,7 +1,7 @@
 -- ========================header===========================
 local config                   = require "shared/core/config";
 local constants                = require "shared/core/constants";
-local mp                       = require "shared/utils/not_utils".multiplayer;
+local mp                       = require "shared/lib/not_utils".multiplayer;
 local ns_events                = require "shared/core/ns_events"
 local logger                   = require "shared/core/logger"
 local net_events               = require "shared/net/utils/net_events"

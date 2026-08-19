@@ -1,4 +1,4 @@
-local nu = require "shared/utils/not_utils";
+local nu = require "shared/lib/not_utils";
 local mp = nu.multiplayer
 local logger = require "shared/core/logger";
 local ns_events = require "shared/core/ns_events"

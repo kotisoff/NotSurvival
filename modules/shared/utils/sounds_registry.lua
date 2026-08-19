@@ -1,4 +1,4 @@
-local _mp = require "shared/utils/not_utils".multiplayer
+local _mp = require "shared/lib/not_utils".multiplayer
 local mode = _mp.mode
 local mp = _mp.api.server
 

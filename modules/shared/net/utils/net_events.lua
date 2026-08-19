@@ -1,4 +1,4 @@
-local mp = require "shared/utils/not_utils".multiplayer;
+local mp = require "shared/lib/not_utils".multiplayer;
 
 local pack_id = require "shared/core/constants".pack_id;
 

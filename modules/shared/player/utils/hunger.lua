@@ -1,4 +1,4 @@
-local utils = require "shared/utils/not_utils".utils
+local utils = require "shared/lib/not_utils".utils
 
 local module = {}
 

@@ -1,4 +1,4 @@
-local mp         = require "shared/utils/not_utils".multiplayer;
+local mp         = require "shared/lib/not_utils".multiplayer;
 local net_events = require "shared/net/utils/net_events"
 local damage     = require "shared/player/utils/damage";
 local Stat       = require "shared/player/stats/Stat";

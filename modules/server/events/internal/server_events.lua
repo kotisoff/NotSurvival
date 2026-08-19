@@ -1,4 +1,4 @@
-local mp = require "shared/utils/not_utils".multiplayer;
+local mp = require "shared/lib/not_utils".multiplayer;
 local server = mp.api.server;
 
 local ns_events = require "shared/core/ns_events";

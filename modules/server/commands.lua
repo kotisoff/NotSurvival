@@ -1,4 +1,4 @@
-local not_utils = require "shared/utils/not_utils"
+local not_utils = require "shared/lib/not_utils"
 local ns_events = require "shared/core/ns_events"
 local death     = require "shared/player/stats/death"
 local manager   = require "shared/player/data/manager"

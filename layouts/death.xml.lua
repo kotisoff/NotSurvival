@@ -1,4 +1,4 @@
-local mp = require "shared/utils/not_utils".multiplayer
+local mp = require "shared/lib/not_utils".multiplayer
 local mode = mp.mode
 local bson = require "shared/utils/bson"
 local net_events = require "shared/net/utils/net_events"

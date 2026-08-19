@@ -1,5 +1,5 @@
 local ns_events = require "shared/core/ns_events"
-local _nu = require "shared/utils/not_utils"
+local _nu = require "shared/lib/not_utils"
 local bson = require "shared/utils/bson"
 local cor = _nu.coroutines
 local utils = _nu.utils

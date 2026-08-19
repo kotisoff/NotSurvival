@@ -1,4 +1,4 @@
-local mp               = require "shared/utils/not_utils".multiplayer;
+local mp               = require "shared/lib/not_utils".multiplayer;
 local playerdata_utils = require "shared/player/data/utils";
 local Buffer           = require "shared/net/utils/Buffer"
 

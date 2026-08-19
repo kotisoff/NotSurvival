@@ -1,4 +1,4 @@
-local mp = require "shared/utils/not_utils".multiplayer;
+local mp = require "shared/lib/not_utils".multiplayer;
 local manager = require "shared/player/data/manager";
 
 local function req_pid(pid)
