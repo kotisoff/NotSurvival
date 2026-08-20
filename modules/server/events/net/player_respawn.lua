@@ -1,6 +1,13 @@
-local death      = require "shared/player/stats/death"
-local net_events = require "shared/net/utils/net_events"
+local death         = require "shared/player/stats/death"
+local logger        = require "shared/core/logger"
 
-net_events.server.on(net_events.packets.player_respawn, function(client)
-  death.revive(client.player.pid);
+local PlayerRespawn = require "shared/net/messages/PlayerRespawn"
+---@cast PlayerRespawn neutron.server.messages.Message
+
+PlayerRespawn:on(function(client)
+  local pid = client.player.pid;
+
+  if not death.revive(pid) then
+    logger:println("W", string.format("Player %s tried to respawn while alive"))
+  end
 end)

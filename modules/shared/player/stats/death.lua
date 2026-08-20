@@ -77,8 +77,9 @@ mp.as_server(function(server, mode)
 
   ---Server side only
   ---@param pid int
+  ---@return bool success
   function module.revive(pid)
-    if not module.get(pid) then return end
+    if not module.get(pid) then return false end
 
     local identity = server.sandbox.players.get_by_pid(pid).identity;
     local client = server.accounts.by_identity.get_client(identity);
@@ -107,6 +108,8 @@ mp.as_server(function(server, mode)
     ns_events.emit("player_revived", pid);
 
     module.set(pid, false)
+
+    return true;
   end
 end)
 

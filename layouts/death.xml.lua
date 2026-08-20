@@ -1,7 +1,8 @@
 local mp = require "shared/lib/not_utils".multiplayer
 local mode = mp.mode
-local bson = require "shared/utils/bson"
-local net_events = require "shared/net/utils/net_events"
+
+local PlayerRespawn = require "shared/net/messages/PlayerRespawn"
+---@cast PlayerRespawn neutron.client.messages.Message
 
 function on_open(invid, x, y, z)
   document.score.pos = {
@@ -13,7 +14,7 @@ function on_open(invid, x, y, z)
 end
 
 function respawn()
-  net_events.client.send(net_events.packets.player_respawn, bson.serialize({}))
+  PlayerRespawn:send({});
 end
 
 function pause()

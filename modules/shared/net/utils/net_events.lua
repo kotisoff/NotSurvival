@@ -9,7 +9,6 @@ local packets = {
   food_eating = tohex(4),
   player_grounded = tohex(5),
   player_sprinting = tohex(6),
-  player_respawn = tohex(7),
   resources_data = tohex(8)
 }
 
