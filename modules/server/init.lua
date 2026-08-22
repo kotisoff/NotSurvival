@@ -22,6 +22,12 @@ for _, system in pairs(systems) do
   system_controller:register(system);
 end
 
+local filters = require_folder "server/systems/filters"
+
+for name, filter in pairs(filters) do
+  system_controller:register_filter(name, filter);
+end
+
 require "server/commands";
 
 logger:println("I", "Server side initialized.")
