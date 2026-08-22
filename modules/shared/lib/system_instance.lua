@@ -11,9 +11,6 @@ return {
 
     function instance:init() end;
 
-    ---@param bool bool
-    function instance:enable(bool) self.enabled = bool end;
-
     ---@return bool
     function instance:should_update(id) return self.enabled end;
 
