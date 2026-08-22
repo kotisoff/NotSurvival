@@ -1,10 +1,12 @@
-local mp         = require "shared/lib/not_utils".multiplayer;
-local net_events = require "shared/net/utils/net_events"
-local damage     = require "shared/player/utils/damage";
-local Stat       = require "shared/player/stats/Stat";
+local mp            = require "shared/lib/not_utils".multiplayer;
+local net_events    = require "shared/net/utils/net_events"
+local damage        = require "shared/player/utils/damage";
+local Stat          = require "shared/player/stats/Stat";
+
+local DealKnockback = require "shared/net/messages/DealKnockback"
 
 ---@class ns.stat.health: ns.stat.base
-local module     = Stat("health");
+local module        = Stat("health");
 
 -- ========================server===========================
 
@@ -51,7 +53,9 @@ mp.as_server(function(server, mode)
 
     if options.do_knockback then
       local vel = damage.calculate_knockback(pid, source, 7)
-      net_events.server.tell(net_events.packets.deal_knockback, client, server.bson.serialize(vel))
+
+      ---@cast DealKnockback neutron.server.messages.Message
+      DealKnockback:tell(client, { velocity = vel })
     end
 
     print(string.format("Игроку %s нанесено %d урона", client.player.username, amount))

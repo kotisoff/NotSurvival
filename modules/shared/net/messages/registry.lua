@@ -6,11 +6,8 @@ local function next()
 end
 
 local messages = {
-  player_respawn = next()
+  player_respawn = next(),
+  deal_knockback = next()
 }
-
-for key, value in pairs(messages) do
-  print(key, value);
-end
 
 return messages;

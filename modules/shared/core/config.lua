@@ -21,7 +21,13 @@ local config = {
       run_speed = 6,
       bhop_speed = 7,   -- Не bhop в привычном понимании, а бег в припрыжку.
       jump_height = 1.2 -- Заглушка
+    },
+    damage = {
+      min_fall_distance = 3
     }
+  },
+  world = {
+    gravity = 22.6 -- src/world/Level.cpp:29
   },
 
   debug = {
