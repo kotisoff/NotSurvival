@@ -1,4 +1,3 @@
-local ns_events  = require "shared/core/ns_events"
 local net_events = require "shared/net/utils/net_events"
 local packets    = net_events.packets;
 local bson       = require "shared/utils/bson"

@@ -1,5 +1,4 @@
 local health     = require "shared/player/stats/health"
-local ns_events  = require "shared/core/ns_events"
 local config     = require "shared/core/config"
 local combat     = require "server/systems/combat"
 local item_props = require "shared/api/v1/item_props"

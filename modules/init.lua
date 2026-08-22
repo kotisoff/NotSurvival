@@ -1,7 +1,5 @@
-local nu = require "shared/utils/not_utils";
-local mp = nu.multiplayer
+local mp = require "shared/lib/multiplayer";
 local logger = require "shared/core/logger";
-local ns_events = require "shared/core/ns_events"
 
 if mp.api.server then
   logger:println("I", "Initializing server side...");
@@ -9,10 +7,10 @@ if mp.api.server then
 end
 
 if mp.api.client then
-  logger:println("I", "Initializing server side...");
+  logger:println("I", "Initializing client side...");
   require "client/init"
 end
 
 ns_events.on("first_tick", function()
-  logger:println("I", string.format("NotSurvival is running in %s mode.", mp.mode));
+  logger:println("I", string.format("NotSurvival is running in %s mode.", mp.side));
 end)

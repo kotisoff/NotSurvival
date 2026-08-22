@@ -1,11 +1,12 @@
-local mp               = require "shared/utils/not_utils".multiplayer;
+local mp               = require "shared/lib/not_utils".multiplayer;
 local playerdata_utils = require "shared/player/data/utils";
 local Buffer           = require "shared/net/utils/Buffer"
 
 ---@type neutron.shared.bson
 
-local bson             = mp.as_any(function(side) return side.bson end)
+local bson             = require "shared/lib/not_utils".bson
 
+---@deprecated
 local module           = Buffer.create_compressor();
 
 ---@param category ns.player.data_categories

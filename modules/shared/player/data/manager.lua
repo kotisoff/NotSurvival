@@ -1,8 +1,6 @@
 -- ========================header===========================
 local config                   = require "shared/core/config";
-local constants                = require "shared/core/constants";
-local mp                       = require "shared/utils/not_utils".multiplayer;
-local ns_events                = require "shared/core/ns_events"
+local mp                       = require "shared/lib/not_utils".multiplayer;
 local logger                   = require "shared/core/logger"
 local net_events               = require "shared/net/utils/net_events"
 local storage                  = require "shared/core/data_storage".data
@@ -17,7 +15,6 @@ local data_request_compression = require "shared/net/compression/player_data_req
 ---@field hunger number
 ---@field saturation number
 ---@field oxygen number
----@field armor number
 
 ---@class ns.player.Status
 ---@field xp number
@@ -30,7 +27,7 @@ local data_request_compression = require "shared/net/compression/player_data_req
 ---@alias ns.player.Status.effect { identifier: string, level: number, time_left: number }
 
 ---@alias ns.player.data_categories "data" | "attributes" | "status"
----@alias ns.player.data_field.base "health" | "hunger" | "saturation" | "oxygen" | "armor"
+---@alias ns.player.data_field.base "health" | "hunger" | "saturation" | "oxygen"
 ---@alias ns.player.data_field.status "xp" | "gamemode" | "dead" | "death_location" | "effects" | "init"
 
 -- =========================================================
@@ -61,16 +58,12 @@ local module = {
 ---@param pid int
 ---@return { data: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
 function module.get_store(pid)
-  -- TODO: investigate где сука у нас всё ломается и обнуляется.
-  -- TODO: вспомнить чё где обнуляется, ибо доёб не понят.
-
-  if mp.mode == "client" then
+  if vc.is_client() then
     return module.session;
   else
-    -- local info = debug.getinfo(3, "S");
-    -- debug.print(info);
+    local player_instance = mp.api.server.sandbox.players.get_by_pid(pid);
 
-    local identity = mp.api.server.sandbox.players.get_by_pid(pid).identity;
+    local identity = player_instance and player_instance.identity or "root";
 
     if not storage.players then
       storage.players = {};
@@ -148,24 +141,26 @@ end
 ---@param field str | nil
 ---@param client neutron.class.client | nil Only on server
 function module.sync(category, field, client)
-  if mp.mode == "server" and client then
-    local store = module.get_store(client.player.pid);
-    local data = store[category];
+  if mp.mode == "server" then
+    if client then
+      local store = module.get_store(client.player.pid);
+      local data = store[category];
 
-    local value;
-    if field then
-      value = data[field];
+      local value;
+      if field then
+        value = data[field];
+      else
+        value = data;
+      end
+
+      net_events.server.tell(net_events.packets.update_player_data, client,
+        data_compression.to_bytes(category, field, value)
+      );
     else
-      value = data;
+      error("Client не указан!");
     end
-
-    net_events.server.tell(net_events.packets.update_player_data, client,
-      data_compression.to_bytes(category, field, value)
-    );
   elseif mp.mode == "client" then
     net_events.client.send(net_events.packets.update_player_data, data_request_compression.to_bytes(category, field));
-  elseif mp.mode == "server" then
-    error("Client не указан!");
   elseif mp.mode == "standalone" then
     local pid = hud.get_player();
     local store = module.get_store(pid);

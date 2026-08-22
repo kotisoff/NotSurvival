@@ -1,5 +1,4 @@
 local constants = require "shared/core/constants"
-local logger    = require "shared/core/logger"
 
 local module    = {
   data = {}

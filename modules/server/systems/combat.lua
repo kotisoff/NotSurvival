@@ -22,7 +22,7 @@ function CombatSystem:on_player_remove(id)
 end
 
 function CombatSystem:update(id, tps)
-  local cooldown = self.cooldown[id];
+  local cooldown = self.cooldown[id] or 0.0;
   local invid, slot = player.get_inventory(id);
 
   if self.slots[id] ~= slot then

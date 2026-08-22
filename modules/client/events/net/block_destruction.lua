@@ -1,8 +1,7 @@
-local ns_events         = require "shared/core/ns_events";
 local net_events        = require "shared/net/utils/net_events";
 local destruction_utils = require "shared/lib/destruction";
 local bson              = require "shared/utils/bson"
-local mp                = require "shared/utils/not_utils".multiplayer
+local mp                = require "shared/lib/not_utils".multiplayer
 local hand_animator     = require "client/systems/hand_animator"
 
 local packets           = net_events.packets;
@@ -92,7 +91,7 @@ handlers[breaking_states.broken] = function(pos, blockid, pid, t_pid, block_stat
     return -- если честно хз чё сюда писать
   end
 
-  if mp.mode == "client" then
+  if vc.is_client() then
     local x, y, z = unpack(pos);
     block.set(x, y, z, 0);
     local sound = block.get_sound(blockid, "breakSound");

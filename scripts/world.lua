@@ -1,5 +1,4 @@
-local ns_events = require "shared/core/ns_events";
-
+require "pack_env";
 require "init";
 
 local first_tick = true;

@@ -1,5 +1,4 @@
-local ns_events = require "shared/core/ns_events"
-local _nu = require "shared/utils/not_utils"
+local _nu = require "shared/lib/not_utils"
 local bson = require "shared/utils/bson"
 local cor = _nu.coroutines
 local utils = _nu.utils
@@ -27,14 +26,14 @@ local function stop_eating()
   net_events.client.send(packets.food_eating, bson.serialize({ false }))
 end
 
-ns_events.on(("player_tick"), function(pid, tps)
+ns_events.on("player_tick", function(pid, tps)
   if pid ~= hud.get_player() then return end
 
   if input.is_active("player.build") and not hud.is_inventory_open() and not hud.is_paused() then
     local inv, slot = player.get_inventory(pid)
     local itemid = inventory.get(inv, slot)
     local data = hunger.get_food_data(itemid)
-    local is_not_max = hunger_mgr.get_hunger() ~= hunger_mgr.get_max_hunger()
+    local is_not_max = hunger_mgr.get_hunger(pid) ~= hunger_mgr.get_max_hunger(pid)
 
     if food.eating then
       if food.id ~= itemid or food.slot ~= slot then

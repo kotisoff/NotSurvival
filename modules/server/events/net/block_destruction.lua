@@ -1,6 +1,5 @@
-local ns_events         = require "shared/core/ns_events"
 local net_events        = require "shared/net/utils/net_events";
-local mp                = require "shared/utils/not_utils".multiplayer;
+local mp                = require "shared/lib/not_utils".multiplayer;
 local destruction_utils = require "shared/lib/destruction"
 local logger            = require "shared/core/logger"
 local config            = require "shared/core/config"
@@ -147,8 +146,8 @@ handlers[breaking_states.broken] = function(state, pos, blockid, client)
     local expected_time = durability / destruction_utils.get_speed_multiplier(pid, blockid)
     local deviation = calculate_breaking_deviation(expected_time);
 
-    -- mp.mode == "server" нужен для того чтобы не было ложных срабатываний в синглплеере.
-    if (expected_time - deviation) >= total and mp.mode == "server" then
+    -- headless нужен для того чтобы не было ложных срабатываний в синглплеере.
+    if (expected_time - deviation) >= total and vc.is_headless() then
       tell_breaking_state(client, breaking_states.interrupted, target, { block.get_states(unpack(pos)) });
       echo_breaking_state(state, target, client);
       -- Конкретно здесь пакеты ломающему игроку и другим отличаются 5 параметром, а точнее его присутствием.
@@ -202,7 +201,10 @@ local base_utils = require "base:util"
 
 ns_events.on("l:block_broken", function(blockid, pos, pid)
   local x, y, z = unpack(pos);
-  block.set(x, y, z, 0);
+
+  if vc.is_headless() then
+    block.set(x, y, z, 0);
+  end
 
   inventory.use(player.get_inventory(pid));
 

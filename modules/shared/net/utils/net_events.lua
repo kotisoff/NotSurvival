@@ -1,16 +1,15 @@
-local mp = require "shared/utils/not_utils".multiplayer;
+local mp = require "shared/lib/not_utils".multiplayer;
 
 local pack_id = require "shared/core/constants".pack_id;
 
 local packets = {
-  update_player_data = tohex(1),
-  block_breaking = tohex(2),
-  deal_knockback = tohex(3),
-  food_eating = tohex(4),
-  player_grounded = tohex(5),
-  player_sprinting = tohex(6),
-  player_respawn = tohex(7),
-  resources_data = tohex(8)
+  update_player_data = tohex(11),
+  block_breaking = tohex(12),
+  deal_knockback = tohex(13),
+  food_eating = tohex(14),
+  player_grounded = tohex(15),
+  player_sprinting = tohex(16),
+  resources_data = tohex(17)
 }
 
 local client = {};
@@ -55,8 +54,13 @@ mp.as_server(function(api, mode)
   end
 end)
 
-return {
+local module = {
+  ---@deprecated
   client = client,
+  ---@deprecated
   server = server,
+  ---@deprecated
   packets = packets
-};
+}
+
+return module;

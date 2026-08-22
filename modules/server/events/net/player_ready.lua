@@ -1,5 +1,4 @@
-local mp          = require "shared/utils/not_utils".multiplayer;
-local ns_events   = require "shared/core/ns_events"
+local mp          = require "shared/lib/not_utils".multiplayer;
 local manager     = require "shared/player/data/manager"
 local loaders     = require "shared/lib/loaders/main";
 local net_events  = require "shared/net/utils/net_events"
@@ -15,7 +14,6 @@ ns_events.on("player_ready", function(client)
       local x, y, z = player.get_pos(client.player.pid);
 
       player.set_spawnpoint(client.player.pid, x, y, z);
-      player.set_pos(client.player.pid, x, y, z);
 
       status.init = true;
     end

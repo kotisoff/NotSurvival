@@ -1,9 +1,7 @@
-local mp = require "shared/utils/not_utils".multiplayer;
+local mp = require "shared/lib/not_utils".multiplayer;
 local server = mp.api.server;
 
-local ns_events = require "shared/core/ns_events";
-
-if mp.mode == "server" then
+if vc.is_headless() then
   ns_events.on("world_tick", function()
     local players = server.sandbox.players.get_all();
 
@@ -26,8 +24,19 @@ if mp.mode == "server" then
     ns_events.emit("client_disconnected", client)
   end)
 elseif mp.mode == "standalone" then
+  ---@type number
+  local pid = nil;
+
+  local function require_pid()
+    if not pid then
+      pid = hud.get_player();
+    end
+
+    return pid;
+  end
+
   local emit = function(event)
-    local pid = hud.get_player()
+    require_pid();
 
     local identity = server.sandbox.players.get_by_pid(pid).identity;
     local client = server.accounts.by_identity.get_client(identity);
@@ -39,9 +48,11 @@ elseif mp.mode == "standalone" then
   ns_events.on("hud_open", function()
     emit("client_connected");
   end);
+
   ns_events.on("first_tick", function()
     emit("player_ready");
   end);
+
   ns_events.on("world_quit", function()
     emit("client_disconnected");
   end)
