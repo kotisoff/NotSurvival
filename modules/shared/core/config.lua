@@ -26,12 +26,13 @@ local config = {
       min_fall_distance = 3
     }
   },
+
   world = {
     gravity = 22.6 -- src/world/Level.cpp:29
   },
 
   debug = {
-    log_events = true,
+    log_events = false,
     log_anticheat = true,
     log_misc = true
   },
