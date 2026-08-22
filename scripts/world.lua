@@ -1,3 +1,4 @@
+require "pack_env";
 require "init";
 
 local first_tick = true;

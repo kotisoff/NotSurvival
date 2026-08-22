@@ -1,5 +1,3 @@
-require "shared/core/pack_env";
-
 local mp = require "shared/lib/multiplayer";
 local logger = require "shared/core/logger";
 

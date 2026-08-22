@@ -1,6 +1,7 @@
 ---@diagnostic disable: inject-field
 local player_data = require "shared/player/data/manager";
 local experience = require "shared/utils/experience"
+local ns_events = require "shared/core/ns_events"
 
 local bars_size = {};
 
