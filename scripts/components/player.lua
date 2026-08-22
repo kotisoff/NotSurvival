@@ -1,12 +1,9 @@
 local ns_events = require "shared/core/ns_events"
 local mp = require "shared/lib/not_utils".multiplayer
 local player_data = require "shared/player/data/manager"
-local net_events = require "shared/net/utils/net_events"
-local fall_distance = require "shared/utils/fall_distance"
 local movement_controller = require "client/systems/movement_controller"
 
 local tsf = entity.transform
-local body = entity.rigidbody
 local rig = entity.skeleton
 
 -- mp.as_server(function(server, mode)
@@ -26,19 +23,6 @@ local rig = entity.skeleton
 --     SAVED_DATA = ARGS
 --   end
 -- end
-
-function on_grounded(velocity)
-  -- mp.as_client(function(client, mode)
-
-  --   if fall_distance.calculate_damage(velocity, scale) > 0 then
-  --     net_events.client.send(net_events.packets.player_grounded, client.bson.serialize({ velocity }))
-  --   end
-  -- end)
-
-  local scale = body:get_gravity_scale()
-
-  ns_events.emit("player_grounded", entity:get_player(), velocity, scale);
-end
 
 function on_attacked(attacker_eid, attacker_pid)
   mp.as_server(function(server, mode)
