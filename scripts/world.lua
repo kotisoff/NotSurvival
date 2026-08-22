@@ -1,5 +1,3 @@
-local ns_events = require "shared/core/ns_events";
-
 require "init";
 
 local first_tick = true;

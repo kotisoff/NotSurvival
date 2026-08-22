@@ -1,4 +1,3 @@
-local ns_events         = require "shared/core/ns_events";
 local system_controller = require "server/lib/system_controller";
 local data_storage      = require "shared/core/data_storage"
 

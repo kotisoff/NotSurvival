@@ -1,7 +1,6 @@
 local death           = require "shared/player/stats/death";
 local experience      = require "shared/player/stats/experience";
 local system_instance = require "shared/lib/system_instance"
-local ns_events       = require "shared/core/ns_events"
 
 local system          = system_instance.new("ns.system.death_handling")
 

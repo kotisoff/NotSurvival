@@ -1,6 +1,7 @@
+require "shared/core/pack_env";
+
 local mp = require "shared/lib/multiplayer";
 local logger = require "shared/core/logger";
-local ns_events = require "shared/core/ns_events"
 
 if mp.api.server then
   logger:println("I", "Initializing server side...");

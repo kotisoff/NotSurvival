@@ -1,8 +1,6 @@
 -- ========================header===========================
 local config                   = require "shared/core/config";
-local constants                = require "shared/core/constants";
 local mp                       = require "shared/lib/not_utils".multiplayer;
-local ns_events                = require "shared/core/ns_events"
 local logger                   = require "shared/core/logger"
 local net_events               = require "shared/net/utils/net_events"
 local storage                  = require "shared/core/data_storage".data
@@ -63,7 +61,9 @@ function module.get_store(pid)
   if vc.is_client() then
     return module.session;
   else
-    local identity = mp.api.server.sandbox.players.get_by_pid(pid).identity;
+    local player_instance = mp.api.server.sandbox.players.get_by_pid(pid);
+
+    local identity = player_instance and player_instance.identity or "root";
 
     if not storage.players then
       storage.players = {};

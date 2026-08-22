@@ -1,4 +1,3 @@
-local ns_events         = require "shared/core/ns_events";
 local logger            = require "shared/core/logger";
 local prefix            = require "shared/utils/prefix"
 local system_controller = require "client/lib/system_controller"

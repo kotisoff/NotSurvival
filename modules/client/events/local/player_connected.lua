@@ -1,4 +1,3 @@
-local ns_events = require "shared/core/ns_events"
 local data = require "shared/player/data/manager"
 local death = require "shared/player/stats/death";
 local allow_cheats = require "client/hooks/allow_cheats"
