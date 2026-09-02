@@ -1,11 +1,11 @@
 {
-  "caption": "Выдать опыт",
+  "caption": "experience apple (debug)",
   "icon-type": "sprite",
   "icon": "items:apple",
   "not_survival:food": {
     "eat-anyway": true,
-    "eat-delay": 0.01,
-    "consume-item": false,
+    "eat-delay": 0.5,
+    "consume-item": true,
     "type": "food",
     "callback": "function(pid) require('not_survival:shared/player/stats/experience').give(pid, math.random(1,10)) end"
   },
