@@ -84,7 +84,7 @@ ns_events.on("first_tick", function()
     function(args, client)
       local vel = args.vector;
 
-      if not is_array(vel) and #vel == 3 then
+      if not is_array(vel) or #vel ~= 3 then
         mp.console.tell("Vector must be array of 3 elements", client);
         return;
       end;

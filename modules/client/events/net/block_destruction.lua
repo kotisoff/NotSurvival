@@ -1,8 +1,8 @@
 local net_events        = require "shared/net/utils/net_events";
 local destruction_utils = require "shared/lib/destruction";
 local bson              = require "shared/utils/bson"
-local mp                = require "shared/lib/not_utils".multiplayer
 local hand_animator     = require "client/systems/hand_animator"
+local logger            = require "shared/core/logger";
 
 local packets           = net_events.packets;
 
@@ -105,6 +105,11 @@ net_events.client.on(packets.block_breaking, function(bytes)
   local args = bson.deserialize(bytes)
   local state, pos, blockid, t_pid, block_state = unpack(args)
   local pid = hud.get_player();
+
+  if handlers[state] == nil then
+    logger:println("W", "Requested handler not found.");
+    return;
+  end
 
   handlers[state](pos, blockid, pid, t_pid, block_state);
 end)

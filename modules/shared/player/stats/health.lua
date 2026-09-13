@@ -2,6 +2,7 @@ local mp            = require "shared/lib/not_utils".multiplayer;
 local net_events    = require "shared/net/utils/net_events"
 local damage        = require "shared/player/utils/damage";
 local Stat          = require "shared/player/stats/Stat";
+local config        = require "shared/core/config"
 
 local DealKnockback = require "shared/net/messages/DealKnockback"
 
@@ -58,7 +59,9 @@ mp.as_server(function(server, mode)
       DealKnockback:tell(client, { velocity = vel })
     end
 
-    print(string.format("Игроку %s нанесено %d урона", client.player.username, amount))
+    if config.debug.log_misc then
+      print(string.format("Игроку %s нанесено %d урона", client.player.username, amount))
+    end
   end
 end)
 

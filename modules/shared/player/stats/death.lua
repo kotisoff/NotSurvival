@@ -52,8 +52,8 @@ mp.as_server(function(server, mode)
   function module.kill(pid, damage_type)
     if module.is_invulnerable(pid) then return end
 
-    local max = health.get(pid)
-    health.damage(pid, max, { damage_type = damage_type, do_knockback = false })
+    local hp = health.get(pid)
+    health.damage(pid, hp, { damage_type = damage_type, do_knockback = false })
   end
 
   ---Server side only

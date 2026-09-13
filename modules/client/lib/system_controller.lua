@@ -19,7 +19,7 @@ end
 
 function controller:update(tps)
   for _, system in ipairs(self.systems) do
-    if system:should_update(self.pid) then
+    if system.enabled and system:should_update(self.pid) then
       system:update(self.pid, tps);
     end;
   end

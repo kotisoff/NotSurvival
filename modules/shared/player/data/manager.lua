@@ -33,9 +33,14 @@ local data_request_compression = require "shared/net/compression/player_data_req
 -- =========================================================
 
 
----@param v { init: int, max: int }
 ---@type ns.player.Base
-local PlayerBase = table.map(table.copy(config.player.base), function(i, v) return v.init end);
+local PlayerBase = table.map(
+  table.copy(config.player.base),
+  ---@param v { init: int, max: int }
+  function(i, v)
+    return v.init
+  end
+);
 
 ---@param v { init: int, max: int }
 ---@type ns.player.Base
@@ -48,10 +53,7 @@ local PlayerStatus = {
 
 -- =========================================================
 
-local module = {
-  ---@type { data: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
-  session = {}
-};
+local module = {};
 
 -- Shared
 
@@ -63,7 +65,8 @@ function module.get_store(pid)
   else
     local player_instance = mp.api.server.sandbox.players.get_by_pid(pid);
 
-    local identity = player_instance and player_instance.identity or "root";
+    local identity = (player_instance and player_instance.identity) or (pid == 0 and "root");
+    assert(identity ~= false, "Tried to get storage of unknown player");
 
     if not storage.players then
       storage.players = {};
@@ -116,7 +119,7 @@ end
 ---@param category ns.player.data_categories
 ---@param field str | ns.player.data_field.base | ns.player.data_field.status
 function module.set(pid, category, field, value)
-  if value == "nil" then
+  if value == nil then
     local info = debug.getinfo(2, "S");
     logger:println("W", string.format("setting explicit nil value to player field! %s:%s in %s:%s"), category, field,
       info.source, info.lastlinedefined);

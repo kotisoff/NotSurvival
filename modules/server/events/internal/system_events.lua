@@ -10,6 +10,10 @@ ns_events.on("player_ready", function(client)
   system_controller:register_player(client.player.pid);
 end)
 
+ns_events.on("world_save", function()
+  data_storage.save();
+end)
+
 ---@param client neutron.class.client
 ns_events.on("client_disconnected", function(client)
   system_controller:remove_player(client.player.pid);

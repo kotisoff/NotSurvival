@@ -2,7 +2,7 @@ local system_instance = require "shared/lib/system_instance"
 local death           = require "shared/player/stats/death"
 
 ---@type ns.ecs.system | { hit_timer: int, reset_hit: fun(self: ns.ecs.system, ignore_timer?: bool) }
-local system          = system_instance.new("ns.system.death_handling")
+local system          = system_instance.new("ns.system.hand_animator")
 system.hit_timer      = 0;
 
 function system:init()
