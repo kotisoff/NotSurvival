@@ -1,9 +1,5 @@
-local mp            = require "shared/lib/multiplayer";
-local constants     = require "shared/core/constants"
-local registry      = require "shared/net/messages/registry"
+local Message = require "shared/net/messages/_Message"
 
-local Message       = mp.api[mp.side].messages;
+local M = Message.new(Message.ids.player_respawn, {})
 
-local PlayerRespawn = Message.new(constants.pack_id, registry.player_respawn, {})
-
-return PlayerRespawn;
+return M;

@@ -1,11 +1,7 @@
-local mp            = require "shared/lib/multiplayer";
-local constants     = require "shared/core/constants"
-local registry      = require "shared/net/messages/registry"
+local Message = require "shared/net/messages/_Message"
 
-local messages      = mp.api[mp.side].messages;
-
-local DealKnockback = messages.new(constants.pack_id, registry.deal_knockback, {
+local M = Message.new(Message.ids.deal_knockback, {
   velocity = "Vec3<float32>"
 })
 
-return DealKnockback;
+return M;

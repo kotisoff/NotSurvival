@@ -1,9 +1,5 @@
-local mp             = require "shared/lib/multiplayer";
-local constants      = require "shared/core/constants"
-local registry       = require "shared/net/messages/registry"
+local Message = require "shared/net/messages/_Message"
 
-local Message        = mp.api[mp.side].messages;
+local M = Message.new(Message.ids.start_sprinting, { state = "boolean" })
 
-local StartSprinting = Message.new(constants.pack_id, registry.start_sprinting, { state = "boolean" })
-
-return StartSprinting;
+return M;
