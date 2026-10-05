@@ -1,6 +1,3 @@
-local mp = require "shared/lib/not_utils".multiplayer
-local mode = mp.mode
-
 local PlayerRespawn = require "shared/net/messages/PlayerRespawn"
 ---@cast PlayerRespawn neutron.client.messages.Message
 
@@ -10,7 +7,8 @@ function on_open(invid, x, y, z)
     40
   }
 
-  document.pause_btn.visible = mode == "standalone"
+  -- TODO: dead code. maybe reactivate with MicroN
+  document.pause_btn.visible = false; -- mp.side == "standalone"
 end
 
 function respawn()

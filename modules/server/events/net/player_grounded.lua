@@ -1,4 +1,4 @@
-local mp            = require "shared/lib/not_utils".multiplayer.api.server
+local mp            = require "shared/lib/multiplayer".api.server
 local tags          = require "shared/lib/not_utils".tags;
 local health        = require "shared/player/stats/health"
 local fall_distance = require "shared/utils/fall_distance"

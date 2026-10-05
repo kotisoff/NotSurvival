@@ -1,12 +1,14 @@
-local hunger     = require "shared/player/utils/hunger"
-local hunger_mgr = require "shared/player/stats/hunger"
-local prefix     = require "shared/utils/prefix"
+local hunger      = require "shared/player/utils/hunger"
+local hunger_mgr  = require "shared/player/stats/hunger"
+local prefix      = require "shared/utils/prefix"
 
-local net_events = require "shared/net/utils/net_events"
-local mp         = require "shared/lib/not_utils".multiplayer.api.server;
+local mp          = require "shared/lib/multiplayer".api.server;
+
+local StartEating = require "shared/net/messages/StartEating";
+---@cast StartEating neutron.server.messages.Message
 
 ---@type table<str, { id: int, progress: number }>
-local eating     = {}
+local eating      = {}
 
 -- =========================funcs===========================
 
@@ -34,12 +36,11 @@ end
 
 -- ========================network==========================
 
-net_events.server.on(net_events.packets.food_eating, function(client, bytes)
+StartEating:on(function(client, data)
   local pid = client.player.pid
-  ---@type bool
-  local status = unpack(mp.bson.deserialize(bytes))
+  local status = data.state;
 
-  if status then
+  if status == true then
     start_eating(pid)
   elseif is_eating(pid) then
     stop_eating(pid)
@@ -77,7 +78,7 @@ events.on(prefix("player_tick"), function(pid)
 
     local identity = mp.sandbox.players.get_by_pid(pid).identity;
     local client = mp.accounts.by_identity.get_client(identity);
-    net_events.server.tell(net_events.packets.food_eating, client, mp.bson.serialize({}))
+    StartEating:tell(client, { state = true });
 
     pcall(food_data.callback, pid)
   end

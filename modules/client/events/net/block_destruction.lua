@@ -245,7 +245,7 @@ local function animate_all_wraps(tps)
   end
 end
 
-ns_events.on(("player_tick"), function(pid, tps)
+ns_events.on("player_tick", function(pid, tps)
   local playerid = hud.get_player()
   if pid ~= playerid then return end
 

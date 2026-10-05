@@ -14,7 +14,7 @@ local function stop_sprint()
   net_events.client.send(packets.player_sprinting, bson.serialize({ false }))
 end
 
-ns_events.on(("player_tick"), function(pid, tps)
+ns_events.on("player_tick", function(pid, tps)
   if pid ~= hud.get_player() then return end
 
   if input.is_active("movement.sprint") and not hud.is_inventory_open() and not hud.is_paused() then
