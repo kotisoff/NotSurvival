@@ -1,17 +1,12 @@
-local net_events = require "shared/net/utils/net_events"
-local packets    = net_events.packets;
-local bson       = require "shared/utils/bson"
+local StartSprinting = require "shared/net/messages/StartSprinting";
+---@cast StartSprinting neutron.client.messages.Message
 
-local sprinting  = false
+local sprinting      = false
 
-local function start_sprint()
-  sprinting = true
-  net_events.client.send(packets.player_sprinting, bson.serialize({ true }))
-end
-
-local function stop_sprint()
-  sprinting = false
-  net_events.client.send(packets.player_sprinting, bson.serialize({ false }))
+---@param state boolean
+local function set_sprint(state)
+  sprinting = state
+  StartSprinting:send({ state = state });
 end
 
 ns_events.on("player_tick", function(pid, tps)
@@ -23,12 +18,12 @@ ns_events.on("player_tick", function(pid, tps)
 
     if sprinting then
       if vel < 3.6 then
-        return stop_sprint()
+        return set_sprint(false)
       end
     elseif vel >= 3.6 then
-      return start_sprint()
+      return set_sprint(true)
     end
   elseif sprinting then
-    stop_sprint()
+    set_sprint(false)
   end
 end)
