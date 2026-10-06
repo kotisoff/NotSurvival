@@ -1,11 +1,14 @@
-local net_events = require "shared/net/utils/net_events"
-local loaders    = require "shared/lib/loaders/main";
-local logger     = require "shared/core/logger"
+local loaders       = require "shared/lib/loaders/main";
+local logger        = require "shared/core/logger"
 
-net_events.client.on(net_events.packets.resources_data, function(bytes)
+local ResourcesData = require "shared/net/messages/ResourcesData";
+---@cast ResourcesData neutron.client.messages.Message
+
+---@param data { hash: string, data: bytearray }
+ResourcesData:on(function(data)
   logger:println("I",
-    string.format("Got %s bytes of resources", #bytes)
-  );
+    string.format("Got %s bytes of resources (Hash: %s)", data.data, data.hash)
+  )
 
-  loaders.decompress(bytes);
+  loaders.decompress(data.data, data.hash);
 end)

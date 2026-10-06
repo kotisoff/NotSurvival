@@ -16,7 +16,8 @@ module.ids = {
   player_respawn = "1",
   deal_knockback = "2",
   start_eating = "3",
-  start_sprinting = "4"
+  start_sprinting = "4",
+  resources_data = "5"
 }
 
 return module;
