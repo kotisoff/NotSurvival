@@ -3,13 +3,8 @@ local mp = require "shared/lib/not_utils".multiplayer;
 local pack_id = require "shared/core/constants".pack_id;
 
 local packets = {
-  update_player_data = tohex(11),
-  block_breaking = tohex(12),
-  deal_knockback = tohex(13),
-  food_eating = tohex(14),
-  player_grounded = tohex(15),
-  player_sprinting = tohex(16),
-  resources_data = tohex(17)
+  update_player_data = "0x1",
+  resources_data = "0x2"
 }
 
 local client = {};

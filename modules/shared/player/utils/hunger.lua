@@ -89,9 +89,8 @@ end
 
 ---@return ns.types.food|nil
 function module.get_food_data(itemid)
-  local key = tohex(itemid)
-  if food_cache[key] then
-    return table.deep_copy(food_cache[key])
+  if food_cache[itemid] then
+    return table.deep_copy(food_cache[itemid])
   end
 
   ---@type ns.types.food
@@ -108,7 +107,7 @@ function module.get_food_data(itemid)
   end
   if not flag then return end
 
-  food_cache[key] = data
+  food_cache[itemid] = data
   return table.deep_copy(data)
 end
 
