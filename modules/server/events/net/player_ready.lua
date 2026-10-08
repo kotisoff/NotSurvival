@@ -2,7 +2,6 @@ local mp            = require "shared/lib/not_utils".multiplayer;
 local manager       = require "shared/player/data/manager"
 local loaders       = require "shared/lib/loaders/main";
 local net_events    = require "shared/net/utils/net_events"
-local logger        = require "shared/core/logger"
 local destruction   = require "shared/lib/destruction"
 
 local ResourcesData = require "shared/net/messages/ResourcesData";

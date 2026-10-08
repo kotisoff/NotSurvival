@@ -1,4 +1,3 @@
-local logger            = require "shared/core/logger";
 local prefix            = require "shared/utils/prefix"
 local system_controller = require "client/lib/system_controller"
 local manager           = require "shared/player/data/manager"

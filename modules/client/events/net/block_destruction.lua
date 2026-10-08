@@ -2,7 +2,6 @@ local net_events        = require "shared/net/utils/net_events";
 local destruction_utils = require "shared/lib/destruction";
 local bson              = require "shared/utils/bson"
 local hand_animator     = require "client/systems/hand_animator"
-local logger            = require "shared/core/logger";
 
 local packets           = net_events.packets;
 

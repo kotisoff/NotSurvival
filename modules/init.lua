@@ -1,5 +1,5 @@
 local mp = require "shared/lib/multiplayer";
-local logger = require "shared/core/logger";
+local test_tool = require "shared/lib/test_tool"
 
 if mp.api.server then
   logger:println("I", "Initializing server side...");
@@ -13,4 +13,7 @@ end
 
 ns_events.on("first_tick", function()
   logger:println("I", string.format("NotSurvival is running in %s mode.", mp.side));
+
+  require "shared/player/data/stats_loader";
+  test_tool.run();
 end)

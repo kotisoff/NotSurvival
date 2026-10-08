@@ -1,0 +1,6 @@
+{
+  "category": "status",
+  "override": false,
+  "net": "uint32",
+  "init": 0
+}

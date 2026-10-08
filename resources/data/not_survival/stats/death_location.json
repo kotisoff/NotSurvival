@@ -1,0 +1,6 @@
+{
+  "category": "status",
+  "override": false,
+  "net": "Triple<int32,uint8,int32>",
+  "init": [0, 100, 0]
+}

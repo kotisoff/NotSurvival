@@ -1,5 +1,4 @@
 local death         = require "shared/player/stats/death"
-local logger        = require "shared/core/logger"
 
 local PlayerRespawn = require "shared/net/messages/PlayerRespawn"
 ---@cast PlayerRespawn neutron.server.messages.Message

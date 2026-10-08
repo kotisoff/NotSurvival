@@ -3,7 +3,6 @@ local tags          = require "shared/lib/not_utils".tags;
 local health        = require "shared/player/stats/health"
 local fall_distance = require "shared/utils/fall_distance"
 local config        = require "shared/core/config";
-local logger        = require "shared/core/logger"
 
 local function process_ground_block(pos)
   local grounded_block = block.get(unpack(pos));

@@ -1,5 +1,4 @@
 local mp        = require "shared/lib/not_utils".multiplayer;
-local logger    = require "shared/core/logger"
 local data      = require "shared/player/data/manager";
 
 local health    = require "shared/player/stats/health";

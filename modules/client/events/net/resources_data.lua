@@ -1,5 +1,4 @@
 local loaders       = require "shared/lib/loaders/main";
-local logger        = require "shared/core/logger"
 
 local ResourcesData = require "shared/net/messages/ResourcesData";
 ---@cast ResourcesData neutron.client.messages.Message

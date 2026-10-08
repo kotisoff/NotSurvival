@@ -4,7 +4,7 @@ local pack_id = require "shared/core/constants".pack_id;
 
 local packets = {
   update_player_data = "0x1",
-  resources_data = "0x2"
+  block_breaking = "0x2"
 }
 
 local client = {};
