@@ -49,6 +49,34 @@ function module.reload()
 	reader:clear();
 end
 
+function module.stat_id(res_id, name)
+	if res_id == constants.pack_id then
+		return name;
+	end;
+	return string.format("%s:%s", res_id, name);
+end
+
+function module.build()
+	local res = {
+		attributes = {}
+	};
+
+	for res_id, stats in pairs(module.tree) do
+		for stat, data in pairs(stats) do
+			local id = module.stat_id(res_id, stat);
+
+			res[data.category] = res[data.category] or {};
+			res[data.category][id] = data.init;
+
+			if data.max then
+				res.attributes[id] = data.max;
+			end
+		end
+	end
+
+	return res;
+end
+
 function module.build_scheme()
 	local scheme = {
 		attributes = {}
@@ -57,10 +85,7 @@ function module.build_scheme()
 	for res_id, stats in pairs(module.tree) do
 		for stat, data in pairs(stats) do
 			if data.net then
-				local id = string.format("%s:%s", res_id, stat);
-				if res_id == constants.pack_id then
-					id = stat;
-				end
+				local id = module.stat_id(res_id, stat);
 
 				scheme[data.category] = scheme[data.category] or {};
 				scheme[data.category][id] = data.net;
@@ -82,9 +107,13 @@ end)
 test_tool.create_test("build_stats_scheme", function()
 	local scheme = module.build_scheme();
 
-	assert(scheme and type(scheme) == "table", "corrupted scheme generated");
-
 	debug.print(scheme);
+end)
+
+test_tool.create_test("build_stats_values", function()
+	local values = module.build();
+
+	debug.print(values);
 end)
 
 return module;

@@ -1,5 +1,5 @@
 {
-  "category": "data",
+  "category": "base",
   "override": false,
   "net": "uint8",
   "init": 20,

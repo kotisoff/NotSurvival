@@ -1,3 +1,4 @@
+---@class ns.types.config
 local config = {
   player = {
     base = {
