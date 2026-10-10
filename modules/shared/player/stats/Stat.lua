@@ -38,7 +38,7 @@ return function(name)
       local max = module.get_max(pid);
       local new_val = math.clamp(value, 0, max)
 
-      manager.set(pid, "data", name, new_val);
+      manager.set(pid, "base", name, new_val);
     end
 
     ---Server side only

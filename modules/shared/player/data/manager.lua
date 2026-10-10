@@ -26,7 +26,7 @@ local data_compression  = require "shared/net/compression/player_data";
 
 ---@alias ns.player.Status.effect { identifier: string, level: number, time_left: number }
 
----@alias ns.player.data_categories "data" | "attributes" | "status"
+---@alias ns.player.data_categories "base" | "attributes" | "status"
 ---@alias ns.player.data_field.base "health" | "hunger" | "saturation" | "oxygen"
 ---@alias ns.player.data_field.status "xp" | "gamemode" | "dead" | "death_location" | "effects" | "init"
 
@@ -184,7 +184,7 @@ end
 module.session = nil;
 
 ns_events.on("hud_open", function(...)
-  logger:println("I", "Устанавливаем клиентские данные");
+  logger:println("I", "Creating session stats storage");
   module.session = module.new_data();
 end)
 
