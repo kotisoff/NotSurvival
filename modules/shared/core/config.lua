@@ -1,11 +1,11 @@
+---@class ns.types.config
 local config = {
   player = {
     base = {
       health = { init = 20, max = 20 },
       hunger = { init = 20, max = 20 },
       saturation = { init = 20, max = 20 },
-      oxygen = { init = 20, max = 20 },
-      armor = { init = 0, max = 20 }
+      oxygen = { init = 20, max = 20 }
     },
     combat = {
       punch_damage = 1,
@@ -22,7 +22,14 @@ local config = {
       run_speed = 6,
       bhop_speed = 7,   -- Не bhop в привычном понимании, а бег в припрыжку.
       jump_height = 1.2 -- Заглушка
+    },
+    damage = {
+      min_fall_distance = 3
     }
+  },
+
+  world = {
+    gravity = 22.6 -- src/world/Level.cpp:29
   },
 
   debug = {

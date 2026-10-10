@@ -1,10 +1,10 @@
 local module = {};
 
-local PlayerStatusKeys = { "xp", "gamemode", "dead", "death_location", "effects", "init" }
-local PlayerDataKeys = { "health", "hunger", "saturation", "oxygen", "armor" }
+local PlayerStatusKeys = { "xp", "gamemode", "dead", "death_location" }
+local PlayerDataKeys = { "health", "hunger", "saturation", "oxygen" }
 
-module.Categories = { "data", "attributes", "status" }
-module.CategoryFields = { data = PlayerDataKeys, attributes = PlayerDataKeys, status = PlayerStatusKeys }
+module.Categories = { "base", "attributes", "status" }
+module.CategoryFields = { base = PlayerDataKeys, attributes = PlayerDataKeys, status = PlayerStatusKeys }
 
 ---@param category ns.player.data_categories|string|number
 ---@return integer

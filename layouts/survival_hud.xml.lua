@@ -58,7 +58,7 @@ ns_events.on("__update_hud", function(pid, category, field, value)
 
   if type(value) == "number" then
     if category == "status" and field == "xp" then
-      local lvl = math.floor(experience.calc_lvl(value)) or "";
+      local lvl = math.floor(experience.calc_level(value)) or "";
       update_number_stat("lvl", lvl);
 
       attributes.xp = experience.calc_next(lvl);

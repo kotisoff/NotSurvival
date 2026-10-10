@@ -1,4 +1,3 @@
-local ns_events         = require "shared/core/ns_events";
 local system_controller = require "server/lib/system_controller";
 local data_storage      = require "shared/core/data_storage"
 
@@ -9,6 +8,10 @@ end)
 ---@param client neutron.class.client
 ns_events.on("player_ready", function(client)
   system_controller:register_player(client.player.pid);
+end)
+
+ns_events.on("world_save", function()
+  data_storage.save();
 end)
 
 ---@param client neutron.class.client

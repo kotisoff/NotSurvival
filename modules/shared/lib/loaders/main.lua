@@ -1,6 +1,7 @@
 local module = {
   loaders = {},
-  compressed_data = {}
+  compressed_data = {},
+  local_hash = ""
 };
 
 module.loaders = {
@@ -15,6 +16,7 @@ function module.reload()
   module.compress();
 end
 
+---@return bytearray bytes, string hash
 function module.compress()
   local compressed = {};
 
@@ -23,12 +25,19 @@ function module.compress()
   end
 
   local bytes = bjson.tobytes(compressed, true);
-
   module.compressed_data = bytes;
-  return bytes;
+
+  local hash = crypto.md5(Bytearray_as_string(bytes));
+  module.local_hash = hash;
+
+  return bytes, hash;
 end
 
-function module.decompress(bytes)
+---@param bytes bytearray
+---@param hash string
+function module.decompress(bytes, hash)
+  if hash == module.local_hash then return end;
+
   local compressed = bjson.frombytes(bytes);
 
   for key, data in pairs(compressed) do

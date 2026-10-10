@@ -1,8 +1,9 @@
-local mp              = require "shared/utils/not_utils".multiplayer.api.server
-local net_events      = require "shared/net/utils/net_events"
 local hunger          = require "shared/player/stats/hunger"
 local system_instance = require "shared/lib/system_instance"
 local Counter         = require "shared/lib/Counter"
+
+local StartSprinting  = require "shared/net/messages/StartSprinting";
+---@cast StartSprinting neutron.server.messages.Message
 
 -- А это тут нужно чтобы работали приколы типа добавления кастомных полей и методов.
 ---@class ns.ecs.system.server.sprinting:ns.ecs.system
@@ -17,9 +18,8 @@ function SprintingSystem:on_player_remove(id)
   Counter.get_or_create(id, self.name):destroy();
 end
 
-net_events.server.on(net_events.packets.player_sprinting, function(client, bytes)
-  local status = unpack(mp.bson.deserialize(bytes))
-
+StartSprinting:on(function(client, data)
+  local status = data.state;
   SprintingSystem.sprinting[client.player.pid] = status
 end)
 

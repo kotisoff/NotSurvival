@@ -13,3 +13,6 @@
 
 # Effect
 "not_survival:effect" = {}
+
+# Base fallback
+"base:loot" = {}

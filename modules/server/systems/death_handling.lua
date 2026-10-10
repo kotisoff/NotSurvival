@@ -2,7 +2,7 @@ local health          = require "shared/player/stats/health"
 local death           = require "shared/player/stats/death"
 local system_instance = require "shared/lib/system_instance"
 
-local _nu             = require "shared/utils/not_utils"
+local _nu             = require "shared/lib/not_utils"
 local mp              = _nu.multiplayer.api.server
 
 local Death_handler   = system_instance.new("ns.system.death_handler")

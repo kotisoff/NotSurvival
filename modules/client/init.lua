@@ -1,8 +1,7 @@
-local ns_events         = require "shared/core/ns_events";
-local logger            = require "shared/core/logger";
 local prefix            = require "shared/utils/prefix"
 local system_controller = require "client/lib/system_controller"
 local manager           = require "shared/player/data/manager"
+local constants         = require "shared/core/constants"
 
 local require_folder    = require "shared/utils/require_folder"
 
@@ -11,22 +10,22 @@ require_folder "client/events/net"
 
 local systems = require_folder "client/systems"
 
+-- hud_open вызывается в момент инициализации худа на клиенте один раз.
 ns_events.on("hud_open", function(...)
   for _, system in pairs(systems) do
     system_controller:register(system);
   end
+
+  hud.open_permanent(prefix "survival_hud")
+
+  local ver = pack.get_info(constants.pack_id).version;
+  console.log(string.format("[#00ff00]NotSurvival - %s[#ffffff]", ver));
+
+  system_controller:register_player();
 end)
 
 ns_events.on("first_tick", function()
-  hud.open_permanent(prefix "survival_hud")
-
-  console.log("[#00ff00]NotSurvival - 0.3.0[#ffffff]")
-
-  system_controller:register_player();
-  print("reg player");
-
-  print('gonna update data');
-  manager.sync("data");
+  manager.sync("base");
   manager.sync("status");
   manager.sync("attributes");
 end)

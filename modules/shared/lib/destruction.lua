@@ -1,4 +1,4 @@
-local tags             = require "shared/utils/not_utils".tags;
+local tags             = require "shared/lib/not_utils".tags;
 local tools            = require "shared/lib/tools"
 local death            = require "shared/player/stats/death"
 

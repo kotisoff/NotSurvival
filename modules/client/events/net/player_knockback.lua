@@ -1,8 +1,9 @@
-local net_events = require "shared/net/utils/net_events"
-local bson       = require "shared/utils/bson"
+local DealKnockback = require "shared/net/messages/DealKnockback"
 
-net_events.client.on(net_events.packets.deal_knockback, function(bytes)
-  local vel = bson.deserialize(bytes)
+---@cast DealKnockback neutron.client.messages.Message
+DealKnockback:on(function(data)
+  local vel = data.velocity;
+
   local pid = hud.get_player()
 
   local player_vel = { player.get_vel(pid) }

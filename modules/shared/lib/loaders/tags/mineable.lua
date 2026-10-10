@@ -1,11 +1,10 @@
-local not_utils = require "shared/utils/not_utils"
-local logger    = require "shared/core/logger"
+local not_utils = require "shared/lib/not_utils";
 
 local tags      = not_utils.tags;
 local reader    = not_utils.FileReader.new();
 
 local module    = {
-  ---@type table<int, table<ns.breaking.tool_type, bool>>
+  ---@type table<int, ns.breaking.tool_type[]>
   data = {}
 };
 
