@@ -1,10 +1,10 @@
+local stats_loader = require "shared/player/data/stats_loader"
 local system_controller = require "server/lib/system_controller"
 local loaders = require "shared/lib/loaders/main";
 local storage = require "shared/core/data_storage";
 
-require "shared/player/data/manager"
-
 ns_events.on("first_tick", function()
+  stats_loader.reload();
   loaders.reload();
   storage.load();
 end)

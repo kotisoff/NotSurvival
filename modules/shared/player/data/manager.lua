@@ -1,11 +1,13 @@
 -- ========================header===========================
-local config                   = require "shared/core/config";
-local mp                       = require "shared/lib/not_utils".multiplayer;
-local net_events               = require "shared/net/utils/net_events"
-local storage                  = require "shared/core/data_storage".data
+local config            = require "shared/core/config";
+local mp                = require "shared/lib/not_utils".multiplayer;
+local net_events        = require "shared/net/utils/net_events"
+local storage           = require "shared/core/data_storage".data
+local stats_loader      = require "shared/player/data/stats_loader"
 
-local data_compression         = require "shared/net/compression/player_data";
-local data_request_compression = require "shared/net/compression/player_data_request";
+local PlayerDataRequest = require "shared/net/messages/PlayerDataRequest";
+
+local data_compression  = require "shared/net/compression/player_data";
 
 -- =========================types===========================
 
@@ -20,8 +22,7 @@ local data_request_compression = require "shared/net/compression/player_data_req
 ---@field gamemode number
 ---@field dead boolean
 ---@field death_location vec3
----@field effects ns.player.Status.effect[]
----@field init bool
+-- -@field effects ns.player.Status.effect[]
 
 ---@alias ns.player.Status.effect { identifier: string, level: number, time_left: number }
 
@@ -31,33 +32,32 @@ local data_request_compression = require "shared/net/compression/player_data_req
 
 -- =========================================================
 
+-- ---@type ns.player.Base
+-- local PlayerBase = table.map(
+--   table.copy(config.player.base),
+--   ---@param v { init: int, max: int }
+--   function(i, v)
+--     return v.init
+--   end
+-- );
 
----@type ns.player.Base
-local PlayerBase = table.map(
-  table.copy(config.player.base),
-  ---@param v { init: int, max: int }
-  function(i, v)
-    return v.init
-  end
-);
+-- ---@param v { init: int, max: int }
+-- ---@type ns.player.Base
+-- local PlayerAttributes = table.map(table.copy(config.player.base), function(i, v) return v.max end);
 
----@param v { init: int, max: int }
----@type ns.player.Base
-local PlayerAttributes = table.map(table.copy(config.player.base), function(i, v) return v.max end);
-
----@type ns.player.Status
-local PlayerStatus = {
-  xp = 0, gamemode = 0, dead = false, death_location = { 0, 0, 0 }, effects = {}, init = false
-}
+-- ---@type ns.player.Status
+-- local PlayerStatus = {
+--   xp = 0, gamemode = 0, dead = false, death_location = { 0, 0, 0 }, effects = {}, init = false
+-- }
 
 -- =========================================================
 
-local module = {};
+local module            = {};
 
 -- Shared
 
 ---@param pid int
----@return { data: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
+---@return { base: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
 function module.get_store(pid)
   if vc.is_client() then
     return module.session;
@@ -76,34 +76,35 @@ function module.get_store(pid)
         logger:println("I", string.format("Created new survival data for %s(%s)", identity, pid));
       end
 
-      storage.players[identity] = {
-        data = module.new_base(),
-        attributes = module.new_attributes(),
-        status = module.new_status()
-      }
+      storage.players[identity] = module.new_data()
     end
 
     return storage.players[identity];
   end
 end
 
----@return ns.player.Base
-function module.new_base()
-  return table.copy(PlayerBase)
+-- ---@return ns.player.Base
+-- function module.new_base()
+--   return table.copy(PlayerBase)
+-- end
+
+-- ---@return ns.player.Base
+-- function module.new_attributes()
+--   return table.copy(PlayerAttributes)
+-- end
+
+-- ---@return ns.player.Status
+-- function module.new_status()
+--   return table.copy(PlayerStatus)
+-- end
+
+---@return { base: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
+function module.new_data()
+  return stats_loader.build();
 end
 
----@return ns.player.Base
-function module.new_attributes()
-  return table.copy(PlayerAttributes)
-end
-
----@return ns.player.Status
-function module.new_status()
-  return table.copy(PlayerStatus)
-end
-
-function module.get_data(pid)
-  return module.get_store(pid).data;
+function module.get_base(pid)
+  return module.get_store(pid).base;
 end
 
 function module.get_attributes(pid)
@@ -162,7 +163,8 @@ function module.sync(category, field, client)
       error("Client не указан!");
     end
   elseif mp.mode == "client" then
-    net_events.client.send(net_events.packets.update_player_data, data_request_compression.to_bytes(category, field));
+    ---@cast PlayerDataRequest neutron.client.messages.Message
+    PlayerDataRequest:send({ category = category, field = field });
   elseif mp.mode == "standalone" then
     local pid = hud.get_player();
     local store = module.get_store(pid);
@@ -178,10 +180,12 @@ function module.sync(category, field, client)
   end
 end
 
-module.session = {
-  data = module.new_base(),
-  attributes = module.new_attributes(),
-  status = module.new_status()
-};
+---@type { base: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
+module.session = nil;
+
+ns_events.on("hud_open", function(...)
+  logger:println("I", "Устанавливаем клиентские данные");
+  module.session = module.new_data();
+end)
 
 return module;

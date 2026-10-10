@@ -41,10 +41,11 @@ function module.reload()
 		local stat = file.name(file.remove_ext(path));
 
 		module.tree[res_id] = module.tree[res_id] or {};
-		local branch = module.tree[res_id];
+		module.tree[res_id][stat] = data;
 
-		branch[stat] = data;
+		logger:log("I", string.format('Added "%s:%s" as %s["%s"]', res_id, stat, data.category, module.stat_id(res_id, stat)));
 	end)
+	logger:print();
 
 	reader:clear();
 end
@@ -56,12 +57,21 @@ function module.stat_id(res_id, name)
 	return string.format("%s:%s", res_id, name);
 end
 
+function module.require_tree()
+	if table.count_pairs(module.tree) == 0 then
+		module.reload();
+	end
+
+	return module.tree;
+end
+
 function module.build()
 	local res = {
 		attributes = {}
 	};
 
-	for res_id, stats in pairs(module.tree) do
+	local tree = module.require_tree();
+	for res_id, stats in pairs(tree) do
 		for stat, data in pairs(stats) do
 			local id = module.stat_id(res_id, stat);
 
@@ -82,7 +92,8 @@ function module.build_scheme()
 		attributes = {}
 	};
 
-	for res_id, stats in pairs(module.tree) do
+	local tree = module.require_tree();
+	for res_id, stats in pairs(tree) do
 		for stat, data in pairs(stats) do
 			if data.net then
 				local id = module.stat_id(res_id, stat);

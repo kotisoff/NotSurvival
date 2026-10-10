@@ -16,7 +16,7 @@ return function(name)
   ---@return number
   function module.get(pid)
     pid = req_pid(pid);
-    return manager.get_data(pid)[name]
+    return manager.get_base(pid)[name]
   end
 
   ---@param pid? int Default: hud.get_player()

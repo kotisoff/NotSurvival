@@ -17,7 +17,8 @@ module.ids = {
   deal_knockback = "2",
   start_eating = "3",
   start_sprinting = "4",
-  resources_data = "5"
+  resources_data = "5",
+  player_data_request = "1t"
 }
 
 return module;

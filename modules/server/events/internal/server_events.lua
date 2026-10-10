@@ -23,37 +23,37 @@ if vc.is_headless() then
   events.on("server:client_disconnected", function(client)
     ns_events.emit("client_disconnected", client)
   end)
-elseif mp.mode == "standalone" then
-  ---@type number
-  local pid = nil;
+  -- elseif mp.mode == "standalone" then
+  --   ---@type number
+  --   local pid = nil;
 
-  local function require_pid()
-    if not pid then
-      pid = hud.get_player();
-    end
+  --   local function require_pid()
+  --     if not pid then
+  --       pid = hud.get_player();
+  --     end
 
-    return pid;
-  end
+  --     return pid;
+  --   end
 
-  local emit = function(event)
-    require_pid();
+  --   local emit = function(event)
+  --     require_pid();
 
-    local identity = server.sandbox.players.get_by_pid(pid).identity;
-    local client = server.accounts.by_identity.get_client(identity);
-    -- Вот эта ↑ залупень ↑ нужна чтобы ide не ругалась, по идее я могу ваще без identity клиента спиздить в standalone.
+  --     local identity = server.sandbox.players.get_by_pid(pid).identity;
+  --     local client = server.accounts.by_identity.get_client(identity);
+  --     -- Вот эта ↑ залупень ↑ нужна чтобы ide не ругалась, по идее я могу ваще без identity клиента спиздить в standalone.
 
-    ns_events.emit(event, client);
-  end
+  --     ns_events.emit(event, client);
+  --   end
 
-  ns_events.on("hud_open", function()
-    emit("client_connected");
-  end);
+  --   ns_events.on("hud_open", function()
+  --     emit("client_connected");
+  --   end);
 
-  ns_events.on("first_tick", function()
-    emit("player_ready");
-  end);
+  --   ns_events.on("first_tick", function()
+  --     emit("player_ready");
+  --   end);
 
-  ns_events.on("world_quit", function()
-    emit("client_disconnected");
-  end)
+  --   ns_events.on("world_quit", function()
+  --     emit("client_disconnected");
+  --   end)
 end

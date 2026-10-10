@@ -60,7 +60,7 @@ mp.as_server(function(server, mode)
     end
 
     if config.debug.log_misc then
-      print(string.format("Игроку %s нанесено %d урона", client.player.username, amount))
+      logger:println("I", string.format("Игроку %s нанесено %d урона", client.player.username, amount))
     end
   end
 end)

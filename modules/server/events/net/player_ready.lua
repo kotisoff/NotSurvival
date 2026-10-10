@@ -9,17 +9,18 @@ local ResourcesData = require "shared/net/messages/ResourcesData";
 
 ---@param client neutron.class.client
 ns_events.on("player_ready", function(client)
-  time.post_runnable(function()
-    local success, status = pcall(manager.get_status, client.player.pid);
+  -- FIXME: а нахуя?
+  -- time.post_runnable(function()
+  --   local success, status = pcall(manager.get_status, client.player.pid);
 
-    if success and not status.init then
-      local x, y, z = player.get_pos(client.player.pid);
+  --   if success and not status.init then
+  --     local x, y, z = player.get_pos(client.player.pid);
 
-      player.set_spawnpoint(client.player.pid, x, y, z);
+  --     player.set_spawnpoint(client.player.pid, x, y, z);
 
-      status.init = true;
-    end
-  end)
+  --     status.init = true;
+  --   end
+  -- end)
 
   destruction.update_player_rules(client.player.pid);
 

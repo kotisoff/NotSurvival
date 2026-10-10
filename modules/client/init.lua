@@ -15,19 +15,17 @@ ns_events.on("hud_open", function(...)
   for _, system in pairs(systems) do
     system_controller:register(system);
   end
-end)
 
-ns_events.on("first_tick", function()
   hud.open_permanent(prefix "survival_hud")
 
   local ver = pack.get_info(constants.pack_id).version;
   console.log(string.format("[#00ff00]NotSurvival - %s[#ffffff]", ver));
 
   system_controller:register_player();
-  print("reg player");
+end)
 
-  print('gonna update data');
-  manager.sync("data");
+ns_events.on("first_tick", function()
+  manager.sync("base");
   manager.sync("status");
   manager.sync("attributes");
 end)
