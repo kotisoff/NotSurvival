@@ -1,13 +1,11 @@
 -- ========================header===========================
-local config            = require "shared/core/config";
-local mp                = require "shared/lib/not_utils".multiplayer;
-local net_events        = require "shared/net/utils/net_events"
-local storage           = require "shared/core/data_storage".data
-local stats_loader      = require "shared/player/data/stats_loader"
+local config          = require "shared/core/config";
+local mp              = require "shared/lib/not_utils".multiplayer;
+local data_storage    = require "shared/core/data_storage";
+local stats_loader    = require "shared/player/data/stats_loader"
+local PlayerData      = require "shared/net/replicators/PlayerData"
 
-local PlayerDataRequest = require "shared/net/messages/PlayerDataRequest";
-
-local data_compression  = require "shared/net/compression/player_data";
+local storage         = data_storage.data;
 
 -- =========================types===========================
 
@@ -52,7 +50,8 @@ local data_compression  = require "shared/net/compression/player_data";
 
 -- =========================================================
 
-local module            = {};
+local module          = {};
+local replica_storage = {};
 
 -- Shared
 
@@ -62,45 +61,41 @@ function module.get_store(pid)
   if vc.is_client() then
     return module.session;
   else
-    local player_instance = mp.api.server.sandbox.players.get_by_pid(pid);
+    local identity = mp.api.server.sandbox.players.get_by_pid(pid).identity;
 
-    local identity = (player_instance and player_instance.identity) or (pid == 0 and "root");
-    assert(identity ~= false, "Tried to get storage of unknown player");
-
-    if not storage.players then
-      storage.players = {};
-    end
-
-    if not storage.players[identity] then
+    if not replica_storage[identity] then
       if config.debug.log_misc then
-        logger:println("I", string.format("Created new survival data for %s(%s)", identity, pid));
+        logger:println("I", string.format("Creating new survival data for %s(%s)", player.get_name(pid), pid));
       end
 
-      storage.players[identity] = module.new_data()
+      local client = mp.api.server.accounts.by_identity.get_client(identity);
+      local replica = PlayerData.unwrap();
+      ---@cast replica neutron.server.replications.Replicator
+
+      local value = {};
+      if storage.players[identity] then
+        value = storage.players[identity];
+      else
+        value = stats_loader.build();
+      end
+
+      replica_storage[identity] = replica:create_private_replica(pid, value, client);
     end
 
-    return storage.players[identity];
+    return replica_storage[identity];
   end
 end
 
--- ---@return ns.player.Base
--- function module.new_base()
---   return table.copy(PlayerBase)
--- end
+---@param player neutron.class.player
+function module.disconnect_replica(player)
+  local replica = PlayerData.unwrap();
 
--- ---@return ns.player.Base
--- function module.new_attributes()
---   return table.copy(PlayerAttributes)
--- end
-
--- ---@return ns.player.Status
--- function module.new_status()
---   return table.copy(PlayerStatus)
--- end
-
----@return { base: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
-function module.new_data()
-  return stats_loader.build();
+  if replica_storage[player.identity] then
+    replica_storage[player.identity] = nil;
+    replica:remove_replica(player.pid);
+    return true;
+  end
+  return false;
 end
 
 function module.get_base(pid)
@@ -127,65 +122,72 @@ function module.set(pid, category, field, value)
 
   local store = module.get_store(pid);
   store[category][field] = value;
-
-  if mp.mode ~= "standalone" then
-    ns_events.emit("__set_player_data", pid, category, field, value);
-  end
-
-  mp.as_server(function(server, mode)
-    local identity = server.sandbox.players.get_by_pid(pid).identity;
-    local client = server.accounts.by_identity.get_client(identity);
-
-    module.sync(category, field, client);
-  end)
 end
 
----@param category str
----@param field str | nil
----@param client neutron.class.client | nil Only on server
-function module.sync(category, field, client)
-  if mp.mode == "server" then
-    if client then
-      local store = module.get_store(client.player.pid);
-      local data = store[category];
+-- ---@param category str
+-- ---@param field str | nil
+-- ---@param client neutron.class.client | nil Only on server
+-- function module.sync(category, field, client)
+--   if mp.mode == "server" then
+--     if client then
+--       local store = module.get_store(client.player.pid);
+--       local data = store[category];
 
-      local value;
-      if field then
-        value = data[field];
-      else
-        value = data;
-      end
+--       local value;
+--       if field then
+--         value = data[field];
+--       else
+--         value = data;
+--       end
 
-      net_events.server.tell(net_events.packets.update_player_data, client,
-        data_compression.to_bytes(category, field, value)
-      );
-    else
-      error("Client не указан!");
-    end
-  elseif mp.mode == "client" then
-    ---@cast PlayerDataRequest neutron.client.messages.Message
-    PlayerDataRequest:send({ category = category, field = field });
-  elseif mp.mode == "standalone" then
-    local pid = hud.get_player();
-    local store = module.get_store(pid);
+--       net_events.server.tell(net_events.packets.update_player_data, client,
+--         data_compression.to_bytes(category, field, value)
+--       );
+--     else
+--       error("Client не указан!");
+--     end
+--   elseif mp.mode == "client" then
+--     ---@cast PlayerDataRequest neutron.client.messages.Message
+--     PlayerDataRequest:send({ category = category, field = field });
+-- elseif mp.mode == "standalone" then
+--   local pid = hud.get_player();
+--   local store = module.get_store(pid);
 
-    local value
-    if field then
-      value = store[category][field]
-    else
-      value = store[category]
-    end
+--   local value
+--   if field then
+--     value = store[category][field]
+--   else
+--     value = store[category]
+--   end
 
-    ns_events.emit("__set_player_data", pid, category, field, value);
-  end
-end
+-- FIXME: without __set_player_data ui won't work
+-- ns_events.emit("__set_player_data", pid, category, field, value);
+--   end
+-- end
 
 ---@type { base: ns.player.Base, attributes: ns.player.Base, status: ns.player.Status }
 module.session = nil;
 
 ns_events.on("hud_open", function(...)
-  logger:println("I", "Creating session stats storage");
-  module.session = module.new_data();
+  logger:println("I", "Creating survival data listener");
+
+  local replica = PlayerData.unwrap();
+  ---@cast replica neutron.client.replications.Replicator
+
+  module.session = replica:create_listener(hud.get_player(), stats_loader.build());
 end)
+
+data_storage.on_save(function()
+  for identity, replica in pairs(replica_storage) do
+    storage.players[identity] = {};
+    local _player = storage.players[identity];
+
+    for key, value in pairs(replica) do
+      if key ~= "_old_data" and key ~= "_client" then
+        _player[key] = value;
+      end
+    end
+  end
+end, "players")
 
 return module;

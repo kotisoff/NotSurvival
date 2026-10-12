@@ -16,6 +16,22 @@ function module.new(event, schema)
 	return Replicator.new(constants.pack_id, event, schema);
 end
 
+---@param event string
+---@param schema table
+function module.wrap_new(event, schema)
+	local obj = { value = module.prototype };
+
+	function obj.unwrap()
+		if not obj.value then
+			obj.value = module.new(event, schema);
+		end
+
+		return obj.value;
+	end
+
+	return obj;
+end
+
 module.ids = packet_registry.replicators;
 
 return module;

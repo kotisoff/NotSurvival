@@ -1,5 +1,6 @@
 local system_controller = require "server/lib/system_controller";
 local data_storage      = require "shared/core/data_storage"
+local manager           = require "shared/player/data/manager"
 
 ns_events.on("player_tick", function(pid, tps)
   system_controller:update(pid, tps);
@@ -17,6 +18,6 @@ end)
 ---@param client neutron.class.client
 ns_events.on("client_disconnected", function(client)
   system_controller:remove_player(client.player.pid);
-
   data_storage.save("players");
+  manager.disconnect_replica(client.player);
 end)

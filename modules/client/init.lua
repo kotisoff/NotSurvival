@@ -25,9 +25,9 @@ ns_events.on("hud_open", function(...)
 end)
 
 ns_events.on("first_tick", function()
-  manager.sync("base");
-  manager.sync("status");
-  manager.sync("attributes");
+  -- manager.sync("base");
+  -- manager.sync("status");
+  -- manager.sync("attributes");
 end)
 
 ns_events.on("hud_render", function()

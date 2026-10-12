@@ -87,7 +87,7 @@ function module.build()
 	return res;
 end
 
-function module.build_scheme()
+function module.build_schema()
 	local scheme = {
 		attributes = {}
 	};
@@ -115,8 +115,8 @@ test_tool.create_test("read_stats", function()
 	module.reload();
 end)
 
-test_tool.create_test("build_stats_scheme", function()
-	local scheme = module.build_scheme();
+test_tool.create_test("build_stats_schema", function()
+	local scheme = module.build_schema();
 
 	debug.print(scheme);
 end)
