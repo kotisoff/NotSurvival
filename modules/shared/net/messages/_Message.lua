@@ -7,6 +7,9 @@ local Message         = mp.api[mp.side].messages;
 ---@class ns.net.MessageRegistry
 local module          = {};
 
+---@type neutron.client.messages.Message | neutron.server.messages.Message
+module.prototype      = nil;
+
 ---@param event string
 ---@param schema table
 function module.new(event, schema)

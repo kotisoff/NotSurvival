@@ -3,8 +3,7 @@ local mp = require "shared/lib/not_utils".multiplayer;
 local pack_id = require "shared/core/constants".pack_id;
 
 local packets = {
-  update_player_data = "0x1",
-  block_breaking = "0x2"
+  block_breaking = "0x1" -- todo: predicted event => remove this line (and file)
 }
 
 local client = {};

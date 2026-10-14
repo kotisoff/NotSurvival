@@ -57,4 +57,8 @@ function module.on_save(fun, key)
   table.insert(bus, { fun, key });
 end
 
+ns_events.on("world_quit", function()
+  bus = {};
+end);
+
 return module;
