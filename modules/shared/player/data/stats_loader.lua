@@ -76,7 +76,13 @@ function module.build()
 			local id = module.stat_id(res_id, stat);
 
 			res[data.category] = res[data.category] or {};
-			res[data.category][id] = data.init;
+
+			local init = data.init;
+			if type(init) == "table" then
+				init = table.deep_copy(init);
+			end
+
+			res[data.category][id] = init;
 
 			if data.max then
 				res.attributes[id] = data.max;
