@@ -17,13 +17,13 @@ function module.new(event, schema)
 end
 
 ---@param event string
----@param schema table
-function module.wrap_new(event, schema)
+---@param schema_provider fun(): table
+function module.wrap_new(event, schema_provider)
 	local obj = { value = module.prototype };
 
 	function obj.unwrap()
 		if not obj.value then
-			obj.value = module.new(event, schema);
+			obj.value = module.new(event, schema_provider());
 		end
 
 		return obj.value;
