@@ -8,7 +8,7 @@ local mp              = _nu.multiplayer.api.server
 local Death_handler   = system_instance.new("ns.system.death_handler")
 
 function Death_handler:should_update(id)
-  return not death.is_invulnerable(id)
+  return not health.is_invulnerable(id)
 end
 
 function Death_handler:update(pid, tps)

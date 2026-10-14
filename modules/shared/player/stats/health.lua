@@ -1,13 +1,23 @@
 local mp            = require "shared/lib/not_utils".multiplayer;
-local net_events    = require "shared/net/utils/net_events"
+local data          = require "shared/player/data/manager";
 local damage        = require "shared/player/utils/damage";
 local Stat          = require "shared/player/stats/Stat";
 local config        = require "shared/core/config"
 
 local DealKnockback = require "shared/net/messages/DealKnockback"
 
+local function is_invulnerable(pid)
+  return data.get_status(pid).gamemode == 1;
+end
+
 ---@class ns.stat.health: ns.stat.base
-local module        = Stat("health");
+local module = Stat("health");
+
+---@return bool
+function module.is_invulnerable(pid)
+  if not pid then pid = hud.get_player() end;
+  return data.get_status(pid).gamemode == 1;
+end
 
 -- ========================server===========================
 

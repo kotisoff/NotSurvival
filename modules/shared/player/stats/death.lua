@@ -22,12 +22,6 @@ function module.get_location(pid)
   return data.get_status(pid).death_location
 end
 
----@return bool
-function module.is_invulnerable(pid)
-  if not pid then pid = hud.get_player() end;
-  return data.get_status(pid).gamemode == 1;
-end
-
 -- ========================server===========================
 
 mp.as_server(function(server, mode)
@@ -49,7 +43,7 @@ mp.as_server(function(server, mode)
   ---@param pid int
   ---@param damage_type damage_types
   function module.kill(pid, damage_type)
-    if module.is_invulnerable(pid) then return end
+    if health.is_invulnerable(pid) then return end
 
     local hp = health.get(pid)
     health.damage(pid, hp, { damage_type = damage_type, do_knockback = false })

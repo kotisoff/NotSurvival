@@ -1,6 +1,6 @@
-local data = require "shared/player/data/manager"
-local death = require "shared/player/stats/death";
+local data         = require "shared/player/data/manager"
 local allow_cheats = require "client/hooks/allow_cheats"
+local health       = require "shared/player/stats/health"
 
 
 ns_events.on("first_tick", function()
@@ -11,5 +11,5 @@ ns_events.on("first_tick", function()
     return
   end
 
-  allow_cheats(death.is_invulnerable(pid));
+  allow_cheats(health.is_invulnerable(pid));
 end)

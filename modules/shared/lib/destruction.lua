@@ -1,6 +1,6 @@
 local tags             = require "shared/lib/not_utils".tags;
 local tools            = require "shared/lib/tools"
-local death            = require "shared/player/stats/death"
+local health           = require "shared/player/stats/health"
 
 local module           = {}
 
@@ -78,7 +78,7 @@ end
 
 ---Устанавливает игроку set_instant_destruction и set_infinite_items в зависимости от его режима игры.
 function module.update_player_rules(pid)
-  local state = death.is_invulnerable(pid);
+  local state = health.is_invulnerable(pid);
 
   player.set_instant_destruction(pid, state)
   player.set_infinite_items(pid, state)
