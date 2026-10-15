@@ -7,13 +7,16 @@ local Message         = mp.api[mp.side].messages;
 ---@class ns.net.MessageRegistry
 local module          = {};
 
----@type neutron.client.messages.Message | neutron.server.messages.Message
-module.prototype      = nil;
-
 ---@param event string
 ---@param schema table
 function module.new(event, schema)
   return Message.new(constants.pack_id, event, schema);
+end
+
+---@param event string
+---@param schema_provider fun(): table
+function module.wrap_new(event, schema_provider)
+  return Message.lazy_new(constants.pack_id, event, schema_provider);
 end
 
 module.ids = packet_registry.messages;

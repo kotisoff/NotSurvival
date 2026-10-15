@@ -22,6 +22,6 @@ local function prepare_schema(schema)
 end
 
 -- HACK: Catches replicator diff packets and uses them to update ui.
-local M = Message.new(_Replicator.ids.player_data, prepare_schema(stats_loader.build_schema()))
+local M = Message.wrap_new(_Replicator.ids.player_data, function() return prepare_schema(stats_loader.build_schema()) end)
 
 return M;
