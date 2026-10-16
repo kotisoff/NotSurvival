@@ -1,4 +1,4 @@
-local mp         = require "shared/lib/not_utils".multiplayer;
+local mp         = require "shared/lib/multiplayer"
 local Stat       = require "shared/player/stats/Stat"
 
 local hunger     = Stat("hunger");
@@ -31,7 +31,7 @@ end;
 
 -- ========================server===========================
 
-mp.as_server(function(server, mode)
+if mp.side == "server" then
   ---Server side only
   ---@param pid int
   ---@param value number
@@ -88,6 +88,6 @@ mp.as_server(function(server, mode)
       module.set_saturation(pid, sat)
     end
   end
-end)
+end
 
 return module

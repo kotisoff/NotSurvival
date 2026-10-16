@@ -1,5 +1,5 @@
 -- ========================header===========================
-local mp = require "shared/lib/not_utils".multiplayer;
+local mp     = require "shared/lib/multiplayer"
 -- =========================================================
 
 local module = {
@@ -9,7 +9,7 @@ local module = {
 -- Shared
 
 function module.get_slots(pid)
-  if mp.mode == "client" then
+  if mp.side == "client" then
     return module.session;
   end
 end

@@ -1,6 +1,6 @@
-local _mp = require "shared/lib/not_utils".multiplayer
-local mode = _mp.mode
-local mp = _mp.api.server
+local _mp    = require "shared/lib/multiplayer"
+local side   = _mp.side
+local mp     = _mp.api.server
 
 local module = {
   ---@type table<string,string[]>
@@ -10,7 +10,7 @@ local module = {
 }
 
 local function set_duration(sound, duration)
-  if mode == "server" then
+  if side == "server" then
     mp.audio.register_duration(sound, duration)
   end
 end

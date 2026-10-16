@@ -1,6 +1,6 @@
 -- ========================header===========================
 local config          = require "shared/core/config";
-local mp              = require "shared/lib/not_utils".multiplayer;
+local mp              = require "shared/lib/multiplayer"
 local data_storage    = require "shared/core/data_storage";
 local stats_loader    = require "shared/player/data/stats_loader"
 local PlayerData      = require "shared/net/replicators/PlayerData"

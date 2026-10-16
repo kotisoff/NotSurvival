@@ -1,4 +1,4 @@
-local mp        = require "shared/lib/not_utils".multiplayer;
+local mp        = require "shared/lib/multiplayer"
 local data      = require "shared/player/data/manager";
 
 local health    = require "shared/player/stats/health";
@@ -24,7 +24,9 @@ end
 
 -- ========================server===========================
 
-mp.as_server(function(server, mode)
+if mp.side == "server" then
+  local server = mp.api.server;
+
   ---Server side only
   ---@param pid int
   ---@param flag bool
@@ -103,6 +105,6 @@ mp.as_server(function(server, mode)
 
     return true;
   end
-end)
+end
 
 return module

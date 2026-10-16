@@ -1,4 +1,4 @@
-local mp         = require "shared/lib/not_utils".multiplayer;
+local mp         = require "shared/lib/multiplayer"
 local manager    = require "shared/player/data/manager"
 local exp_shared = require "shared/utils/experience"
 
@@ -31,7 +31,7 @@ end
 
 -- ========================server===========================
 
-mp.as_server(function(server, mode)
+if mp.side == "server" then
   ---Server side only
   ---@param pid int
   function module.set(pid, value)
@@ -82,6 +82,6 @@ mp.as_server(function(server, mode)
   function module.summon(pos, amount)
     return {}
   end
-end)
+end
 
 return module

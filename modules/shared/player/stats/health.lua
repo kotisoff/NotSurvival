@@ -1,4 +1,4 @@
-local mp            = require "shared/lib/not_utils".multiplayer;
+local mp            = require "shared/lib/multiplayer"
 local data          = require "shared/player/data/manager";
 local damage        = require "shared/player/utils/damage";
 local Stat          = require "shared/player/stats/Stat";
@@ -6,12 +6,8 @@ local config        = require "shared/core/config"
 
 local DealKnockback = require "shared/net/messages/DealKnockback"
 
-local function is_invulnerable(pid)
-  return data.get_status(pid).gamemode == 1;
-end
-
 ---@class ns.stat.health: ns.stat.base
-local module = Stat("health");
+local module        = Stat("health");
 
 ---@return bool
 function module.is_invulnerable(pid)
@@ -21,7 +17,9 @@ end
 
 -- ========================server===========================
 
-mp.as_server(function(server, mode)
+if mp.side == "server" then
+  local server = mp.api.server;
+
   ---@class ns.api.health.damage_options
   ---@field damage_type? damage_types
   ---@field source? vec3 Position of damage source.
@@ -73,6 +71,6 @@ mp.as_server(function(server, mode)
       logger:println("I", string.format("Игроку %s нанесено %d урона", client.player.username, amount))
     end
   end
-end)
+end
 
 return module

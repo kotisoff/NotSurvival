@@ -1,4 +1,4 @@
-local mp = require "shared/lib/not_utils".multiplayer;
+local mp = require "shared/lib/multiplayer";
 local server = mp.api.server;
 
 if vc.is_headless() then

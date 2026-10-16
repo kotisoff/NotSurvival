@@ -33,8 +33,14 @@ end
 
 ---@param instance ns.net.PredictedEvent.BlockDestruction.client.Instance
 function M.on_ack_start(instance)
+	local blockid = instance.data.block;
 	local pos = instance.data.pos;
 	instance.data.wrap = gfx.blockwraps.wrap(pos, destruction.get_breaking_texture(instance.progress));
+
+	local x, y, z = unpack(vec3.add(pos, 0.5))
+	local sound = block.get_sound(blockid, "stepsSound");
+	audio.play_sound(sound, x, y, z, 1, 1, "regular");
+	particles(hud.get_player(), blockid, { x, y, z });
 end
 
 ---@param instance ns.net.PredictedEvent.BlockDestruction.client.Instance

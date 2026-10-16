@@ -1,7 +1,4 @@
-local mp            = require "shared/lib/not_utils".multiplayer;
-local manager       = require "shared/player/data/manager"
 local loaders       = require "shared/lib/loaders/main";
-local net_events    = require "shared/net/utils/net_events"
 local destruction   = require "shared/lib/destruction"
 
 local ResourcesData = require "shared/net/messages/ResourcesData";
@@ -25,15 +22,13 @@ ns_events.on("player_ready", function(client)
   destruction.update_player_rules(client.player.pid);
 
 
-  if mp.mode ~= "standalone" then
-    local bytes = loaders.compressed_data;
+  local bytes = loaders.compressed_data;
 
-    ResourcesData:tell(client, { hash = loaders.local_hash, data = bytes });
+  ResourcesData:tell(client, { hash = loaders.local_hash, data = bytes });
 
-    logger:println("I",
-      string.format("Sent %s bytes of resources to %s(%s)", #bytes, client.player.username, client.player.pid)
-    );
-  end
+  logger:println("I",
+    string.format("Sent %s bytes of resources to %s(%s)", #bytes, client.player.username, client.player.pid)
+  );
 
   -- print(string.format("Игрок %s(%d) присоединился", client.player.username, client.player.pid))
 end)

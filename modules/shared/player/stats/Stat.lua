@@ -1,4 +1,4 @@
-local mp = require "shared/lib/not_utils".multiplayer;
+local mp      = require "shared/lib/multiplayer"
 local manager = require "shared/player/data/manager";
 
 local function req_pid(pid)
@@ -28,7 +28,7 @@ return function(name)
 
   -- ========================server===========================
 
-  mp.as_server(function()
+  if mp.side == "server" then
     ---Server side only
     ---@param pid int
     ---@param value number
@@ -54,7 +54,7 @@ return function(name)
       local value = module.get(pid);
       module.set(pid, value + (amount or 1));
     end
-  end)
+  end
 
   return module;
 end
