@@ -1,5 +1,9 @@
-local BlockDestruction = require "shared/net/predicted_events/BlockDestruction";
+local BlockDestruction        = require "shared/net/predicted_events/BlockDestruction";
+local destruction             = require "shared/lib/destruction"
+local InstantBlockDestruction = require "shared/net/messages/InstantBlockDestruction"
+
 ---@cast BlockDestruction neutron.client.predicted_events.PredictedEvent
+---@cast InstantBlockDestruction neutron.client.messages.Message
 
 ---@type ns.net.PredictedEvent.BlockDestruction.client.Instance | neutron.client.predicted_events.Instance | nil
 local instance
@@ -18,9 +22,26 @@ ns_events.on("player_tick", function(pid, tps)
       end
     elseif x ~= nil then
       local blockid = block.get(x, y, z);
-      instance = BlockDestruction:start({ pos = { x, y, z }, block = blockid, pid = pid });
+
+      local data = {
+        pos = { x, y, z },
+        block = blockid
+      }
+
+      if destruction.get_durability(blockid) <= 0 then
+        InstantBlockDestruction:send(data)
+      else
+        data.pid = pid;
+        instance = BlockDestruction:start(data);
+      end
     end
   elseif instance and instance.active then
     instance:interrupt();
   end
+end)
+
+---@param data { pos: vec3, block: int, states: int }
+InstantBlockDestruction:on(function(data)
+  local x, y, z = unpack(data.pos);
+  block.set(x, y, z, data.block, data.states, true);
 end)

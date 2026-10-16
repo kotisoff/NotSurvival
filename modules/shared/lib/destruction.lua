@@ -1,6 +1,8 @@
 local tags             = require "shared/lib/not_utils".tags;
 local tools            = require "shared/lib/tools"
 local health           = require "shared/player/stats/health"
+local drop_utils       = require "shared/utils/drop_utils"
+local base_utils       = require "shared/utils/base_utils"
 
 local module           = {}
 
@@ -82,6 +84,27 @@ function module.update_player_rules(pid)
 
   player.set_instant_destruction(pid, state)
   player.set_infinite_items(pid, state)
+end
+
+function module.break_block(x, y, z, blockid, pid)
+  block.destruct(x, y, z, pid);
+  inventory.use(player.get_inventory(pid));
+
+  local ns_loot = drop_utils.block_loot(blockid);
+  local drop = base_utils.block_loot(blockid);
+  local drop_pos = vec3.add({ x, y, z }, 0.5);
+
+  for _, loot in ipairs(drop) do
+    if loot.item then
+      ---@type voxelcore.class.entity | nil
+      local entity = base_utils.drop(drop_pos, loot.item, loot.count);
+      if entity then
+        entity.rigidbody:set_vel(vec3.spherical_rand(3));
+      end
+    end
+  end
+
+  ns_loot.callback(blockid, x, y, z, pid);
 end
 
 return module

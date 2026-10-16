@@ -5,7 +5,8 @@ local registry = {
 		deal_knockback = "2",
 		start_eating = "3",
 		start_sprinting = "4",
-		resources_data = "5"
+		instant_block_destruction = "5",
+		resources_data = "6",
 	},
 	replicators = {
 		player_data = "1"

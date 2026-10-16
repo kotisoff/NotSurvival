@@ -39,7 +39,7 @@ end
 
 ---@param instance ns.net.PredictedEvent.BlockDestruction.client.Instance
 function M.on_reject(instance)
-	logger:println("W", "Сервер отклонил событие начала разрушения.");
+	logger:println("W", "Server rejected block destruction start event.");
 end
 
 ---@param instance ns.net.PredictedEvent.BlockDestruction.client.Instance
