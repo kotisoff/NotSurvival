@@ -1,12 +1,10 @@
-local net_events      = require "shared/net/utils/net_events"
-local data            = require "shared/player/data/manager";
-local compression     = require "shared/net/compression/player_data"
 local death           = require "shared/player/stats/death";
 local experience      = require "shared/player/stats/experience";
 local system_instance = require "shared/lib/system_instance"
-local ns_events       = require "shared/core/ns_events"
 
 local system          = system_instance.new("ns.system.death_handling")
+
+local death_overlay   = "not_survival:death";
 
 ---@type voxelcore.libinput.bindings[]
 local movement_inputs = {
@@ -25,12 +23,33 @@ local function enable_inputs(flag)
   end
 end
 
+local _doc;
+local function req_doc()
+  if not _doc then
+    _doc = Document.new(death_overlay);
+  end
+  return _doc;
+end
+
+local function show_overlay(score)
+  if score then
+    local document = req_doc();
+    document.score.text = string.format("Score: [#FFFF00]%d", score);
+  end
+
+  hud.show_overlay(death_overlay, false);
+end
+
+local function close_overlay()
+  hud.close(death_overlay);
+end
+
 ns_events.on("__set_player_data", function(pid, category, field, value)
   if category == "status" and field == "dead" then
     if value then
-      death.show_overlay(experience.get_exp(pid));
+      show_overlay(experience.get(pid));
     else
-      death.close_overlay();
+      close_overlay();
       hud.close_inventory();
     end
 
@@ -43,7 +62,7 @@ function system:update()
   local dead = death.get()
 
   if dead and not hud.is_inventory_open() then
-    death.show_overlay(experience.get_exp())
+    show_overlay(experience.get())
   end
 
   enable_inputs(not dead);

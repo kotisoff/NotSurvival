@@ -23,7 +23,7 @@ function module.calc_total(lvl)
 end
 
 ---Calculates lvl from xp
-function module.calc_lvl(xp)
+function module.calc_level(xp)
   if xp < 353 then
     return math.sqrt(xp + 9) - 3;
   elseif xp < 1508 then

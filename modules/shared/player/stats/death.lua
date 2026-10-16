@@ -1,16 +1,12 @@
-local mp         = require "shared/utils/not_utils".multiplayer;
-local logger     = require "shared/core/logger"
+local mp        = require "shared/lib/multiplayer"
+local data      = require "shared/player/data/manager";
 
-local data       = require "shared/player/data/manager";
+local health    = require "shared/player/stats/health";
 
-local health     = require "shared/player/stats/health";
-local experience = require "shared/player/stats/experience";
-local hunger     = require "shared/player/stats/hunger";
-local oxygen     = require "shared/player/stats/oxygen";
+local base_util = require "base:util";
 
-local base_util  = require "base:util";
-
-local module     = {}
+---@class ns.stat.death
+local module    = {}
 
 -- ========================shared===========================
 
@@ -26,15 +22,11 @@ function module.get_location(pid)
   return data.get_status(pid).death_location
 end
 
----@return bool
-function module.is_invulnerable(pid)
-  if not pid then pid = hud.get_player() end;
-  return data.get_status(pid).gamemode == 1;
-end
-
 -- ========================server===========================
 
-mp.as_server(function(server, mode)
+if mp.side == "server" then
+  local server = mp.api.server;
+
   ---Server side only
   ---@param pid int
   ---@param flag bool
@@ -53,10 +45,10 @@ mp.as_server(function(server, mode)
   ---@param pid int
   ---@param damage_type damage_types
   function module.kill(pid, damage_type)
-    if data.get_status(pid).gamemode ~= 0 then return end
+    if health.is_invulnerable(pid) then return end
 
-    local max = health.get(pid)
-    health.damage(pid, max, { damage_type = damage_type, do_knockback = false })
+    local hp = health.get(pid)
+    health.damage(pid, hp, { damage_type = damage_type, do_knockback = false })
   end
 
   ---Server side only
@@ -79,37 +71,23 @@ mp.as_server(function(server, mode)
 
   ---Server side only
   ---@param pid int
+  ---@return bool success
   function module.revive(pid)
-    if not module.get(pid) then return end
+    if not module.get(pid) then return false end
 
-    --TODO: add ns rules.
     local identity = server.sandbox.players.get_by_pid(pid).identity;
     local client = server.accounts.by_identity.get_client(identity);
 
-    if not true then
-      local pos = { player.get_pos(pid) }
+    local death_pos = module.get_location(pid);
+    local death_pos_str = table.concat(vec3.round(death_pos), " ");
 
-      local orbs = math.random(6)
-      for _ = 1, orbs do
-        ---@type voxelcore.class.entity
-        local entity = experience.summon(pos, experience.get_exp(pid) / orbs)
-
-        if mode == "standalone" then
-          entity.rigidbody:set_vel(vec3.spherical_rand(4))
-        end
-      end
-      experience.set_xp(pid, 0)
-
-      module.drop_items(pid)
-    end
-
-    server.console.tell("You died at " .. table.concat(vec3.round(module.get_location(pid)), " "), client)
+    server.console.tell("You died at " .. death_pos_str, client)
     logger:println(
       "I",
       string.format(
         "%s died at %s",
         client.player.username,
-        table.concat(vec3.round(module.get_location(pid)), " ")
+        death_pos_str
       )
     )
 
@@ -121,35 +99,12 @@ mp.as_server(function(server, mode)
     player.set_vel(pid, 0, 0, 0)
 
     -- Восстановление игрока
-    health.full(pid)
-    hunger.full(pid)
-    oxygen.full(pid)
-    -- effects.remove(pid) ну типа потом добавлю лол
+    ns_events.emit("player_revived", pid);
 
     module.set(pid, false)
+
+    return true;
   end
-end)
-
--- ========================client===========================
-
-mp.as_client(function(client, mode)
-  local death_overlay = "not_survival:death"
-  local document = Document.new(death_overlay)
-
-  ---Client side only
-  ---@param score? int
-  function module.show_overlay(score)
-    if score then
-      document.score.text = string.format("Score: [#FFFF00]%d", score)
-    end
-
-    hud.show_overlay(death_overlay, false)
-  end
-
-  ---Client side only
-  function module.close_overlay()
-    hud.close(death_overlay)
-  end
-end)
+end
 
 return module

@@ -1,5 +1,4 @@
-local ns_events = require "shared/core/ns_events";
-
+require "pack_env";
 require "init";
 
 local first_tick = true;
@@ -26,6 +25,10 @@ end
 
 function on_block_broken(blockid, x, y, z, pid)
   ns_events.emit("block_broken", blockid, x, y, z, pid);
+end
+
+function on_world_save()
+  ns_events.emit("world_save");
 end
 
 function on_world_quit()

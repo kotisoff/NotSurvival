@@ -1,6 +1,0 @@
-{
-  "base:loot@append": [],
-  "not_survival:loot": {
-    "callback": "function(blockid, x, y, z, pid) block.place(x, y, z, block.index('base:water')) end"
-  }
-}

@@ -1,0 +1,6 @@
+{
+  "category": "status",
+  "override": false,
+  "net": "boolean",
+  "init": false
+}

@@ -1,7 +1,0 @@
-{
-  "texture": "cobblestone",
-  "rotation": "none",
-  "material": "base:stone",
-  "base:durability": 13,
-  "tags": ["not_survival:cobblestone"]
-}

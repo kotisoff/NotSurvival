@@ -24,7 +24,7 @@ function Drowning_system:on_player_remove(id)
 end
 
 function Drowning_system:should_update(id)
-  return not death.is_invulnerable(id)
+  return not health.is_invulnerable(id)
 end
 
 function Drowning_system:update(id, tps)

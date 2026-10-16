@@ -1,3 +1,6 @@
 {
-  "components": ["not_survival:player"]
+  "components": [
+    "not_survival:player",
+    "not_survival:player_fall_distance"
+  ]
 }

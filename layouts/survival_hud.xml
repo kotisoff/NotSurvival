@@ -7,7 +7,7 @@
   </container>
 
   <!-- Air -->
-  <container gravity="top-right" size="240, 22">
+  <container gravity="top-right" size="240, 22" visible="false">
     <container color="#b9f4fa40" size="240, 22" id="oxygen_bar" />
     <label gravity="center-center" id="oxygen_label">20/20</label>
   </container>

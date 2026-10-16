@@ -1,12 +1,13 @@
 local packid = require "shared/core/constants".pack_id;
 
 ---@param folder string
+---@return table<string, any>
 return function(folder)
   local dir = file.join(pack.get_folder(packid), "modules/" .. folder)
   local collection = {};
 
   for _, path in ipairs(file.list(dir)) do
-    if file.isfile(path) then
+    if file.isfile(path) and (file.ext(path) == "lua") then
       local basename = file.stem(path)
       collection[basename] = require(file.join(folder, basename))
     end;

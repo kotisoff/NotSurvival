@@ -1,9 +1,10 @@
 local constants = require "shared/core/constants"
-local logger    = require "shared/core/logger"
 
 local module    = {
   data = {}
 };
+
+local bus       = {};
 
 local data_path = string.format("world:data/%s", constants.pack_id)
 
@@ -32,6 +33,14 @@ end
 
 ---@param save_key string | nil
 function module.save(save_key)
+  for _, value in ipairs(bus) do
+    local fun, key = unpack(value);
+
+    if not key or save_key == key then
+      fun();
+    end
+  end
+
   if save_key and module.data[save_key] then
     save_data(save_key, module.data[save_key]);
     return;
@@ -41,5 +50,15 @@ function module.save(save_key)
     save_data(key, value);
   end
 end
+
+---@param fun function
+---@param key? string
+function module.on_save(fun, key)
+  table.insert(bus, { fun, key });
+end
+
+ns_events.on("world_quit", function()
+  bus = {};
+end);
 
 return module;

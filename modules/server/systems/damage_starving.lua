@@ -11,7 +11,7 @@ function Starving_system:on_player_remove(id)
 end
 
 function Starving_system:should_update(id)
-  return not death.is_invulnerable(id)
+  return not health.is_invulnerable(id)
 end
 
 function Starving_system:update(pid, tps)

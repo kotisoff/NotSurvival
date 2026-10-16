@@ -1,6 +1,5 @@
-local utils = require "shared/utils/not_utils".utils;
+local utils = require "shared/lib/not_utils".utils;
 local config = require "shared/core/config";
-local logger = require "shared/core/logger"
 
 local processors = {};
 local cache = {};
