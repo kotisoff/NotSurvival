@@ -15,7 +15,7 @@ end
 
 ---@param event string
 ---@param schema_provider fun(): table
-function module.wrap_new(event, schema_provider)
+function module.lazy_new(event, schema_provider)
 	return Replicator.lazy_new(constants.pack_id, event, schema_provider)
 end
 

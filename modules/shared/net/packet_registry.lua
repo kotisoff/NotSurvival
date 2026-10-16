@@ -9,6 +9,9 @@ local registry = {
 	},
 	replicators = {
 		player_data = "1"
+	},
+	predicted_events = {
+		block_destruction = "1"
 	}
 }
 
