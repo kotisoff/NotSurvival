@@ -1,6 +1,7 @@
 local M               = require "shared/net/logic/BlockDestruction".server;
 local destruction     = require "shared/lib/destruction"
 local camera_position = require "shared/utils/camera_position"
+local combat          = require "server/systems/combat"
 
 local RAYCAST_VERIFY  = true;
 
@@ -21,11 +22,15 @@ function M.on_start(client, data)
 	if RAYCAST_VERIFY then
 		local ray = raycast(client);
 		if ray and vec3.equals(ray.iendpoint, data.pos) and ray.block == data.block then
+			combat:consume_cooldown(client.player.pid);
+
 			return true
 		end
 
 		return false;
 	else
+		combat:consume_cooldown(client.player.pid);
+
 		return block.get(unpack(data.pos)) == data.block
 	end
 end

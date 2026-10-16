@@ -61,7 +61,7 @@ function module.get_store(pid)
   if vc.is_client() then
     return module.session;
   else
-    local identity = mp.api.server.sandbox.players.get_by_pid(pid).identity;
+    local identity = mp.api.server.sandbox.players.get_by_pid(pid).identity
 
     if not replica_storage[identity] then
       if config.debug.log_misc then

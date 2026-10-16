@@ -1,6 +1,5 @@
 local not_utils = require "shared/lib/not_utils";
-local test_tool = require "shared/lib/test_tool"
-local constants = require "shared/core/constants"
+local constants = require "shared/core/constants";
 
 local reader = not_utils.FileReader.new();
 
@@ -116,21 +115,5 @@ function module.build_schema()
 
 	return scheme;
 end
-
-test_tool.create_test("read_stats", function()
-	module.reload();
-end)
-
-test_tool.create_test("build_stats_schema", function()
-	local scheme = module.build_schema();
-
-	debug.print(scheme);
-end)
-
-test_tool.create_test("build_stats_values", function()
-	local values = module.build();
-
-	debug.print(values);
-end)
 
 return module;

@@ -1,6 +1,5 @@
 local prefix            = require "shared/utils/prefix"
 local system_controller = require "client/lib/system_controller"
-local manager           = require "shared/player/data/manager"
 local constants         = require "shared/core/constants"
 
 local require_folder    = require "shared/utils/require_folder"
@@ -25,9 +24,6 @@ ns_events.on("hud_open", function(...)
 end)
 
 ns_events.on("first_tick", function()
-  -- manager.sync("base");
-  -- manager.sync("status");
-  -- manager.sync("attributes");
 end)
 
 ns_events.on("hud_render", function()
